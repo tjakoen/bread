@@ -1,0 +1,2 @@
+/* organisms/item-list */
+.item-list { display: grid; gap: var(--space-2); }

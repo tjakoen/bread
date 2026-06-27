@@ -1,0 +1,31 @@
+/* styles/global.css — reset + page-level layout (design-system base, not component-specific) */
+
+/* Cross-document (MPA) view transitions: animate full-page navigations between
+   same-origin pages. Native, no JS — Chromium today, progressive elsewhere. */
+@view-transition { navigation: auto; }
+
+/* Honour reduced-motion: opt the whole app out of nav animations. */
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
+
+/* Tune the default root cross-fade. */
+::view-transition-old(root),
+::view-transition-new(root) { animation-duration: 0.25s; }
+
+* { box-sizing: border-box; }
+
+body {
+  font: var(--font-base);
+  color: var(--color-fg);
+  background: var(--color-bg);
+  margin: 0;
+}
+
+.container { max-width: 640px; margin: 3rem auto; padding: 0 var(--space-4); }
+h1 { margin: 0 0 var(--space-6); }
+
+/* form layout helper — a native <form> composed of atomic fields on a page */
+.add-form { display: flex; gap: var(--space-2); align-items: flex-end; margin-bottom: var(--space-6); }
+
+.error { color: var(--color-danger); }

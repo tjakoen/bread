@@ -1,0 +1,58 @@
+/* atoms/b-button — the button, ONE class: .btn. Variants are ATTRIBUTES, not
+   extra classes (vanilla CSS, no utility soup). The component owns its styling.
+   Accent is three CSS vars scoped to .btn; a status attribute repoints them, so
+   every variant inherits the new color for free.
+   Each pseudo-state has a parallel data-force value so the catalog can show it
+   statically (e.g. .btn:hover AND .btn[data-force~="hover"]). */
+
+.btn {
+  /* accent token set — [data-status] overrides these */
+  --btn-accent: var(--color-primary);
+  --btn-accent-hover: var(--color-primary-hover);
+  --btn-accent-contrast: var(--color-primary-contrast);
+  --btn-accent-soft: var(--color-primary-soft);
+
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--text-base);            /* medium = default size */
+  line-height: var(--leading-tight);
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 0.12s, color 0.12s, border-color 0.12s, filter 0.12s;
+
+  /* default variant = solid */
+  background: var(--btn-accent);
+  color: var(--btn-accent-contrast);
+}
+
+/* ---- sizes (attribute) ---- */
+.btn[data-size="sm"] { padding: var(--space-1) var(--space-3); font-size: var(--text-sm); }
+.btn[data-size="lg"] { padding: var(--space-3) var(--space-5); font-size: var(--text-lg); }
+
+/* ---- variants (attribute) ---- */
+.btn[data-variant="soft"]    { background: var(--btn-accent-soft); color: var(--btn-accent); }
+.btn[data-variant="outline"] { background: transparent; color: var(--btn-accent); border-color: var(--btn-accent); }
+
+/* ---- status (attribute): repoint the accent token set ---- */
+.btn[data-status="success"] {
+  --btn-accent: var(--color-success); --btn-accent-hover: var(--color-success-hover);
+  --btn-accent-contrast: var(--color-success-contrast); --btn-accent-soft: var(--color-success-soft);
+}
+.btn[data-status="danger"] {
+  --btn-accent: var(--color-danger); --btn-accent-hover: var(--color-danger-hover);
+  --btn-accent-contrast: var(--color-danger-contrast); --btn-accent-soft: var(--color-danger-soft);
+}
+
+/* ---- pseudo-states (real + parallel data-force for the catalog) ---- */
+.btn:hover, .btn[data-force~="hover"] { background: var(--btn-accent-hover); }
+.btn[data-variant="soft"]:hover,    .btn[data-variant="soft"][data-force~="hover"]    { background: var(--btn-accent-soft); filter: brightness(0.96); }
+.btn[data-variant="outline"]:hover, .btn[data-variant="outline"][data-force~="hover"] { background: var(--btn-accent-soft); }
+
+.btn:focus-visible, .btn[data-force~="focus"] { outline: 2px solid var(--btn-accent); outline-offset: 2px; }
+.btn:active,        .btn[data-force~="active"] { transform: translateY(1px); }
+
+.btn:disabled, .btn[disabled] { opacity: 0.5; cursor: not-allowed; pointer-events: none; }

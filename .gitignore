@@ -1,0 +1,18 @@
+# dependencies
+node_modules/
+poc/node_modules/
+
+# bun
+.bun/
+
+# build/export artifacts (BATCH is no-build; this is just-in-case)
+dist/
+
+# local tooling / editor / OS
+.claude/
+.DS_Store
+*.log
+
+# env
+.env
+.env.*

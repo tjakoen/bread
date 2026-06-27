@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Items — BATCH</title>
+  <!-- design system: tokens then base -->
+  <link rel="stylesheet" href="/styles/variables.css">
+  <link rel="stylesheet" href="/styles/global.css">
+  <!-- co-located component styles, bundled by the framework -->
+  <link rel="stylesheet" href="/components.css">
+  <script src="/vendor/htmx.min.js" defer></script>
+</head>
+<body>
+  <main class="container">
+    <app-header active="items" />
+
+    <h1>Items</h1>
+
+    <!-- native <form> (semantic structure); fields + button are atomic components -->
+    <form class="add-form" hx-post="/ui/items" hx-swap="none">
+      <b-input name="name" label="Name" required />
+      <b-input name="description" label="Description" required />
+      <b-button label="Add" type="submit" />
+    </form>
+
+    <!-- list is fetched as an HTML fragment on load, then re-fetched after adds -->
+    <div id="list" hx-get="/ui/items" hx-trigger="load, refresh">
+      Loading…
+    </div>
+  </main>
+
+  <!-- minimal JS, placed after the UI: clear form + refresh list on a successful add -->
+  <script>
+    document.addEventListener("htmx:afterRequest", (e) => {
+      const form = e.target;
+      if (!form.matches?.(".add-form") || !e.detail.successful) return;
+      form.reset();
+      htmx.trigger("#list", "refresh");
+    });
+  </script>
+</body>
+</html>
