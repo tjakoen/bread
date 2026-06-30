@@ -79,10 +79,11 @@ This is the contract for not drifting. After any change, sync everything in its 
 
 ## Memory
 
-Notable decisions, user preferences, and project context are recorded as memories under
-`memory/` (indexed in `memory/MEMORY.md`) and surface automatically in future sessions. When
-you make a real decision or learn something non-obvious, write it down; when something you read
-there contradicts the code, trust the code and fix the memory.
+Claude Code keeps **per-project memories** (decisions, preferences, context) outside the repo;
+they surface automatically at the start of each session. When you make a real decision or learn
+something non-obvious, write one so the next session inherits it. If a recalled memory
+contradicts the code, trust the code and fix the memory. (These are agent memory, not committed
+files — durable, repo-worthy rules belong in `CONVENTIONS.md` or this file.)
 
 ## Working notes
 
