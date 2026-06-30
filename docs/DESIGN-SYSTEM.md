@@ -8,16 +8,17 @@ color, no shadows, no gradients. Restraint is the brand.
 > in the monorepo vs. what's still on the page:
 > - ✅ **Tokens** — the monochrome palette is the Layer-1 primitives; the existing
 >   semantic aliases were re-pointed at them, so every component re-themed with no
->   per-component edits (`project/styles/variables.css` — values live in the project).
+>   per-component edits (`grain/styles/variables.css` — GRAIN's default theme; a product
+>   overrides these slots to re-skin).
 > - ✅ **Redaction self-hosted** — grades clean / 35 / 50 / 70 as `@font-face`
->   families in `project/fonts/`. The working **grain grade is 50** (bumped from 35
->   for visibility; see §3).
+>   families in `grain/fonts/` (the grain grade is GRAIN's signature). The working
+>   **grain grade is 50** (bumped from 35 for visibility; see §3).
 > - ✅ **Grade as signal** — the inherited `--type-font` atom; grain = AI / in-transit,
 >   clean = human / committed. AI speech *stays* grain (provenance persists). The
 >   MECHANISM lives in GRAIN (`grain/styles/grain.css`); drives text, fields, pending
 >   cards, and the catalog Human/AI toggle.
 > - ✅ **Paper grain layer, masthead, hairlines, crisp radius, underlined links,
->   reduced-motion** — the skin in `project/styles/global.css`; buttons ink-bordered, no fill.
+>   reduced-motion** — the skin in `grain/styles/global.css`; buttons ink-bordered, no fill.
 > - ✅ **Non-text grain** — an AI/in-transit **button** wears a dashed "terminal"
 >   edge + block caret (the grain equivalent for a non-text atom; §3 extension).
 > - ⏳ **Not built yet** — the **dot matrix** (life grid) signature element; a

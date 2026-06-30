@@ -54,10 +54,17 @@ Everything else GRAIN needs (the write capability, the render-a-surface function
 ## How it stacks
 
 ```
-Product (the assistant) + Department of Time identity
-   └─ GRAIN   — the AI-operable interface (this doc)
+Product (the assistant) — domain components + pages + wiring (+ optional theme override)
+   └─ GRAIN   — the AI-operable design system + its DEFAULT theme, "Department of Time"
+        │        (tokens, Redaction fonts, base/skin, grade mechanism, the AI layer)
         └─ BATCH — no-build hypermedia substrate (../ARCHITECTURE.md)
 ```
+
+*Design system vs. theme:* GRAIN ships the **Department of Time** look as its **default
+theme** — it's GRAIN's identity (the warm-paper, Redaction-grain, bread vibe). A product
+on GRAIN uses it directly and only **overrides token slots** (in its own sheet, linked
+after GRAIN's) if it wants a different vibe. New design work generally lands **in GRAIN**
+(it's reusable); only the obviously app-specific bits (a one-off page layout) stay in the project.
 
 The detailed contract is **[AI-INTERFACE.md](./AI-INTERFACE.md)** (envelopes, manifest,
 the two write paths, the AI-acts protocol); the visual identity and grade mechanics are
@@ -73,12 +80,14 @@ product proves them; the boundary is kept clean so that split is a copy, not a r
 ```
 batch/     substrate — render, http (incl. stream.ts SSE), assets, catalog, platform.
            Imports nothing from grain/project. Ships its own render-test fixtures.
-grain/     this layer — ai/ (contract, interaction-layer, reasoner boundary, manifest,
-           accepts), components/atoms/b-*, scripts/ (ai-dispatch, cmdk), styles/grain.css
-           (the grade + spotlight MECHANISM). Ships no values, fonts, skin, or app.
-project/   the app + skin — domain/data/services/routes/view, components (item/loop/…),
-           pages, styles/ (Dept of Time values + @font-face), fonts, vendor, server.ts
-           (the composition root — the one place batch + grain + project meet).
+grain/     the design system — ai/ (contract, interaction-layer, reasoner boundary,
+           manifest, accepts), components/atoms/b-*, scripts/ (ai-dispatch, cmdk),
+           styles/ (variables = tokens, global = base/skin, grain = grade mechanism),
+           fonts/ (the Redaction grades). Ships its DEFAULT THEME — GRAIN looks like
+           GRAIN on its own. A consumer overrides token slots to re-skin.
+project/   the app — domain/data/services/routes/view, DOMAIN components (item/loop/…),
+           pages, vendor, server.ts (the composition root — the one place batch + grain
+           + project meet). Uses GRAIN's look; would add an override sheet only to diverge.
 ```
 
 A key consequence the split forced (and a real reusability test): BATCH's

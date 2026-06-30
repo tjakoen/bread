@@ -485,10 +485,11 @@ imports from the app.
 The framework also has `/framework/assets/style-bundle.ts` —
 `createStyleBundle(componentsDir)` walks the component folders, concatenates every
 co-located `.css` into one cached bundle, and exposes `refresh()` for hot reload.
-The composition root serves it at `/components.css`. So a page links three sheets:
-`styles/variables.css` (tokens) → `styles/global.css` (base) → `/components.css`
-(all component styles). No build step — the bundle is read once and cached, dropped
-on any `.css`/`.html` change (§12a).
+The composition root serves it at `/components.css`. So a page links GRAIN's three
+page-level sheets then the component bundle: `styles/variables.css` (tokens) →
+`styles/global.css` (base/skin) → `styles/grain.css` (grade mechanism) → `/components.css`
+(per-component styles + the AI module). No build step — the bundle is read once and
+cached, dropped on any `.css`/`.html` change (§12a).
 
 Dependency direction: `app/routes → app/services → app/domain`, with `app/data`
 and `framework/platform` implementing ports at the edges, and `app/view` calling
@@ -1253,8 +1254,9 @@ export function createStyleBundle(componentsDir: string) {
 }
 ```
 
-The design-system sheets (`styles/variables.css`, `styles/global.css`) are plain
-static files served by `makeStatic`; only the per-component CSS is bundled.
+GRAIN's three page-level sheets (`styles/variables.css`, `styles/global.css`,
+`styles/grain.css`) are plain static files served by `makeStatic` from `grain/styles`;
+only the per-component CSS (+ the AI module) is bundled.
 
 ### 11.2 Pages — flat files, folders only to group subpages
 
