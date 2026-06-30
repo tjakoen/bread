@@ -13,6 +13,9 @@ test-results/
 playwright-report/
 .playwright/
 
+# generated UI snapshots (bun run shots)
+screenshots/
+
 # local tooling / editor / OS
 .claude/
 .DS_Store

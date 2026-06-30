@@ -42,7 +42,18 @@ bun run check      # tsc --noEmit (must stay green)
 bun run test       # unit + integration (bun test)
 bun run test:e2e   # Playwright e2e (first run: bunx playwright install chromium)
 bun run test:all   # everything
+bun run shots      # capture UI screenshots (+ a gallery) — see "Seeing the UI" below
 ```
+
+## Seeing the UI (headless / remote)
+
+There's no display in a remote/headless session, so to *show the user* what the UI looks
+like: run `bun run shots` (Playwright drives chromium against a freshly-booted app and
+captures the key screens **and states** — the desk mid-act with the spotlight, the ⌘K
+palette — to `screenshots/`, plus a self-contained `screenshots/gallery.html`). Then
+**publish `screenshots/gallery.html` as an Artifact** and give the user the link — that's
+the channel they can view remotely. Add/adjust shots in `project/tools/screenshots.ts`.
+Use this whenever the user asks to "see" something or you've changed anything visual.
 
 ## Non-negotiables (see CONVENTIONS for the full rules)
 
