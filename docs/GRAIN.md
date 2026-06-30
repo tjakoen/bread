@@ -78,5 +78,7 @@ A key consequence the split forced (and a real reusability test): BATCH's
 roots**, so components compose across `grain/components` + `project/components`.
 
 The detailed contract is **[AI-INTERFACE.md](./AI-INTERFACE.md)**; the visual identity
-and grade mechanics are **[DESIGN-SYSTEM.md](./DESIGN-SYSTEM.md)**. When extracting:
-BATCH → its own repo; GRAIN → a repo depending on BATCH; the product → on GRAIN.
+and grade mechanics are **[DESIGN-SYSTEM.md](./DESIGN-SYSTEM.md)**; the hands-on usage
+reference (substrate contract, binding vocabulary, token slots, wiring) lives in the
+package itself, **[`../grain/README.md`](../grain/README.md)**. When extracting:
+BATCH → its own repo; GRAIN → a repo on a substrate (BATCH the reference); product → on GRAIN.
