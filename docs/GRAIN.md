@@ -6,10 +6,30 @@ vocabulary**, and where the AI's presence — its authorship and its actions —
 **visible signal**. It is named for that signal: *grain = AI* (the Redaction grain
 grade), clean = human.
 
-It is built **on [BATCH](../ARCHITECTURE.md)** (the no-build, server-rendered hypermedia
-substrate) but is a distinct concern: BATCH answers "how do I render and serve
+It runs **on a substrate** — [BATCH](../ARCHITECTURE.md) (no-build, server-rendered
+hypermedia) is the reference one — but it is **substrate-agnostic**: `grain/` imports
+nothing from `batch/`. It depends only on a small **port** (`OpChannel`, below), which
+BATCH's SSE hub satisfies structurally. BATCH answers "how do I render and serve
 components with no build step"; GRAIN answers "how does an AI drive that UI, visibly,
-through the same door a human uses."
+through one door" — and would answer it the same on a different substrate.
+
+## Substrate contract — what GRAIN needs to run
+
+GRAIN is portable if its host provides three things (BATCH provides all three; another
+substrate could):
+
+1. **A push channel** — the `OpChannel` port (`push(session, event, data)`): how render
+   ops reach a client. BATCH = SSE; could be a WebSocket hub, etc. *(GRAIN imports the
+   interface from its own `contract.ts`, never from the substrate.)*
+2. **A renderer that understands GRAIN's binding vocabulary** — components use
+   `data-field` / `data-bind-*` / `slot-tag` / `each` / `data`. BATCH's composition
+   engine implements this; a different substrate must too. *(This is the one real
+   remaining coupling — it lives in the markup conventions, not in code imports.)*
+3. **A filesystem** to harvest `data-kind` / `data-accepts` for the manifest (any JS
+   runtime; not BATCH-specific).
+
+Everything else GRAIN needs (the write capability, the render-a-surface function) is
+**injected** by the composition root, so GRAIN names no concrete dependency.
 
 ## The pieces
 
