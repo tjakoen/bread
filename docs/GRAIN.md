@@ -15,11 +15,11 @@ through the same door a human uses."
 
 | Piece | What it is | Where |
 |---|---|---|
-| **Surfaces** | every mutable region has a stable semantic address (`data-surface`) | markup + `contract.ts` |
-| **Action vocabulary** | one closed set of verbs (the SSOT: `ActionName`/`SurfaceKind` + `ACTIONS`) | `app/ai/contract.ts` |
-| **The one door** | human click *and* AI decision become the same `Intent` → `POST /intent` → single writer | `app/ai/interaction-layer.ts` |
-| **Render ops** | the writer's only output: `replace/append/remove/flash/type/spotlight`, addressed to surfaces, pushed over SSE | `contract.ts`, `framework/http/stream.ts` |
-| **Manifest** | the AI's instruction manual per screen — harvested from components, can't drift | `app/ai/manifest.ts`, `framework/render/accepts.ts` |
+| **Surfaces** | every mutable region has a stable semantic address (`data-surface`) | markup + `grain/ai/contract.ts` |
+| **Action vocabulary** | one closed set of verbs (the SSOT: `ActionName`/`SurfaceKind` + `ACTIONS`) | `grain/ai/contract.ts` |
+| **The one door** | human click *and* AI decision become the same `Intent` → `POST /intent` → single writer | `grain/ai/interaction-layer.ts` |
+| **Render ops** | the writer's only output: `replace/append/remove/flash/type/spotlight`, addressed to surfaces, pushed over SSE | `grain/ai/contract.ts`, `batch/http/stream.ts` |
+| **Manifest** | the AI's instruction manual per screen — harvested from components, can't drift | `grain/ai/manifest.ts`, `grain/ai/accepts.ts` |
 | **Grade-as-signal** | grain = AI / in-transit, clean = human / committed — one inherited switch | `DESIGN-SYSTEM.md` §3, `AI-INTERFACE.md` §5 |
 | **The "AI acts" protocol** | spotlight the surface, it enters AI-mode by kind (button → working, input → composed clean, text → grain), act, hand back — mediated, never force-killed | `AI-INTERFACE.md` §5c |
 
@@ -35,21 +35,28 @@ The detailed contract is **[AI-INTERFACE.md](./AI-INTERFACE.md)** (envelopes, ma
 the two write paths, the AI-acts protocol); the visual identity and grade mechanics are
 **[DESIGN-SYSTEM.md](./DESIGN-SYSTEM.md)**.
 
-## Roadmap
+## Repo layout (monorepo, separated now)
 
-GRAIN and BATCH will each become **their own repo** — GRAIN as a package built on BATCH —
-once the first product (the assistant) ships and proves them. Until then they live
-together here and are polished in place. The boundary is already kept clean so the split
-is a copy, not a rewrite:
+The three concerns are already separate top-level directories — no Bun workspaces,
+plain relative imports, one `package.json` + `tsconfig` at the root. They're polished
+in place and will each become **their own repo** (GRAIN a package on BATCH) once the
+product proves them; the boundary is kept clean so that split is a copy, not a rewrite.
 
-- **BATCH (substrate)** — `poc/framework/*` plus the generic additions GRAIN relies on
-  (`http/stream.ts` SSE hub, `render/accepts.ts` harvester, `pages.ts` asset-injection,
-  binary static types). These import nothing from the app.
-- **GRAIN (this layer)** — `poc/app/ai/*` (the door, contract, reasoner boundary,
-  manifest), the dispatcher island `poc/frontend/scripts/ai-dispatch.js`, the grade
-  tokens/atom in `poc/frontend/styles/*`, and the `data-surface`/`data-action`/
-  `data-accepts` conventions on components.
-- **Product** — the domain, the pages, the *Department of Time* skin.
+```
+batch/     substrate — render, http (incl. stream.ts SSE), assets, catalog, platform.
+           Imports nothing from grain/project. Ships its own render-test fixtures.
+grain/     this layer — ai/ (contract, interaction-layer, reasoner boundary, manifest,
+           accepts), components/atoms/b-*, scripts/ (ai-dispatch, cmdk), styles/grain.css
+           (the grade + spotlight MECHANISM). Ships no values, fonts, skin, or app.
+project/   the app + skin — domain/data/services/routes/view, components (item/loop/…),
+           pages, styles/ (Dept of Time values + @font-face), fonts, vendor, server.ts
+           (the composition root — the one place batch + grain + project meet).
+```
 
-When extracting: BATCH → its own repo; GRAIN → a repo depending on BATCH; the product →
-a repo depending on GRAIN.
+A key consequence the split forced (and a real reusability test): BATCH's
+`render`/`catalog`/`style-bundle` and GRAIN's `accepts` accept **multiple component
+roots**, so components compose across `grain/components` + `project/components`.
+
+The detailed contract is **[AI-INTERFACE.md](./AI-INTERFACE.md)**; the visual identity
+and grade mechanics are **[DESIGN-SYSTEM.md](./DESIGN-SYSTEM.md)**. When extracting:
+BATCH → its own repo; GRAIN → a repo depending on BATCH; the product → on GRAIN.

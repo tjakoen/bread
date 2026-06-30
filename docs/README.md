@@ -5,10 +5,11 @@ brain, with an AI task manager as its first slice. They are separate from **the
 stack** it's built on (BATCH — see [`../ARCHITECTURE.md`](../ARCHITECTURE.md) and
 [`../README.md`](../README.md)).
 
-> **The plan:** build this product on BATCH first, dogfood it, then extract the
-> generic stack into its own repo once it's proven. Dogfooding is the moat.
-> While building, the `poc/framework/` ↔ `poc/app/` boundary is kept clean so that
-> extraction is a copy, not a rewrite.
+> **The plan:** build this product on BATCH + GRAIN first, dogfood it, then extract
+> each into its own repo once proven. Dogfooding is the moat. The repo is already a
+> **monorepo** — `batch/` (substrate), `grain/` (the AI design system, see
+> [GRAIN.md](./GRAIN.md)), `project/` (this product) — with clean boundaries, so the
+> split is a copy, not a rewrite.
 
 > **Built so far (2026-06-30):** MVP build-order steps 1–2 — the one `/intent` door,
 > server-push over SSE, the dispatcher island, optimistic→confirm→rollback, the
@@ -40,5 +41,5 @@ Substrate: BATCH (../ARCHITECTURE.md) ─ no-build server-rendered hypermedia
    Product → built on → GRAIN → built on → BATCH
 ```
 
-The running proof of the contract lives in [`../poc/`](../poc/) — see
-[AI-INTERFACE.md §"Reference scaffold"](./AI-INTERFACE.md#reference-scaffold).
+The running proof lives in [`../grain/`](../grain/) + [`../project/`](../project/) —
+see [AI-INTERFACE.md §"Reference scaffold"](./AI-INTERFACE.md#reference-scaffold).

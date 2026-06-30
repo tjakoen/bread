@@ -41,7 +41,7 @@ This action vocabulary is a contract: it's what the frontend exposes and what th
 > two registries (addressable *surfaces*, the closed *action* vocabulary), the *intent*
 > envelope both human and AI produce, the *render ops* the single writer emits, the SSE
 > push channel that lands AI-initiated change without a refresh, and the self-generating
-> *manifest* the AI reads. A working reference loop runs in `poc/` (see that doc §7).
+> *manifest* the AI reads. A working reference loop runs in the monorepo (see that doc §7).
 
 ---
 
@@ -193,7 +193,7 @@ The master plan says engine-first, nothing faked. You want to play with the fron
 **Stub only the action-vocabulary plumbing to prove the feel — never a judgment-bearing panel before its real engine capability exists.**
 
 1. **Shell** — split layout (dashboard + collapsible chat-as-one-conversation).
-2. **Action-vocabulary plumbing, stubbed** — prove the optimistic → confirm → feedback → rollback flow with canned responses. This is the "play with the frontend" step; no real judgment yet. *(Specified in [AI-INTERFACE.md](./AI-INTERFACE.md); a running reference loop is in `poc/` — see that doc §7.)*
+2. **Action-vocabulary plumbing, stubbed** — prove the optimistic → confirm → feedback → rollback flow with canned responses. This is the "play with the frontend" step; no real judgment yet. *(Specified in [AI-INTERFACE.md](./AI-INTERFACE.md); a running reference loop is in the monorepo — see that doc §7.)*
 3. **Wire the single AI interaction layer** — gate triage → reasoner (light/heavy), against the real cloud model behind the `Model` boundary.
 4. **Task loop, real** — capture → placement → complete → learn, running the real loop, writing real rules to SQLite, showing a real (ugly is fine) ledger.
 5. **Knowledge base** — category-1 direct-write surface.
@@ -202,7 +202,7 @@ The master plan says engine-first, nothing faked. You want to play with the fron
 
 **Sequencing rule:** never build a dashboard panel before the engine capability it surfaces exists. The stub in step 2 is plumbing, not faked judgment — the distinction that keeps this honest to the plan.
 
-**Progress (2026-06-30).** **Step 1 (shell)** and **step 2 (stubbed action-vocabulary plumbing)** are built and verified in `poc/`: the one `/intent` door, server-push over SSE, the dispatcher island, optimistic → confirm → rollback, grade-as-signal, and a self-harvested manifest — running end-to-end on a stand-in domain (`item.archive` ≈ `task.complete`, plus `say.*` text demos). The design-system identity is applied app-wide. **Next is step 3:** swap the stub reasoner for the real model behind the `Model` boundary and add the gate (triage → light/heavy). Still stubbed/unbuilt: real judgment, the gate, heavy-path "thinking" UI, the `/kb/*` direct-write surface (step 5), and the chat client.
+**Progress (2026-06-30).** **Step 1 (shell)** and **step 2 (stubbed action-vocabulary plumbing)** are built and verified in the monorepo: the one `/intent` door, server-push over SSE, the dispatcher island, optimistic → confirm → rollback, grade-as-signal, and a self-harvested manifest — running end-to-end on a stand-in domain (`item.archive` ≈ `task.complete`, plus `say.*` text demos). The design-system identity is applied app-wide. **Next is step 3:** swap the stub reasoner for the real model behind the `Model` boundary and add the gate (triage → light/heavy). Still stubbed/unbuilt: real judgment, the gate, heavy-path "thinking" UI, the `/kb/*` direct-write surface (step 5), and the chat client.
 
 ---
 

@@ -3,7 +3,7 @@
 > This is the detailed contract for **GRAIN**, the AI-interaction layer (overview:
 > [GRAIN.md](./GRAIN.md)). GRAIN is built on BATCH and headed for its own repo.
 
-**Status:** Design + reference scaffold (running in `poc/`).
+**Status:** Design + reference scaffold (running in the monorepo).
 **Depends on:** [MVP.md](./MVP.md) §"One interface, one path" and §"The Interaction Flow";
 [PROJECT-PLAN.md](./PROJECT-PLAN.md) §9 (control plane / single-writer);
 [DESIGN-SYSTEM.md](./DESIGN-SYSTEM.md) §3 (grade as signal).
@@ -74,7 +74,7 @@ declares the surface **kinds** it applies to, a typed **payload**, and a routing
 This table **is** the contract. It is defined once in TypeScript and everything else
 — validation, the manifest, the UI affordances — derives from it.
 
-> **Single source of truth: [`poc/app/ai/contract.ts`](../poc/app/ai/contract.ts).**
+> **Single source of truth: [`grain/ai/contract.ts`](../grain/ai/contract.ts).**
 > The closed sets are **union types + a `const` registry**, not a TS `enum` (`enum`
 > is banned by `erasableSyntaxOnly`) — that union *is* the erasable enum:
 > - `ActionName` — the verbs · `ACTIONS` — the registry (depth + accepted kinds).
@@ -343,20 +343,20 @@ engine capability it surfaces exists; the stub is the door's plumbing, not a pan
 
 ## 7. Reference scaffold
 
-`poc/` runs the whole loop end-to-end on the existing item domain — `item.archive`
+The monorepo runs the whole loop end-to-end on the existing item domain — `item.archive`
 stands in for `task.complete` (optimistic light path) so the *mechanism* is proven
 without dragging in the full task domain yet.
 
-| Piece | Where | Layer |
-|-------|-------|-------|
-| Generic SSE hub | `poc/framework/http/stream.ts` | framework (reusable) |
-| Action vocabulary + envelopes | `poc/app/ai/contract.ts` | app |
-| Reasoner boundary + stub | `poc/app/ai/reasoner.ts` | app |
-| The one door (single writer) | `poc/app/ai/interaction-layer.ts` | app |
-| Manifest (harvested, can't drift) | `poc/app/ai/manifest.ts` + `poc/framework/render/accepts.ts` | app + framework |
-| Routes (`/intent`, `/stream`, `/ai/manifest`, `/ui/loop`) | `poc/app/routes/ai-routes.ts` | app |
-| Dispatcher island | `poc/frontend/scripts/ai-dispatch.js` | app frontend |
-| Demo page + card | `poc/frontend/pages/loop.html`, `…/components/molecules/loop-card/` | app frontend |
+| Piece | Where | Concern |
+|-------|-------|---------|
+| Generic SSE hub | `batch/http/stream.ts` | batch (substrate) |
+| Action vocabulary + envelopes | `grain/ai/contract.ts` | grain |
+| Reasoner boundary + stub | `grain/ai/reasoner.ts` | grain |
+| The one door (single writer) | `grain/ai/interaction-layer.ts` | grain |
+| Manifest (harvested, can't drift) | `grain/ai/manifest.ts` + `grain/ai/accepts.ts` | grain |
+| Routes (`/intent`, `/stream`, `/ai/manifest`, `/ui/loop`) | `project/routes/ai-routes.ts` | project (wiring) |
+| Dispatcher island | `grain/scripts/ai-dispatch.js` | grain |
+| Demo page + card | `project/pages/loop.html`, `project/components/molecules/loop-card/` | project |
 
 The manifest is now **harvested** (§4 realised): item targets read `data-accepts` /
 `data-kind` straight off `loop-card`; region targets are inverted from the action

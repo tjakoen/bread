@@ -10,16 +10,17 @@ server-rendered hypermedia stack. Reusable design-system component tags use the
 set, self-closing/prop-text — added and audited 2026-06-27 (§14.4). The **AI
 interaction layer** (server-push over SSE, the one `/intent` door, render ops,
 grade-as-signal) and the **Department of Time** design-system retheme were added and
-audited 2026-06-30 (§17, §14.5). The POC in `poc/` is the source of truth for what
-actually runs.
+audited 2026-06-30 (§17, §14.5), then the repo was **reorganized into a monorepo** the
+same day (§3). The code in `batch/ grain/ project/` is the source of truth.
 
-> **Two layers in this repo.** This document is the **stack** (BATCH — reusable,
-> extractable). The **product** built on it first (a personal AI assistant) is
-> documented under `docs/` — start at `docs/README.md`. Stack additions made while
-> building the product are recorded here (§17); the product's own contracts live in
-> `docs/AI-INTERFACE.md` (how the AI drives the UI) and `docs/DESIGN-SYSTEM.md` (the
-> visual identity). The `framework/` ↔ `app/` boundary stays clean so the stack can
-> be extracted by deleting `app/` + `frontend/`.
+> **Three concerns in this repo (monorepo).** `batch/` is the **stack** this document
+> describes (the reusable no-build hypermedia substrate). `grain/` is **GRAIN**, the
+> AI-interaction design system built on BATCH (`docs/GRAIN.md`). `project/` is the
+> product (a personal AI assistant) + its skin; `project/server.ts` is the one place
+> the three meet. No Bun workspaces — plain relative imports, one `package.json` +
+> `tsconfig`. Each is headed for its own repo once proven; the boundary is kept clean
+> (`batch/` imports nothing from `grain/`/`project/`, verified). Product docs are under
+> `docs/` — start at `docs/README.md`.
 
 Every code block here has been run on Bun 1.3.14. For the final revision the
 entire backend was assembled exactly as specified and **certified**: `tsc`
@@ -391,6 +392,17 @@ coexisting, every component tag and config marker resolved away:
 ---
 
 ## 3. Directory structure — framework vs app
+
+> **On-disk layout (2026-06-30): a monorepo.** The single `poc/framework | app |
+> frontend` tree below was reorganized into three top-level concerns:
+> **`batch/`** (everything `/framework` describes — the substrate), **`grain/`** (the
+> AI design system — `ai/*`, the `b-*` atoms, `scripts/*`, `styles/grain.css`), and
+> **`project/`** (domain/data/services/routes/view, the product's components + pages +
+> skin, and `server.ts` the composition root). No workspaces — relative imports, one
+> root `package.json` + `tsconfig`. The framework's component scanners now take
+> **multiple component roots** (`grain/components` + `project/components`). The tree
+> below still describes BATCH's internals + the conceptual framework/app/frontend
+> split; see `docs/GRAIN.md` for the concern mapping.
 
 Split by **stability and ownership**, not by layer. `/framework` is the reusable
 engine ("BATCH") — you touch it rarely and it knows nothing about any

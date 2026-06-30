@@ -11,12 +11,14 @@ standards, a runtime, and ~600 lines of glue.
 > as-is. Read [`ARCHITECTURE.md`](./ARCHITECTURE.md) for the full reasoning — it's
 > the single source of truth.
 
-> **Two layers in this repo.** This README + [`ARCHITECTURE.md`](./ARCHITECTURE.md)
-> are **the stack** (BATCH — generic, the future standalone repo). [`docs/`](./docs/)
-> is **the product** being built on it first — a personal AI assistant / second brain.
-> The plan: build the product, dogfood it, then extract the stack. The
-> `poc/framework/` ↔ `poc/app/` boundary is kept clean so that extraction is a copy,
-> not a rewrite. Start at [`docs/README.md`](./docs/README.md).
+> **Three concerns in this repo (monorepo).** `batch/` is **the stack** (BATCH — the
+> generic no-build substrate this README + [`ARCHITECTURE.md`](./ARCHITECTURE.md)
+> describe). `grain/` is **GRAIN**, the AI-interaction design system built on BATCH
+> ([`docs/GRAIN.md`](./docs/GRAIN.md)). `project/` is **the product** — a personal AI
+> assistant — plus its skin; `project/server.ts` wires the three. No Bun workspaces:
+> relative imports, one root `package.json` + `tsconfig`. Each is headed for its own
+> repo once proven; the boundaries are kept clean. Start at
+> [`docs/README.md`](./docs/README.md).
 
 ---
 
@@ -107,7 +109,6 @@ serves `/api/items` as JSON for programmatic consumers.
 Needs [Bun](https://bun.sh) (pinned `1.3.x`).
 
 ```sh
-cd poc
 bun install
 bun run dev        # http://localhost:3000  — hot reload, no build
 bun test           # the test suite
@@ -120,31 +121,36 @@ Then visit:
 |---|---|
 | `/` | entrance |
 | `/home` | the Items app (htmx CRUD) |
-| `/about` | a second page (try the animated nav) |
-| `/catalog` | the live component catalog |
+| `/loop` | the AI interaction-loop demo (GRAIN) |
+| `/catalog` | the live component catalog (Human/AI toggle, search) |
 | `/api/items` | the same data as JSON |
 | `/sitemap.xml`, `/robots.txt` | derived from the pages tree |
 
 ---
 
-## Project layout
+## Project layout (monorepo)
 
 ```
-ARCHITECTURE.md          # the single source of truth — read this
-poc/
-├── framework/           # the reusable engine — zero app knowledge
-│   ├── render/          #   the ~120-line composition engine
-│   ├── http/            #   static, pages, sitemap, validation
-│   ├── assets/          #   component CSS bundler
-│   ├── catalog/         #   the /catalog generator
-│   └── platform/        #   runtime port + Bun adapter + hot reload
-├── app/                 # what you build — domain, data, services, routes, views
-├── frontend/            # standards-only, no build
-│   ├── components/       #   one folder per component: .html + .css (+ .md)
-│   ├── pages/            #   flat .html files; folders only group subpages
-│   ├── styles/           #   design tokens + global base
-│   └── vendor/htmx.min.js
-└── server.ts            # composition root — the only place framework + app meet
+ARCHITECTURE.md          # BATCH — the single source of truth for the stack
+docs/                    # product + GRAIN docs (start at docs/README.md)
+batch/                   # the reusable substrate — zero grain/project knowledge
+├── render/              #   the composition engine (multi-root) + test fixtures
+├── http/                #   static, pages, sitemap, stream (SSE), validate, errors
+├── assets/              #   component CSS bundler   ├── catalog/  the /catalog generator
+└── platform/            #   runtime port + Bun adapter + hot reload
+grain/                   # GRAIN — the AI design system (built on batch)
+├── ai/                  #   contract (SSOT), interaction-layer, reasoner, manifest, accepts
+├── components/atoms/    #   the b-* primitives
+├── scripts/             #   ai-dispatch.js (dispatcher) + cmdk.js (⌘K palette)
+└── styles/grain.css     #   the grade + spotlight mechanism
+project/                 # the app + skin (built on grain)
+├── domain|data|services|routes|view|config
+├── components/          #   item-card, loop-card, app-header, …
+├── pages/               #   flat .html; folders only group subpages
+├── styles/              #   Department of Time tokens + @font-face, base skin
+├── fonts/ vendor/       #   self-hosted Redaction · vendored htmx
+└── server.ts            #   composition root — the only place batch+grain+project meet
+package.json · tsconfig.json   # one each, at the root (no workspaces)
 ```
 
 ---
