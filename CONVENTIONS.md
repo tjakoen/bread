@@ -151,7 +151,13 @@ appropriate tier(s). Run: `bun run test` (unit + integration), `bun run test:e2e
 |---|---|---|---|
 | **Unit** | `bun test` | `*.test.ts` (colocated) | one module in isolation; deps faked. Pure logic, the reasoner, render engine, services, parsing. |
 | **Integration** | `bun test` | `*.integration.test.ts` (colocated) | several **real** modules together over HTTP/SSE, no browser. The door → reasoner → push path, routes, manifest. |
-| **E2E** | `playwright test` | `e2e/*.e2e.ts` | a real browser against the running app. The **client dispatcher** (click/Enter → `/intent` → SSE → DOM), the spotlight, the `<dialog>` palette, view transitions. |
+| **E2E** | `playwright test` | `project/e2e/*.e2e.ts` | a real browser against the running app. The **client dispatcher** (click/Enter → `/intent` → SSE → DOM), the spotlight, the `<dialog>` palette, interrupts, auto-scroll, view transitions. |
+
+**Tests travel with the code they test** (this is what makes the repo split clean, §10):
+unit tests are colocated in `batch`/`grain`/`project`; the door **integration** test lives in
+`project/routes/` (it exercises the app's composition); **e2e** lives in `project/e2e/` because
+it drives the *product*. `batch`/`grain` carry only their own unit tests; a grain demo harness
+would get its own e2e when grain is extracted.
 
 **Conventions**
 - Split by extension so the runners never collide: Bun owns `*.test.ts` (incl.
@@ -201,3 +207,32 @@ appropriate tier(s). Run: `bun run test` (unit + integration), `bun run test:e2e
   give acting regions a `data-surface`; e2e-test any new interaction.
 - **A theme tweak:** edit `grain/styles/variables.css` token values (or a project override
   sheet) — never per-component.
+
+---
+
+## 10. On extraction (the future repo split)
+
+The three dirs are headed for **three repos**: `batch` (a published substrate package),
+`grain` (a design-system package on a substrate), `project` (the product, on `grain`). The
+boundaries (§1) are kept clean so the split is a copy, not a rewrite. What goes where:
+
+| Repo | Takes | Tests it carries |
+|---|---|---|
+| **batch** | `batch/**` + its `__fixtures__/` | its colocated `*.test.ts` (no app, no e2e) |
+| **grain** | `grain/**` (AI layer, components, default theme, fonts, islands) | its colocated `*.test.ts`; **adds its own e2e** against a minimal demo harness |
+| **project** | `project/**` incl. `project/e2e/` + a copy of `playwright.config.ts` | its `*.test.ts`, the door `*.integration.test.ts`, and the e2e suite |
+
+**Monorepo-level tooling** (`package.json`, `tsconfig.json`, `playwright.config.ts`, `bun.lock`,
+`.gitignore`) is split/copied per repo. What changes on extraction (and **only** this — the
+code doesn't):
+- **`project/config.ts` paths** — `./grain/components`, `./grain/styles`, `./grain/fonts` become
+  resolved package paths (or stay relative if vendored). The static/serving wiring follows.
+- **Cross-layer imports** — `../batch/*` and `../grain/*` become package imports
+  (`@org/batch`, `@org/grain`). Nothing else: `batch` imports nothing inward, and `grain`
+  already depends only on the `OpChannel` port + the binding-vocabulary contract.
+- **`playwright.config.ts`** moves into the project repo; its `webServer.command` simplifies to
+  `bun server.ts` (cwd becomes the repo root, so `config.ts`'s relative roots still resolve).
+- **The drift guard + manifest harvest** keep working unchanged.
+
+Keep this true as you build: if a new cross-layer dependency can't be expressed as "project →
+grain → (port) ← batch", it's a smell — add a port, don't reach across.
