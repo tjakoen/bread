@@ -119,15 +119,23 @@ The interaction layer never returns "data for the client to render." It returns
 server-rendered hypermedia), so the client stays dumb and can't drift from the truth.
 
 ```ts
-type RenderOpKind = "replace" | "append" | "remove" | "flash";
+type RenderOpKind = "replace" | "append" | "remove" | "flash" | "type" | "spotlight";
 interface RenderOp {
   target: Surface;                // a semantic address from §1a
   op: RenderOpKind;
   html?: string;                  // server-rendered fragment (replace/append/flash)
+  text?: string;                  // a streamed token (type)
+  back?: number;                  // delete the last N chars (type) — the desk REVISING / overwriting
+  done?: boolean;                 // last token of a stream → settle (type)
+  active?: boolean; click?: boolean;   // spotlight on/off; click = pulse (the "AI acts" treatment, §5c)
   provenance: "user" | "ai" | "system";
   commit: "pending" | "committed";   // grade = commit state — see §5
 }
 ```
+
+> A surface is **overwritten** by streaming `back` ops (delete a char) then `text` ops
+> (type the new) — the desk visibly backspacing and retyping. The `/loop` demo uses this
+> to revise one bullet of a plan it just wrote.
 
 ### 2c. The manifest — the AI's instruction manual (generated, §4)
 
