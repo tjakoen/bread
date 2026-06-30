@@ -320,6 +320,50 @@ and traceable). The only client-side force-release is a 20s safety timeout.
 
 ---
 
+## 5d. Reconnect & durability (decided; built with the heavy path)
+
+**The UI is a window onto the process, not its controller.** Closing the tab must NOT
+stop the AI — that would make the browser a kill-switch (and a flaky network would
+destroy committed-to work). The desk keeps working; a reconnecting client just
+*reflects* whatever is true.
+
+Today (fire-and-forget `/intent`): the server finishes the turn regardless of the tab.
+**Committed data persists** and is re-fetched on reload (e.g. an archive shows
+Archived); **in-flight visuals are ephemeral** — the optimistic grain, the spotlight,
+the half-typed text are pushed and forgotten, so a reload doesn't restore them. That's
+the correct hypermedia model (the representation is *derived* from committed state,
+PROJECT-PLAN §9) — but it means a long turn that's still running when you refresh shows
+no sign of itself.
+
+**Decision — what a refresh during a running turn should do:** show the generic
+"✶ the desk is working…" state (with the **ask-it-to-stop** affordance), *without* the
+fine-grained in-flight visuals (the new page can't know the exact mid-state — and that's
+fine). When the turn finishes it resolves to the committed result; if it finished during
+the gap, the reload simply shows that result. The user can still mediate (stop) — never
+the browser-close.
+
+**What that requires (the seam — all additive, no redesign):**
+- **Track turns by ACTOR, not by the per-tab session.** Today `session` is a per-tab
+  UUID, so a reload is a new session the server can't correlate. Split identity: an
+  **actor** (stable across tabs/reloads — a cookie/`localStorage` id, later the account)
+  *owns* the turn; the SSE **session** is just the current, disposable pipe. (Matches the
+  MVP's "one continuous conversation, per user, not per tab.")
+- The interaction layer keeps a per-actor **turn-status** (it already owns the stop
+  flag — same place). On `/stream` connect, if a turn is running for that actor, push a
+  generic "turn active" op → the client shows the working overlay; on completion push
+  "turn done" → release. `desk.stop` re-keys to the actor.
+- The `OpChannel` gains a **durable sibling** (a turn-status/op store) — a clean addition
+  beside the push port; the door, the render-op vocabulary, and **GRAIN's component
+  conventions don't change**. So GRAIN-as-a-design-system already supports this; it's a
+  composition-root + layer concern, not a markup one.
+
+**Deferred to build-order step 3 (the real reasoner / heavy path):** on today's instant
+stub a turn finishes in milliseconds, so "still running on refresh" isn't testable, and
+the actor-id seam is the same one the real assistant needs. Recorded here so it isn't
+re-litigated.
+
+---
+
 ## 6. Simulating the AI (and the build order)
 
 Per MVP §"Build Order" step 2, the stub is **plumbing, never faked judgment.** It
