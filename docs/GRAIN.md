@@ -1,10 +1,13 @@
 # GRAIN — an interface an AI can operate
 
-**GRAIN** is the AI-interaction layer: a design system *and* framework where every UI
-surface is **addressable** and **operable by both a human and an AI through one shared
-vocabulary**, and where the AI's presence — its authorship and its actions — is a
-**visible signal**. It is named for that signal: *grain = AI* (the Redaction grain
-grade), clean = human.
+**GRAIN** is a **design system** with an **optional AI-interaction layer** on top. The
+design system — the `b-*` atoms + *grade-as-signal* (grain texture encodes state) — is
+usable on its own in any BATCH app, no AI required (grade also means draft/saved,
+focus/editing). The AI layer adds the part where every surface is **addressable** and
+**operable by both a human and an AI through one shared vocabulary**, with the AI's
+presence shown as a visible signal: *grain = AI* (the Redaction grain grade), clean =
+human. The dependency is one-directional — the AI layer uses the design system, never
+the reverse (see [`../grain/README.md`](../grain/README.md) §0).
 
 It runs **on a substrate** — [BATCH](../ARCHITECTURE.md) (no-build, server-rendered
 hypermedia) is the reference one — but it is **substrate-agnostic**: `grain/` imports
