@@ -1,31 +1,147 @@
-/* styles/global.css — reset + page-level layout (design-system base, not component-specific) */
+/* styles/global.css — reset + page base + the e-ink details (DESIGN-SYSTEM §6).
+   Component-specific styling stays in each component's co-located .css. */
 
-/* Cross-document (MPA) view transitions: animate full-page navigations between
-   same-origin pages. Native, no JS — Chromium today, progressive elsewhere. */
+/* Cross-document (MPA) view transitions: a slow fade fits e-ink; bouncy easing
+   would break the spell (DESIGN-SYSTEM §6). */
 @view-transition { navigation: auto; }
-
-/* Honour reduced-motion: opt the whole app out of nav animations. */
-@media (prefers-reduced-motion: reduce) {
-  @view-transition { navigation: none; }
-}
-
-/* Tune the default root cross-fade. */
-::view-transition-old(root),
-::view-transition-new(root) { animation-duration: 0.25s; }
+@media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.3s; }
 
 * { box-sizing: border-box; }
 
 body {
   font: var(--font-base);
   color: var(--color-fg);
-  background: var(--color-bg);
+  background: var(--paper);
   margin: 0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-.container { max-width: 640px; margin: 3rem auto; padding: 0 var(--space-4); }
-h1 { margin: 0 0 var(--space-6); }
+/* ---- Paper grain (DESIGN-SYSTEM §6) ----------------------------------------
+   One fixed, full-screen SVG turbulence layer. mix-blend-mode: multiply makes it
+   DARKEN the surface like fibre instead of sitting on top as a grey film. It covers
+   everything (content included) so the whole screen reads as one sheet. */
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.09;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---- The typography atom: one inherited switch (DESIGN-SYSTEM §3) -----------
+   Every type primitive reads --type-font and knows nothing about grades. State
+   lives on ancestors; CSS inheritance distributes it. */
+.t, h1, h2, h3, h4, h5, h6, p, li, label, button, input, textarea, a {
+  font-family: var(--type-font);
+}
+
+/* state lives on any ancestor — inheritance does the rest */
+.is-ai,    [data-grade="grain"]  { --type-font: var(--font-grain); }
+.is-human, [data-grade="smooth"] { --type-font: var(--font-smooth); }
+[data-grade="accent"]            { --type-font: var(--font-accent); }
+
+/* draft at rest, clean while editing (a field is "yours, right now") */
+.field              { --type-font: var(--font-grain); }
+.field:focus-within { --type-font: var(--font-smooth); }
+
+/* commit state == grade: anything the single writer hasn't committed reads as grain
+   (in-transit), settling to clean on commit (AI-INTERFACE §5). */
+[data-commit="pending"] { --type-font: var(--font-grain); }
+
+/* ---- Layout: one left-aligned column, generous air (DESIGN-SYSTEM §4/§7) ---- */
+.container {
+  max-width: var(--content-max);
+  margin: var(--space-8) auto;
+  padding: 0 var(--page-pad);
+}
+
+h1, h2, h3 { font-weight: var(--font-weight-regular); letter-spacing: -0.01em; }
+p { margin: 0 0 var(--space-4); }
+
+/* ---- Masthead (DESIGN-SYSTEM §5): eyebrow → display headline → hairline rule -- */
+.eyebrow { font-size: var(--text-sm); color: var(--color-fg); margin: 0 0 var(--space-2); }
+.eyebrow .name { text-decoration: underline; }
+.masthead {
+  font-size: var(--display); line-height: var(--leading-tight);
+  letter-spacing: -0.01em; margin: 0 0 var(--space-3);
+}
+.rule { border: 0; border-bottom: var(--rule); margin: 0 0 var(--space-6); }
+
+/* ---- Section header (DESIGN-SYSTEM §5): label left, underlined action right ---- */
+.section-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  font-size: var(--text-xl); margin: var(--space-8) 0 var(--space-3);
+}
+.section-head .action { font-size: var(--text-sm); }
+
+/* ---- Links: always underlined; the underline IS the affordance (no color change) */
+a { color: var(--color-fg); text-decoration: underline; text-underline-offset: 2px; }
+
+/* ---- AI text + streaming (DESIGN-SYSTEM §3 "Typing / streaming") -------------
+   AI output sits at grain with a blinking caret while it streams, then settles to
+   clean on completion. */
+.ai-text { color: var(--color-fg); }
+.caret {
+  display: inline-block; width: 0.5ch; margin-left: 1px;
+  border-right: 2px solid var(--color-fg);
+  animation: caret-blink 1s steps(1) infinite;
+}
+@keyframes caret-blink { 50% { opacity: 0; } }
+
+/* the "fax developing into a clean page": cross-fade as grain resolves to clean */
+.settled { animation: settle 0.5s ease both; }
+@keyframes settle { from { opacity: 0.55; } to { opacity: 1; } }
 
 /* form layout helper — a native <form> composed of atomic fields on a page */
 .add-form { display: flex; gap: var(--space-2); align-items: flex-end; margin-bottom: var(--space-6); }
 
-.error { color: var(--color-danger); }
+.muted { color: var(--color-muted); font-size: var(--text-sm); line-height: var(--leading-normal); }
+.error { color: var(--color-fg); text-decoration: underline; }   /* monochrome: no red */
+
+/* ---- "the desk is acting": AI-as-actor spotlight (AI-INTERFACE §5c) ----------
+   When the AI (not the user) drives a control, the page dims and the touched surface
+   is lifted into the light and pulsed like a click. Calm, monochrome, no shadows. */
+.ai-backdrop {
+  position: fixed; inset: 0; z-index: 9000;
+  background: rgba(28, 27, 23, 0.45);
+  opacity: 0; pointer-events: none; transition: opacity 0.35s ease;
+}
+.ai-backdrop.is-on { opacity: 1; pointer-events: auto; }
+.ai-spotlit {
+  position: relative; z-index: 9001;
+  background: var(--paper);                 /* lift it out of the dim */
+  outline: 1px solid var(--ink); outline-offset: 4px;
+}
+.ai-spotlit.is-click::after {
+  content: ""; position: absolute; inset: -4px;
+  border: 1px solid var(--ink); border-radius: inherit;
+  animation: ai-click 0.5s ease-out;
+}
+@keyframes ai-click { from { transform: scale(1); opacity: 0.7; } to { transform: scale(1.12); opacity: 0; } }
+.ai-acting-label {
+  position: fixed; top: var(--space-4); left: 50%; transform: translateX(-50%); z-index: 9002;
+  font-family: var(--font-grain); font-size: var(--text-sm); color: var(--ink);
+  background: var(--paper); border: var(--border); border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-3);
+}
+
+/* interrupt confirm — "ask the desk to stop?" (mediated, never a force-kill) */
+.ai-confirm { position: fixed; inset: 0; z-index: 9003; display: grid; place-items: center; }
+.ai-confirm[hidden] { display: none; }
+.ai-confirm__card {
+  background: var(--paper); border: 1px solid var(--ink); border-radius: var(--radius-md);
+  padding: var(--space-5); max-width: 24rem; text-align: center;
+}
+.ai-confirm__msg { margin: 0 0 var(--space-4); }
+.ai-confirm__actions { display: flex; gap: var(--space-3); justify-content: center; }
+
+/* ---- e-ink stillness: keep motion minimal, honour reduced-motion ------------- */
+@media (prefers-reduced-motion: reduce) {
+  .caret { animation: none; }
+  .settled { animation: none; }
+  .ai-backdrop { transition: none; }
+  .ai-spotlit.is-click::after { animation: none; display: none; }
+}

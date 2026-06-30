@@ -1,101 +1,123 @@
-/* styles/variables.css — design tokens, TWO layers.
-   Layer 1: raw palette/scale PRIMITIVES (never used directly by components).
+/* styles/variables.css — design tokens, TWO layers (see ARCHITECTURE).
+   Layer 1: raw PRIMITIVES (palette, grades, scale) — components never touch these.
    Layer 2: SEMANTIC aliases that point at primitives — components use ONLY these.
-   Change a primitive and everything downstream restyles. */
+
+   This is the "Department of Time" theme (docs/DESIGN-SYSTEM.md): monochrome
+   e-ink / Swiss-editorial. The whole re-skin is done HERE — every existing
+   component restyles because it only ever read the Layer-2 aliases. */
+
+/* ---- Redaction grades, self-hosted (docs/DESIGN-SYSTEM.md §3) ----------------
+   Each grade is its OWN family, so switching grade = swapping family (a class
+   change), which is how "grade as signal" works. */
+@font-face {
+  font-family: "Redaction"; font-style: normal; font-weight: 400; font-display: swap;
+  src: url("/fonts/redaction-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Redaction 35"; font-style: normal; font-weight: 400; font-display: swap;
+  src: url("/fonts/redaction-35-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Redaction 50"; font-style: normal; font-weight: 400; font-display: swap;
+  src: url("/fonts/redaction-50-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Redaction 70"; font-style: normal; font-weight: 400; font-display: swap;
+  src: url("/fonts/redaction-70-400.woff2") format("woff2");
+}
+
 :root {
   /* ---- Layer 1: primitives ------------------------------------------------ */
 
-  /* color palette */
-  --white: #ffffff;
-  --black: #0b0b14;
+  /* monochrome paper + ink — six values do everything (DESIGN-SYSTEM §2) */
+  --paper:     #E2E0D8;            /* page background — dimmed warm grey, NOT bright */
+  --paper-2:   #E8E6DF;            /* subtle hover surface */
+  --panel:     #E8E6DF;            /* grouped "sheet" — a hair brighter than the page */
+  --ink:       #1C1B17;            /* primary text, filled dots, rules */
+  --ink-muted: #6E6C64;            /* secondary text, section labels */
+  --ink-faint: #ABA89F;            /* fading insights, empty/future dots */
+  --hairline:  #1C1B17;            /* solid rules (under headlines) */
+  --line-soft: rgba(28, 27, 23, .14);  /* translucent border for quiet grouping */
 
-  --gray-50:  #f8fafc;
-  --gray-100: #f1f5f9;
-  --gray-200: #e5e7eb;
-  --gray-400: #9ca3af;
-  --gray-500: #6b7280;
-  --gray-700: #374151;
-  --gray-900: #1a1a2e;
+  /* grade font families (clean = human, grain = AI / in-transit). Grain is grade 50 —
+     one step up from the 35 working grade for more visible texture. */
+  --font-smooth: "Redaction",    "Times New Roman", Georgia, serif;
+  --font-grain:  "Redaction 50", "Redaction 35", "Times New Roman", Georgia, serif;
+  --font-accent: "Redaction 70", "Times New Roman", Georgia, serif;
 
-  --indigo-50:  #eef2ff;
-  --indigo-100: #e0e7ff;
-  --indigo-600: #4f46e5;
-  --indigo-700: #4338ca;
-
-  --green-50:  #dcfce7;
-  --green-600: #16a34a;
-  --green-700: #166534;
-
-  --red-50:  #fee2e2;
-  --red-600: #dc2626;
-  --red-700: #b91c1c;
-
-  /* typography primitives */
-  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-weight-regular: 400;
+  --font-weight-regular: 400;      /* house weight — even for headlines */
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
-  --font-weight-bold: 700;
+  --font-weight-bold: 700;         /* reserved for rare extra punch */
 
-  /* type scale */
-  --text-xs:  0.75rem;
-  --text-sm:  0.875rem;
-  --text-base: 1rem;
-  --text-lg:  1.125rem;
-  --text-xl:  1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
+  /* type scale (mobile-first, rem @ 16px) — fluid display via clamp */
+  --text-xs:  0.8125rem;  /* 13px caption */
+  --text-sm:  0.875rem;   /* 14px label / eyebrow */
+  --text-base: 0.9375rem; /* 15px body */
+  --text-lg:  1.05rem;
+  --text-xl:  1.3rem;     /* section heading */
+  --text-2xl: 1.6rem;
+  --text-3xl: 2.25rem;
+  --display:  clamp(2rem, 6vw, 2.75rem);   /* the masthead headline */
 
-  --leading-tight: 1.2;
+  --leading-tight: 1.02;   /* display */
   --leading-normal: 1.5;
-  --leading-relaxed: 1.7;
+  --leading-relaxed: 1.55; /* body */
 
   /* spacing — 4px base scale */
-  --space-1: 0.25rem;   /*  4px */
-  --space-2: 0.5rem;    /*  8px */
-  --space-3: 0.75rem;   /* 12px */
-  --space-4: 1rem;      /* 16px */
-  --space-5: 1.25rem;   /* 20px */
-  --space-6: 1.5rem;    /* 24px */
-  --space-8: 2rem;      /* 32px */
+  --space-1: 0.25rem;  --space-2: 0.5rem;  --space-3: 0.75rem;
+  --space-4: 1rem;     --space-5: 1.25rem; --space-6: 1.5rem;
+  --space-8: 2rem;
 
-  /* radius */
-  --radius-sm: 0.5rem;
-  --radius-md: 0.6rem;
-  --radius-pill: 1rem;
+  /* radius — crisp, almost square (DESIGN-SYSTEM §4) */
+  --radius-sm: 4px;
+  --radius-md: 4px;
+  --radius-pill: 2px;    /* badges are near-rectangular here, not pills */
 
-  /* ---- Layer 2: semantic aliases (the only tokens components touch) ------- */
+  /* rules */
+  --rule:   1.5px solid var(--hairline);   /* under-headline rule */
+  --border: 1px solid var(--hairline);     /* buttons, hard edges you tap */
+
+  --content-max: 768px;
+  --page-pad: clamp(1.25rem, 5vw, 2.5rem);
+
+  /* ---- Layer 2: semantic aliases (the only tokens components touch) -------
+     Re-pointed at the monochrome primitives. Because components read these and
+     never the primitives, the whole app re-themes from the lines below. */
 
   /* surfaces & text */
-  --color-bg: var(--gray-50);
-  --color-surface: var(--white);
-  --color-fg: var(--gray-900);
-  --color-muted: var(--gray-500);
-  --color-line: var(--gray-200);
+  --color-bg: var(--paper);
+  --color-surface: var(--panel);
+  --color-fg: var(--ink);
+  --color-muted: var(--ink-muted);
+  --color-line: var(--line-soft);
 
-  /* primary accent */
-  --color-primary: var(--indigo-600);
-  --color-primary-hover: var(--indigo-700);
-  --color-primary-contrast: var(--white);
-  --color-primary-soft: var(--indigo-50);
+  /* "primary" is just ink — bordered, no fill (no accent hue in a closed palette) */
+  --color-primary: var(--ink);
+  --color-primary-hover: var(--ink);
+  --color-primary-contrast: var(--paper);
+  --color-primary-soft: var(--paper-2);
 
-  /* success accent */
-  --color-success: var(--green-600);
-  --color-success-hover: var(--green-700);
-  --color-success-contrast: var(--white);
-  --color-success-soft: var(--green-50);
-
-  /* danger accent */
-  --color-danger: var(--red-600);
-  --color-danger-hover: var(--red-700);
-  --color-danger-contrast: var(--white);
-  --color-danger-soft: var(--red-50);
+  /* success / danger collapse to ink in monochrome — signalled by weight/treatment,
+     not hue (DESIGN-SYSTEM §2: states from opacity + size, palette stays closed) */
+  --color-success: var(--ink);
+  --color-success-hover: var(--ink);
+  --color-success-contrast: var(--paper);
+  --color-success-soft: var(--paper-2);
+  --color-danger: var(--ink);
+  --color-danger-hover: var(--ink);
+  --color-danger-contrast: var(--paper);
+  --color-danger-soft: var(--paper-2);
 
   /* status badge */
-  --color-ok-bg: var(--green-50);
-  --color-ok-fg: var(--green-700);
-  --color-archived-bg: var(--gray-100);
+  --color-ok-bg: transparent;
+  --color-ok-fg: var(--ink);
+  --color-archived-bg: transparent;
+
+  /* the inheritable grade switch — DESIGN-SYSTEM §3 "As an atom".
+     Default = human/clean; ancestors flip it; CSS inheritance distributes it. */
+  --type-font: var(--font-smooth);
 
   /* base font shorthand */
-  --font-base: var(--text-base)/var(--leading-normal) var(--font-sans);
+  --font-base: var(--text-base)/var(--leading-relaxed) var(--type-font);
 }

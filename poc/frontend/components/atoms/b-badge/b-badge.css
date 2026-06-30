@@ -1,4 +1,9 @@
-/* atoms/b-badge — one class; tone via attribute (no badge--active soup) */
-.badge { font-size: var(--text-xs); padding: var(--space-1) var(--space-2); border-radius: var(--radius-pill); }
-.badge[data-status="active"]   { background: var(--color-ok-bg); color: var(--color-ok-fg); }
-.badge[data-status="archived"] { background: var(--color-archived-bg); color: var(--color-muted); }
+/* atoms/b-badge — one class; tone via attribute. Monochrome: a hairline tag, no
+   fill, no pill. State is carried by ink vs muted, not by hue (DESIGN-SYSTEM §2). */
+.badge {
+  font-size: var(--text-xs); padding: 0 var(--space-2);
+  border: 1px solid var(--line-soft); border-radius: var(--radius-pill);
+  background: transparent;
+}
+.badge[data-status="active"]   { color: var(--ink); border-color: var(--ink); }
+.badge[data-status="archived"] { color: var(--ink-faint); }

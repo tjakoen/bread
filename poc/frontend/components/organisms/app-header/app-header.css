@@ -1,19 +1,20 @@
-/* organisms/app-header — shared across pages. The view-transition-name makes the
-   bar a continuous element, so it stays put (morphs) instead of cross-fading on nav. */
+/* organisms/app-header — shared masthead bar. The view-transition-name keeps the
+   bar continuous (morphs) instead of cross-fading on nav. */
 .app-header {
   view-transition-name: app-header;
   display: flex; gap: var(--space-4); align-items: baseline;
   margin-bottom: var(--space-6); padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--color-line);
+  border-bottom: var(--rule);             /* solid ink hairline rule */
 }
-.app-header .brand { font-weight: var(--font-weight-bold); }
-.app-header nav { display: flex; gap: var(--space-3); margin-left: auto; }
+.app-header .brand { font-family: var(--font-accent); letter-spacing: 0.02em; }
+.app-header nav { display: flex; gap: var(--space-4); margin-left: auto; }
 .app-header nav a { color: var(--color-muted); text-decoration: none; }
-.app-header nav a:hover { color: var(--color-primary); }
+.app-header nav a:hover { color: var(--ink); text-decoration: underline; }
 
-/* active page — driven by the data-active attribute (no per-link logic in markup) */
+/* active page — driven by data-active (no per-link logic in markup) */
 .app-header[data-active="items"]   a[href="/home"],
+.app-header[data-active="loop"]    a[href="/loop"],
 .app-header[data-active="about"]   a[href="/about"],
 .app-header[data-active="catalog"] a[href="/catalog"] {
-  color: var(--color-primary); font-weight: var(--font-weight-semibold);
+  color: var(--ink); text-decoration: underline;
 }

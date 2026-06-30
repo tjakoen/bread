@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The desk — Department of Time</title>
+  <link rel="stylesheet" href="/styles/variables.css">
+  <link rel="stylesheet" href="/styles/global.css">
+  <link rel="stylesheet" href="/components.css">
+  <!-- htmx loads the initial list; the dispatcher island runs the AI loop. -->
+  <script src="/vendor/htmx.min.js" defer></script>
+  <script src="/scripts/ai-dispatch.js" defer></script>
+</head>
+<body data-screen="loop">
+  <main class="container" data-surface="screen">
+    <app-header active="loop" />
+
+    <!-- masthead (DESIGN-SYSTEM §5) -->
+    <p class="eyebrow">The <span class="name">Department of Time</span></p>
+    <h1 class="masthead">A desk that writes back.</h1>
+    <hr class="rule">
+
+    <!-- DEMO 0 — watch the AI itself act: the screen dims, a spotlight follows what
+         the desk touches, it "clicks" + writes, then hands back (AI-INTERFACE §5c). -->
+    <div class="section-head"><span>See the desk act</span></div>
+    <button class="btn" data-action="demo.run" data-target="screen">Watch the desk work</button>
+    <p class="muted">The AI takes over: the screen dims, a spotlight follows what it touches, it writes for you, then hands back.</p>
+
+    <!-- DEMO 1 — input → AI rewrites a line (grain, then settles clean) -->
+    <div class="section-head">
+      <span>Tell the desk something</span>
+      <a class="action" href="/ai/manifest?screen=loop">manifest</a>
+    </div>
+    <label class="field" style="margin-bottom: var(--space-3)">
+      <span class="field__label">Type and press Enter — the AI sets the line below</span>
+      <input class="field__input" type="text" placeholder="e.g. move my deep-work block to Thursday"
+             data-action="say.set" data-target="say-line" aria-label="Tell the desk something">
+    </label>
+    <p class="say-line" data-surface="say-line"><span class="muted">The desk is listening.</span></p>
+
+    <!-- DEMO 2 — button → AI types a line out, token by token, over SSE.
+         While the AI works, the button itself shows the non-text grain: a dashed
+         "terminal" edge + a blinking block caret, settling back to clean on commit. -->
+    <div class="section-head"><span>Ask the desk</span></div>
+    <button class="btn" data-action="say.stream" data-target="say-stream" data-surface="say-button">Ask about my week</button>
+    <p class="muted">The button goes grain (dashed + caret) while the desk is working.</p>
+    <p class="say-stream" data-surface="say-stream" style="min-height: 1.6em"></p>
+
+    <!-- The task loop — Archive routes through the single AI interaction layer:
+         optimistic grain → committed clean, pushed over SSE. -->
+    <div class="section-head" style="margin-top: var(--space-8)"><span>Items</span></div>
+    <div id="loop-list" data-surface="item-list" hx-get="/ui/loop" hx-trigger="load">
+      <span class="muted">Loading…</span>
+    </div>
+  </main>
+</body>
+</html>

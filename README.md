@@ -11,6 +11,13 @@ standards, a runtime, and ~600 lines of glue.
 > as-is. Read [`ARCHITECTURE.md`](./ARCHITECTURE.md) for the full reasoning — it's
 > the single source of truth.
 
+> **Two layers in this repo.** This README + [`ARCHITECTURE.md`](./ARCHITECTURE.md)
+> are **the stack** (BATCH — generic, the future standalone repo). [`docs/`](./docs/)
+> is **the product** being built on it first — a personal AI assistant / second brain.
+> The plan: build the product, dogfood it, then extract the stack. The
+> `poc/framework/` ↔ `poc/app/` boundary is kept clean so that extraction is a copy,
+> not a rewrite. Start at [`docs/README.md`](./docs/README.md).
+
 ---
 
 ## The bet

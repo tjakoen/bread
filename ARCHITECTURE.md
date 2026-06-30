@@ -7,8 +7,19 @@ server-rendered hypermedia stack. Reusable design-system component tags use the
 
 **Status:** Living document · **Runtime:** Bun 1.3.14. Backend certified 2026-06-26
 (§14.1); the frontend layer — pages, component catalog, sitemap, the `b-` component
-set, self-closing/prop-text — added and audited 2026-06-27 (§14.4). The POC in
-`poc/` is the source of truth for what actually runs.
+set, self-closing/prop-text — added and audited 2026-06-27 (§14.4). The **AI
+interaction layer** (server-push over SSE, the one `/intent` door, render ops,
+grade-as-signal) and the **Department of Time** design-system retheme were added and
+audited 2026-06-30 (§17, §14.5). The POC in `poc/` is the source of truth for what
+actually runs.
+
+> **Two layers in this repo.** This document is the **stack** (BATCH — reusable,
+> extractable). The **product** built on it first (a personal AI assistant) is
+> documented under `docs/` — start at `docs/README.md`. Stack additions made while
+> building the product are recorded here (§17); the product's own contracts live in
+> `docs/AI-INTERFACE.md` (how the AI drives the UI) and `docs/DESIGN-SYSTEM.md` (the
+> visual identity). The `framework/` ↔ `app/` boundary stays clean so the stack can
+> be extracted by deleting `app/` + `frontend/`.
 
 Every code block here has been run on Bun 1.3.14. For the final revision the
 entire backend was assembled exactly as specified and **certified**: `tsc`
@@ -400,11 +411,15 @@ imports from the app.
 │   ├── /http                     #   generic transport helpers
 │   │   ├── validate.ts           #     requireString / HttpError
 │   │   ├── errors.ts             #     jsonError
-│   │   ├── static.ts             #     makeStatic(rt, root) — root injected, not hardcoded
-│   │   ├── pages.ts              #     makePageServer — flat-file pages, rendered via engine
+│   │   ├── static.ts             #     makeStatic(rt, root) — root injected; binary types (woff2…)
+│   │   ├── pages.ts              #     makePageServer — flat-file pages; injectBeforeBodyEnd seam (§17)
+│   │   ├── stream.ts             #     createStream() — generic per-session SSE push hub (§17)
 │   │   └── sitemap.ts            #     createSitemap — pages/ tree → routes / xml
+│   ├── /render
+│   │   ├── render.ts             #   (above) the composition engine
+│   │   └── accepts.ts            #   harvest data-kind/data-accepts → AI manifest source (§17)
 │   ├── /assets    style-bundle.ts          #   co-located component .css → /components.css
-│   └── /catalog   catalog.ts               #   co-located .md + sitemap → /catalog
+│   └── /catalog   catalog.ts               #   .md + .ai.md two-view docs + grouped nav + search (§13a)
 │
 ├── /app                          # what you build — touch daily
 │   ├── /domain        item.ts                 # models — ZERO dependencies
@@ -417,10 +432,15 @@ imports from the app.
 │   │   ├── /dto       item-row.ts  item-api-dto.ts
 │   │   └── /mappers   item-mapper.ts
 │   ├── /services      item-service.ts  item-views.ts
+│   ├── /ai                                    # the AI interaction layer (§17, docs/AI-INTERFACE.md)
+│   │   ├── contract.ts                        #   SSOT: ActionName/SurfaceKind unions + ACTIONS registry
+│   │   ├── reasoner.ts                        #   Reasoner boundary (Model seam) + stub
+│   │   ├── interaction-layer.ts               #   the ONE door: validate → decide → push render ops
+│   │   └── manifest.ts                        #   the AI's per-screen instruction manual
 │   ├── /view                                  # this app's view wiring
 │   │   ├── renderer.ts                        #   createRenderer() configured w/ app config
-│   │   └── components.ts                      #   named components (ItemCard, ItemList…)
-│   ├── /routes        routes.ts               # buildRoutes(): /ui (HTML) + /api (JSON)
+│   │   └── components.ts                      #   named components (ItemCard, LoopCard…)
+│   ├── /routes      routes.ts  ai-routes.ts   # buildRoutes(): /ui + /api · buildAiRoutes(): /intent /stream /ai/manifest
 │   └── config.ts                              # env-driven dev/prod switches
 │
 ├── /frontend                     # standards-only, no build (your components)
@@ -435,13 +455,15 @@ imports from the app.
 │   │       ├── /item-list    item-list.html   item-list.css
 │   │       └── /app-header   app-header.html  app-header.css    # shared nav, composed by pages
 │   ├── /styles                               # the DESIGN SYSTEM (global, not per-component)
-│   │   ├── variables.css                      #   tokens: primitives → semantic (§2)
-│   │   └── global.css                         #   reset + page-level layout
+│   │   ├── variables.css                      #   tokens + Redaction @font-face + grade atom (§2, §17)
+│   │   └── global.css                         #   reset + paper grain layer + masthead + caret
+│   ├── /fonts        redaction-{400,35,50,70}-400.woff2   # self-hosted grade families (DESIGN-SYSTEM §3)
+│   ├── /scripts                              # the only client JS — small islands
+│   │   ├── ai-dispatch.js                     #   dispatcher: clicks → /intent, applies SSE render ops (§17)
+│   │   └── cmdk.js                            #   global ⌘K command palette (search)
 │   ├── /pages                                # flat files; folders only to group subpages
-│   │   ├── index.html                         #   "/"      — the entrance
-│   │   ├── home.html                          #   "/home"  — a flat page
-│   │   ├── about.html                         #   "/about"
-│   │   └── /profile  index.html  settings.html  #  "/profile" + "/profile/settings" (subpages)
+│   │   ├── index.html  home.html  about.html  #   "/" · "/home" · "/about"
+│   │   └── loop.html                          #   "/loop" — the AI interaction-loop demo
 │   └── /vendor       htmx.min.js              # vendored, not a CDN
 │
 ├── server.ts                     # composition root — the ONLY place framework + app meet
@@ -1568,6 +1590,11 @@ documented state renders **live** above its **copyable source**. The left side-n
 has two sections: **Pages** (the site map from `createSitemap`, §11.4 — doubling as
 in-app navigation) and **Components** (anchors to each documented component).
 
+> **Extended 2026-06-30 (§17.4):** components now pair `<name>.md` (Human) with an
+> optional `<name>.ai.md` (AI) toggled per component; the Components nav is grouped
+> by atomic layer as collapsible dropdowns with a search filter; and prose renders
+> inline markdown. The base mechanism below is unchanged.
+
 **Authoring stays trivial — three steps, all inside the component's own folder:**
 1. Add the component's CSS to its `.css` (one class; variants as attributes; a
    parallel `data-force` selector for each pseudo-state).
@@ -1684,6 +1711,29 @@ prop-text) was audited after the backend certification. Findings and fixes:
 passes, server serves entrance/`/home`/`/about`/`/catalog`/`/sitemap.xml`/`/robots.txt`,
 pages expand `b-*` tags, archived button is inert, badge is single-class.
 
+### 14.5 AI interaction layer + design-system audit (2026-06-30) — verified
+
+Added the AI interaction layer (§17), the Department of Time retheme, the catalog
+upgrades, and the global ⌘K palette. Full audit findings:
+
+| Area | Result |
+|---|---|
+| Framework purity | `framework/` imports **nothing** from `app/` — `stream.ts` + `accepts.ts` are generic (verified by grep). |
+| Erasable TS | No `enum`, no parameter-properties; the AI vocabulary uses `ActionName`/`SurfaceKind` **unions + a `const` registry** (the erasable "enum"). `tsc` green. |
+| SSOT | `app/ai/contract.ts` is the single source for verbs + surface kinds; view models are typed against it (`action.name: ActionName`), surfaces built via `surface()`. Manifest accepts are **derived** (harvest + registry inversion), never hand-typed; startup drift-guard clean. |
+| Binary assets | `makeStatic` now types woff2/woff/svg; fonts served byte-exact (magic `wOF2`, exact length) from the composition root. |
+| Routes | 14/14 smoke-tested 200 + correct content-type; `/intent` → 202 valid / 400 unknown verb; SSE confirm + rollback land over `/stream`. |
+| Design system | Monochrome paper/ink applied app-wide via the semantic-token remap (no per-component edits); grade-as-signal real (Redaction 35/50/70 self-hosted); no stale `--gray-*` refs. |
+| Tests | 15 pass / 0 fail (interaction-layer validation, single-writer, rollback, streaming). |
+
+**Open items (deferred by design, not defects):** the reasoner is a **stub** behind
+the real `Model` seam; the **Gate** (triage → light/heavy routing) and **heavy-path**
+"thinking" UI are not yet wired (build-order step 3); the legacy `/home` direct-write
+is a back-door *pattern* kept only as a stack example (the product writes through the
+door, except category-1 docs); the ⌘K palette indexes pages + components (tasks/
+knowledge and intent-emitting commands are seams); SSE has no auth (single-user;
+multi-device deferred with conflict-resolution, `docs/MVP.md`).
+
 ---
 
 ## 15. Build order
@@ -1781,3 +1831,82 @@ These were cut to keep the architecture focused; re-add when a real need appears
 - **Native routing + dual representation** — `/ui` HTML and `/api` JSON off one
   service, POST validation (400) and create (201), `:id` params (§11, §13).
 - **Env-driven config** — one module keys dev/prod differences (§12a).
+
+---
+
+## 17. AI interaction layer & design-system signal (2026-06-30)
+
+This section records the **stack-level** additions made while building the product.
+The product's own contracts are the SSOTs: **how the AI drives the UI** lives in
+`docs/AI-INTERFACE.md`; the **visual identity** in `docs/DESIGN-SYSTEM.md`. Here we
+document only the reusable mechanism and where it sits in the stack.
+
+### 17.1 The one door + server push
+
+The product inverts CRUD: the AI is the single writer, and a human click and an AI
+decision resolve to the **same named action through one endpoint** (`POST /intent`),
+never a privileged DOM back-channel. Because the AI acts on its own timeline (a
+reasoner takes seconds; background workers fire unprompted), the server must **push**
+to the page. Two pieces are reusable stack, the rest is app:
+
+- **`framework/http/stream.ts` — `createStream()`**: a generic per-session SSE hub
+  (`subscribe(id) → Response`, `push(id, event, data)`, `broadcast`). Zero app
+  knowledge; carries opaque JSON. This is the one structural addition to BATCH —
+  htmx stays for client-initiated reads, SSE adds server-initiated push.
+- **`framework/render/accepts.ts` — `createAccepts()`**: harvests `data-kind` /
+  `data-accepts` off component `.html` so the AI's manifest is a *projection of the
+  real components* and can't drift (the "one source, four uses" property — catalog,
+  CSS, sitemap, **and** AI manifest). A startup drift-guard warns if a component
+  declares a verb the backend doesn't allow.
+
+The app layer (`app/ai/*`, `docs/AI-INTERFACE.md`) holds the closed vocabulary
+(`contract.ts` — `ActionName`/`SurfaceKind` unions + the `ACTIONS` registry, the
+single source of truth for verbs and surface kinds), the single-writer interaction
+layer, the reasoner boundary (a stub today, behind the real `Model` seam), and the
+`/intent` `/stream` `/ai/manifest` routes. The one client-JS island,
+`frontend/scripts/ai-dispatch.js`, turns clicks into intents and applies render ops
+by semantic surface address (`data-surface`) — never by tag or CSS class.
+
+> **The dual write paths (ownership decides the mechanism).** Mutations of
+> AI-owned state go through the door; the **one sanctioned direct-to-storage
+> exception** is category-1 *user ground-truth* (the knowledge base), which writes
+> straight to a repository via plain htmx. There is no generic direct-write
+> endpoint — the mechanism must match the data's ownership category, set at creation
+> (see `docs/MVP.md`).
+
+### 17.2 Two reusable seams added to the stack
+
+- **`makePageServer(…, injectBeforeBodyEnd)`** — appends a global asset (here the
+  ⌘K palette) before `</body>` on every rendered page. The platform-wide-asset seam.
+- **`makeStatic` binary content-types** — woff2/woff/svg are now typed correctly;
+  fonts are served byte-exact from the composition root (a text read would corrupt
+  them), so self-hosted fonts need no CDN.
+
+### 17.3 Grade as signal (design system ↔ interaction)
+
+Provenance/commit-state is a **cross-cutting concern carried by one inherited custom
+property**, not per-component code (this is why atoms have almost no AI-specific
+markup). An ancestor sets `data-grade` / `data-commit`; the type atom reads
+`--type-font`; CSS inheritance distributes it. Self-hosted **Redaction** grades make
+the texture real: clean = human, **grain (Redaction 50) = AI / in-transit**. AI
+*speech* stays grain (provenance persists); a user's optimistic action settles to
+clean on commit. Non-text atoms express the same state their own way (a button grows
+a dashed "terminal" edge + block caret). See `docs/DESIGN-SYSTEM.md` §3 and
+`docs/AI-INTERFACE.md` §5.
+
+### 17.4 Catalog upgrades (still no-build)
+
+`/catalog` now: pairs `<name>.md` (Human) with optional `<name>.ai.md` (AI) and a
+per-component toggle swaps the *view*; groups the side-nav by atomic layer
+(atoms/molecules/organisms) as collapsible dropdowns with a search filter; and
+renders inline markdown (`code`, **bold**, links) in prose. The AI toggle re-grades
+only the live previews, never the catalog's own chrome.
+
+### 17.5 Status
+
+`tsc` green (erasable, `verbatimModuleSyntax`); full suite passes; `/framework`
+still imports **nothing** from `/app` (the new `stream.ts`/`accepts.ts` are generic);
+all routes serve (`/`, `/home`, `/about`, `/loop`, `/catalog`, `/components.css`,
+`/ai/manifest`, `/search.json`, `/sitemap.xml`, `/robots.txt`, `/api/*`, `/ui/*`,
+`/fonts/*`, `/scripts/*`); the `/intent` door returns 202 on a valid intent and 400
+on an unknown verb; SSE confirms/rolls-back land over `/stream`. See §14.5.
