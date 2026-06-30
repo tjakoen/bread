@@ -46,57 +46,73 @@ export function makeStubReasoner(opts: StubOptions = {}): Reasoner {
     async decide(intent: Intent, tools: ReasonTools): Promise<Decision> {
       const def = ACTIONS[intent.action];
 
+      // Spotlight the surface the AI is touching — the "desk is acting" treatment.
+      // on = pending (in progress); off = committed (done → also releases the trigger).
+      const spot = (target: string, active: boolean) =>
+        tools.emit({ target, op: "spotlight", active, provenance: "ai", commit: active ? "pending" : "committed" });
+
       // Type a line out, ONE CHARACTER at a time over SSE at a single steady cadence,
       // so every typing effect reads identically regardless of word length. Each char
       // arrives at grain with a caret; `done` settles it to clean (DESIGN-SYSTEM §3).
       // Shared by both text verbs so the input and the button feel the same.
-      const stream = async (surface: string, line: string): Promise<Decision> => {
+      const stream = async (surface: string, line: string, done = true): Promise<Decision> => {
         for (const ch of [...line]) {                       // spread = per code point (handles "—")
           if (tools.cancelled()) break;                     // stop promptly at a clean boundary…
           await tools.delay(thinkMs > 0 ? TYPE_MS : 0);
           tools.emit({ target: surface, op: "type", text: ch, provenance: "ai", commit: "pending" });
         }
-        tools.emit({ target: surface, op: "type", done: true, provenance: "ai", commit: "committed" });  // …and settle what's there
+        if (done) tools.emit({ target: surface, op: "type", done: true, provenance: "ai", commit: "committed" });  // settle / submit
         return { ok: true, ops: [], reply: line };
       };
 
-      // --- say.stream: button → the AI types a canned reflection ---
+      // --- say.stream: button → the AI types a reflection. Spotlit: a human clicked, but
+      //     the AI is the one writing, so show where it acts (grade = AI as actor, §5c). ---
       if (intent.action === "say.stream") {
-        return stream(intent.surface, "On it — checking your week. You have room on Thursday.");
+        spot(intent.surface, true);
+        const d = await stream(intent.surface, "On it — checking your week. You have room on Thursday.");
+        spot(intent.surface, false);
+        return d;
       }
 
-      // --- say.set: input → the AI types back the line it noted from your text ---
+      // --- say.set: input → the AI writes back the line it noted from your text ---
       if (intent.action === "say.set") {
         const text = String(intent.payload.text ?? "").trim();
-        return stream(intent.surface, text ? `Noted: ${text}` : "Nothing to note.");
+        spot(intent.surface, true);
+        const d = await stream(intent.surface, text ? `Noted: ${text}` : "Nothing to note.");
+        spot(intent.surface, false);
+        return d;
       }
 
       // --- demo.run: play a scripted AI-acting sequence so the user can WATCH the desk
       //     drive the UI. The spotlight follows what it touches; the backdrop stays up
       //     across the whole turn, then releases (AI-INTERFACE §5c). ---
       if (intent.action === "demo.run") {
-        // spotlight on = pending (in progress); off = committed (done → releases the trigger).
-        const spot = (target: string, active: boolean) =>
-          tools.emit({ target, op: "spotlight", active, provenance: "ai", commit: active ? "pending" : "committed" });
         const beat = (ms: number) => tools.delay(thinkMs > 0 ? ms : 0);
-        // graceful stop: if the user asked the desk to stop, hand back cleanly (never
-        // a force-kill — the writer halts itself, MVP/PROJECT-PLAN §9).
-        const stopped = (): boolean => {
-          if (!tools.cancelled()) return false;
-          spot("screen", false);
-          return true;
-        };
+        const handBack: Decision = { ok: true, ops: [], reply: "Stopped — handed back to you." };
+        // graceful stop: hand back cleanly if asked — never a force-kill (PROJECT-PLAN §9).
+        const stopped = (): boolean => { if (!tools.cancelled()) return false; spot("screen", false); return true; };
 
-        spot("say-button", true);                 // focus the button…
-        await beat(800);                           // …and "click" it (the dispatcher pulses it)
-        if (stopped()) return { ok: true, ops: [], reply: "Stopped — handed back to you." };
-        spot("say-stream", true);                  // attention moves to where the answer lands
+        // 1) "click" the button — it goes into AI mode (grain/terminal) — answer lands below it
+        spot("say-button", true);
+        await beat(800);
+        if (stopped()) return handBack;
+        spot("say-stream", true);
         await beat(250);
         await stream("say-stream", "On it — checking your week. Thursday 09:00–11:00 is clear.");
-        if (stopped()) return { ok: true, ops: [], reply: "Stopped — handed back to you." };
-        spot("say-line", true);                    // move on to leave a note
-        await beat(400);
-        await stream("say-line", "Booked it, and held your morning.");
+        if (stopped()) return handBack;
+
+        // 2) use the INPUT like a human would: compose IN the field, then "submit"
+        spot("say-input", true);
+        await beat(300);
+        await stream("say-input", "Move my deep-work block to Thursday", false);   // type into the field
+        await beat(500);
+        tools.emit({ target: "say-input", op: "type", done: true, provenance: "ai", commit: "committed" });  // Enter → clears it
+        if (stopped()) return handBack;
+
+        // 3) …which lands the noted line in the text under it
+        spot("say-line", true);
+        await beat(300);
+        await stream("say-line", "Noted: deep-work moved to Thursday, 09:00–11:00.");
         await beat(600);
         spot("screen", false);                     // hand back to you
         return { ok: true, ops: [], reply: "(demo) the desk acted, then handed back." };

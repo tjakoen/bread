@@ -65,20 +65,8 @@
 .btn[data-commit="pending"],
 .btn[data-grade="grain"],
 [data-grade="grain"] .btn {
-  border-style: dashed;
+  border-style: dashed;          /* a control the AI is using — terminal edge + grain label */
   pointer-events: none;          /* one intent at a time while the writer works */
 }
-.btn[data-commit="pending"]::after,
-.btn[data-grade="grain"]::after,
-[data-grade="grain"] .btn::after {
-  content: "";
-  display: inline-block; width: 0.5ch; height: 1em; margin-left: 0.4ch;
-  background: currentColor; vertical-align: -0.12em;
-  animation: caret-blink 1s steps(1) infinite;   /* keyframes live in global.css */
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .btn[data-commit="pending"]::after,
-  .btn[data-grade="grain"]::after,
-  [data-grade="grain"] .btn::after { animation: none; }
-}
+/* no typing caret on buttons — a button isn't a text field; the caret belongs to
+   streamed text (.caret), not here. */

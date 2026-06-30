@@ -1834,7 +1834,14 @@ These were cut to keep the architecture focused; re-add when a real need appears
 
 ---
 
-## 17. AI interaction layer & design-system signal (2026-06-30)
+## 17. AI interaction layer (GRAIN) & design-system signal (2026-06-30)
+
+The AI-interaction layer has its own name — **GRAIN** — and its own doc
+(`docs/GRAIN.md`): a design system + framework an AI can operate, built **on** BATCH.
+BATCH stays the substrate (no-build hypermedia); GRAIN is the layer that makes the UI
+AI-operable. Both are headed for **separate repos** (GRAIN as a package on BATCH) once
+the product ships; until then they live here with a clean boundary. This section
+records the BATCH-side (substrate) additions GRAIN relies on.
 
 This section records the **stack-level** additions made while building the product.
 The product's own contracts are the SSOTs: **how the AI drives the UI** lives in

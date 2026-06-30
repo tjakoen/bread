@@ -23,18 +23,21 @@ stack** it's built on (BATCH — see [`../ARCHITECTURE.md`](../ARCHITECTURE.md) 
 |---|-----|-----------|----------|
 | 1 | [PROJECT-PLAN.md](./PROJECT-PLAN.md) | The master vision — the full ambient assistant, its principles, and the four differentiators (correction loop, trade-off ledger, duty-to-warn, accountability). | Vision |
 | 2 | [MVP.md](./MVP.md) | The current slice — the AI task manager dashboard. What we build *now*, consistent with the master plan. | Product slice |
-| 3 | [AI-INTERFACE.md](./AI-INTERFACE.md) | The mechanism that makes single-writer / one-door real: the action vocabulary (SSOT in `contract.ts`), intent + render-op envelopes, the SSE push channel, the self-harvested manifest, **the two write paths** (the door vs. direct category-1 writes), and grade-as-signal. | Contract / how |
-| 4 | [DESIGN-SYSTEM.md](./DESIGN-SYSTEM.md) | The visual identity — *Department of Time*, a monochrome e-ink aesthetic. "Grade as signal" (grain = AI, clean = human) is implemented; AI-INTERFACE §5 ties it to the interaction layer. | Identity |
+| 3 | [GRAIN.md](./GRAIN.md) | **The AI-interaction layer** — a design system + framework an AI can operate (surfaces, one action vocabulary, render ops, manifest, grade-as-signal, the AI-acts protocol). Built on BATCH; headed for its own repo. The umbrella for #4–5. | Layer |
+| 4 | [AI-INTERFACE.md](./AI-INTERFACE.md) | GRAIN's detailed contract: the action vocabulary (SSOT in `contract.ts`), intent + render-op envelopes, the SSE push channel, the self-harvested manifest, the two write paths, grade-as-signal, the AI-acts protocol. | Contract / how |
+| 5 | [DESIGN-SYSTEM.md](./DESIGN-SYSTEM.md) | The visual identity — *Department of Time*, a monochrome e-ink aesthetic. "Grade as signal" (grain = AI, clean = human) is GRAIN's signature, implemented. | Identity |
 
 ## How they fit
 
 ```
-PROJECT-PLAN  ─ the destination (full assistant)
-   └─ MVP     ─ the first slice (task manager dashboard)
-        ├─ AI-INTERFACE  ─ HOW the AI drives the UI (single door, no back channel)
-        └─ DESIGN-SYSTEM ─ how it LOOKS (and how the look encodes state)
-              ↑ AI-INTERFACE and DESIGN-SYSTEM meet at: grade = commit state
-                (grain = proposed/in-transit/uncommitted · clean = committed ground truth)
+Product:  PROJECT-PLAN ─ the destination (full assistant)
+             └─ MVP    ─ the first slice (task manager dashboard)
+Layer:    GRAIN        ─ the AI-operable interface (own repo, later)
+             ├─ AI-INTERFACE  ─ the contract: one door, render ops, manifest, AI-acts protocol
+             └─ DESIGN-SYSTEM ─ the look + grade-as-signal (grain = AI · clean = human)
+Substrate: BATCH (../ARCHITECTURE.md) ─ no-build server-rendered hypermedia
+
+   Product → built on → GRAIN → built on → BATCH
 ```
 
 The running proof of the contract lives in [`../poc/`](../poc/) — see

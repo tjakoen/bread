@@ -45,16 +45,36 @@
     actingLabel.hidden = true;
     document.body.append(backdrop, actingLabel);
   }
+  // release a surface from the spotlight. A control the AI is "using" keeps its
+  // working state (data-commit) until its OUTPUT completes — held in pendingTriggers,
+  // released by clearTrigger on the output's committed op — so it isn't dropped here.
+  function clearActing(el) {
+    if (!el) return;
+    el.classList.remove("ai-spotlit", "is-click");
+    if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") el.blur();
+    const held = [...pendingTriggers.values()].includes(el);
+    if (!held) el.removeAttribute("data-commit");
+  }
   function spotlightOn(target) {
     ensureSpotlight();
     backdrop.classList.add("is-on");
     actingLabel.hidden = false;
     const el = find(target);
-    if (spotlit && spotlit !== el) spotlit.classList.remove("ai-spotlit", "is-click");
+    if (spotlit && spotlit !== el) clearActing(spotlit);   // moving on → release the previous surface
     if (el) {
       el.classList.add("ai-spotlit");
       el.classList.remove("is-click"); void el.offsetWidth; el.classList.add("is-click");   // pulse = "click"
       el.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "center" });  // gently follow
+      // each KIND of surface reads AI-mode its own way:
+      const tag = el.tagName, out = el.getAttribute("data-target");
+      if (tag === "INPUT" || tag === "TEXTAREA") {
+        el.focus();   // the AI composes like a human — clean ink + the field's own caret
+      } else if (el.hasAttribute("data-action") && out) {
+        el.setAttribute("data-commit", "pending");   // a control being USED → working until its output finishes…
+        pendingTriggers.set(out, el);                // …held, then released by the output's committed op
+      } else if (target !== "screen") {
+        el.setAttribute("data-commit", "pending");   // a text region the AI writes in → grain
+      }
       spotlit = el;
     }
     clearTimeout(spotlightTimer);
@@ -65,7 +85,7 @@
     hideConfirm();
     if (backdrop) backdrop.classList.remove("is-on");
     if (actingLabel) actingLabel.hidden = true;
-    if (spotlit) { spotlit.classList.remove("ai-spotlit", "is-click"); spotlit = null; }
+    clearActing(spotlit); spotlit = null;
   }
 
   // ---- interrupt: pause, ask, and (if confirmed) ask the DESK to stop --------------
@@ -152,6 +172,16 @@
   // append tokens as they arrive. On `done` the caret goes and it's marked committed,
   // but it STAYS grain — this is AI speech, and grain = AI (provenance persists).
   function applyType(el, op) {
+    // the AI composing in a real form field: drive .value (no caret/stream-body),
+    // and clear on `done` — exactly what pressing Enter does for a human.
+    if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+      if (typeof op.text === "string") {
+        if (document.activeElement !== el) el.focus();   // human-like: focused → clean ink + real caret
+        el.value += op.text;
+      }
+      if (op.done) { el.value = ""; el.blur(); }          // "submit" clears the field, like Enter
+      return;
+    }
     let body = el.querySelector(".stream-body");
     if (!body) {
       el.innerHTML = '<span class="stream-body"></span><span class="caret"></span>';

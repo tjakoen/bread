@@ -1,4 +1,7 @@
-# AI ↔ UI Interface — the action vocabulary contract
+# AI ↔ UI Interface — the GRAIN action vocabulary contract
+
+> This is the detailed contract for **GRAIN**, the AI-interaction layer (overview:
+> [GRAIN.md](./GRAIN.md)). GRAIN is built on BATCH and headed for its own repo.
 
 **Status:** Design + reference scaffold (running in `poc/`).
 **Depends on:** [MVP.md](./MVP.md) §"One interface, one path" and §"The Interaction Flow";
@@ -285,12 +288,24 @@ the `/kb/*` direct surface is a documented seam, not yet built.)
 
 A human click and an AI action both go through the door, but only the **AI as actor**
 gets a spotlight — that's how the user *sees* the desk working (vs. their own clicks,
-which are silent). It's a `spotlight` render op driven by **provenance**: the
-interaction layer auto-brackets any `source:"ai"` intent with `spotlight active:true`
-→ ops → `active:false`, and a multi-step AI turn moves the spotlight between targets,
-gently scrolling each into view. The dim backdrop stays up across the whole turn; the
-touched surface is lifted into the light and pulsed like a click; a "✶ the desk is
-acting…" label names what's happening (effect + word, not effect alone).
+which are silent).
+
+**The established "AI acts on a surface" protocol — one rule, used everywhere:**
+
+1. **`spotlight active:true target:S`** — the screen dims, S is lifted into the light,
+   gently scrolled into view, and pulsed like a click; **and S itself enters AI mode**
+   (the dispatcher sets `data-commit="pending"` on S, so a button reads terminal, an
+   input/text reads grain). The surface the AI touches *looks* AI-driven.
+2. **the AI acts on S** — types into it. Text streams into a region; for a real **input**
+   it drives `.value` and a final `done` clears it, exactly like a human pressing Enter.
+3. **move on** — `spotlight active:true` on the next surface (the previous one is released,
+   the backdrop stays up); or **`spotlight active:false`** to hand back (undim, release).
+
+Authored text keeps its grain *after* release (the `type` op's `data-grade` persists =
+AI provenance); the spotlight's `data-commit` is only the *transient* "acting now" state.
+The same `spot()` drives `say.stream`, `say.set`, the multi-step demo, and the layer's
+auto-bracket of any `source:"ai"` intent — so every AI interaction looks identical. A
+"✶ the desk is acting…" label names it (effect + word, not effect alone).
 
 **Interrupt is mediated, never a force-kill.** While the desk acts, any user
 interaction (click / Esc / backdrop) raises a confirm — *"Ask it to stop?"* — without
