@@ -9,6 +9,11 @@ presence shown as a visible signal: *grain = AI* (the Redaction grain grade), cl
 human. The dependency is one-directional — the AI layer uses the design system, never
 the reverse (see [`../grain/README.md`](../grain/README.md) §0).
 
+> **On the name.** *Grain* earns it twice: it's the literal AI signal (the Redaction
+> grain grade), and it's the *vibe* — warm paper, soft ink, that faxed/floury texture
+> reads like **bread**. Wholesome, slow-risen (no-build, server-rendered), and the grain
+> is the whole point. Fitting for a second brain.
+
 It runs **on a substrate** — [BATCH](../ARCHITECTURE.md) (no-build, server-rendered
 hypermedia) is the reference one — but it is **substrate-agnostic**: `grain/` imports
 nothing from `batch/`. It depends only on a small **port** (`OpChannel`, below), which
