@@ -20,6 +20,10 @@ standards, a runtime, and ~600 lines of glue.
 > repo once proven; the boundaries are kept clean. Start at
 > [`docs/README.md`](./docs/README.md).
 
+> **Building on this?** [`CONVENTIONS.md`](./CONVENTIONS.md) is the standard — layering,
+> component authoring, the action vocabulary, tokens, and the three-tier testing bar
+> (unit · integration · e2e). Read it before adding code.
+
 ---
 
 ## The bet
