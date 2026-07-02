@@ -33,6 +33,22 @@ Instead:
 
 Everything below is the machinery for that one sentence.
 
+### The AI's interface is a *modality*, not a chat channel
+
+That closed vocabulary is best understood as a **modality** — a finite set of real action
+primitives (like keys on a piano: structured at the primitive level, expressive in combination),
+not a chat channel the AI narrates through. Two things ground it, kept distinct:
+
+- **The index** — the space of what's *possible*: the manifest's `actions` + `targets` (§4).
+- **The snapshot** — what's *true right now*: each target's state-narrowed `accepts` + `inView` (§4).
+
+The AI reads the index for its move set and the snapshot for where it's standing. Today the door
+**validates pessimistically**: an action the surface doesn't afford is *rejected* with a `flash`
+(§3), so the AI is expected to pre-check the manifest, not probe blindly. (A more forgiving *"the
+surface has physics"* model — an unafforded action no-ops and reports what *is* available — is a
+noted direction, **not** current behavior.) The *why* behind the modality lives in
+[`../PHILOSOPHY.md`](../PHILOSOPHY.md).
+
 ---
 
 ## 1. The two registries — "an API for every element/screen"
@@ -78,7 +94,9 @@ This table **is** the contract. It is defined once in TypeScript and everything 
 > The closed sets are **union types + a `const` registry**, not a TS `enum` (`enum`
 > is banned by `erasableSyntaxOnly`) — that union *is* the erasable enum:
 > - `ActionName` — the verbs · `ACTIONS` — the registry (depth + accepted kinds).
-> - `SurfaceKind` — the closed set of surface kinds (`item`, `say-line`, …).
+> - `SurfaceKind` — the closed set of surface kinds a verb can accept (`item`,
+>   `reflection`, `say-stream`, `screen`, `chat-log`). Push-only display surfaces the
+>   AI only *writes* to (e.g. `console`) are intentionally **not** kinds — see the note in `contract.ts`.
 > - `surface(kind, id)` — the builder; always construct addresses with it, never by
 >   hand-concatenating strings, so a typo is a compile error.
 >
@@ -98,7 +116,8 @@ This table **is** the contract. It is defined once in TypeScript and everything 
 
 ```ts
 interface Intent {
-  source: "user" | "ai";          // provenance, set at the door — never inferred later
+  source: "user" | "ai";          // provenance, stamped at the entrance — HTTP /intent always
+                                  // stamps "user"; only in-process actors raise "ai" (never client-set)
   session: string;                // which conversation/stream this belongs to
   screen: string;                 // where the user is (MVP step 2: "check what's in view")
   surface: Surface;               // what was touched/referred to (step 3)
@@ -125,16 +144,17 @@ interface RenderOp {
   op: RenderOpKind;
   html?: string;                  // server-rendered fragment (replace/append/flash)
   text?: string;                  // a streamed token (type)
-  back?: number;                  // delete the last N chars (type) — the desk REVISING / overwriting
+  back?: number;                  // delete the last N chars (type) — the AI REVISING / overwriting
   done?: boolean;                 // last token of a stream → settle (type)
   active?: boolean; click?: boolean;   // spotlight on/off; click = pulse (the "AI acts" treatment, §5c)
+  message?: string;               // human-facing note (flash) — e.g. the rollback copy on a failed write
   provenance: "user" | "ai" | "system";
   commit: "pending" | "committed";   // grade = commit state — see §5
 }
 ```
 
 > A surface is **overwritten** by streaming `back` ops (delete a char) then `text` ops
-> (type the new) — the desk visibly backspacing and retyping. The `/loop` demo uses this
+> (type the new) — the AI visibly backspacing and retyping. The `/loop` demo uses this
 > to revise one bullet of a plan it just wrote.
 
 ### 2c. The manifest — the AI's instruction manual (generated, §4)
@@ -214,7 +234,9 @@ addressable here" *cannot* be out of sync with what's on screen. That is the hon
 guarantee, for free. **(Implemented:** `framework/render/accepts.ts` harvests
 `data-kind`/`data-accepts`; item targets read their accepts from the component, region
 targets are inverted from the registry, and a startup drift-guard warns on mismatch —
-no hand-typed accept lists remain.)
+no hand-typed accept lists remain. The guard also scans every **wired** `data-action`
+verb (e.g. `chat.send` on the assistant composer), so a stray/misspelled verb in any
+component template surfaces at startup, not just a bad `data-accepts` declaration.)
 
 `GET /ai/manifest?screen=tasks` returns:
 
@@ -243,7 +265,7 @@ So the rule the code follows: **grain if `provenance = ai` OR `commit = pending`
 clean only when human-authored AND committed.** Two consequences that matter on the
 running app:
 
-- **AI speech persists grain.** When the desk types a reply (`say.set` / `say.stream`),
+- **AI speech persists grain.** When the AI types a reply (`say.set` / `say.stream`),
   it *stays* grain after it finishes — grain = AI, so provenance doesn't evaporate
   into looking human. (An earlier "resolve to clean on completion" flourish was
   dropped because it erased provenance.)
@@ -295,7 +317,7 @@ the `/kb/*` direct surface is a documented seam, not yet built.)
 ## 5c. Showing the AI as actor (spotlight + mediated interrupt)
 
 A human click and an AI action both go through the door, but only the **AI as actor**
-gets a spotlight — that's how the user *sees* the desk working (vs. their own clicks,
+gets a spotlight — that's how the user *sees* the AI working (vs. their own clicks,
 which are silent).
 
 **The established "AI acts on a surface" protocol — one rule, used everywhere:**
@@ -313,11 +335,11 @@ Authored text keeps its grain *after* release (the `type` op's `data-grade` pers
 AI provenance); the spotlight's `data-commit` is only the *transient* "acting now" state.
 The same `spot()` drives `say.stream`, `say.set`, the multi-step demo, and the layer's
 auto-bracket of any `source:"ai"` intent — so every AI interaction looks identical. A
-"✶ the desk is acting…" label names it (effect + word, not effect alone).
+"✶ the AI is acting…" label names it (effect + word, not effect alone).
 
-**Interrupt is mediated, never a force-kill.** While the desk acts, any user
+**Interrupt is mediated, never a force-kill.** While the AI acts, any user
 interaction (click / Esc / backdrop) raises a confirm — *"Ask it to stop?"* — without
-freezing the stream (the desk keeps working behind the modal, so nothing can wedge):
+freezing the stream (the AI keeps working behind the modal, so nothing can wedge):
 **Let it finish** just dismisses it; **Ask it to stop** posts a `desk.stop` intent. The
 layer flips a per-session stop flag
 that the reasoner **polls between steps** (`tools.cancelled()`) and halts at a clean
@@ -332,7 +354,7 @@ and traceable). The only client-side force-release is a 20s safety timeout.
 
 **The UI is a window onto the process, not its controller.** Closing the tab must NOT
 stop the AI — that would make the browser a kill-switch (and a flaky network would
-destroy committed-to work). The desk keeps working; a reconnecting client just
+destroy committed-to work). The AI keeps working; a reconnecting client just
 *reflects* whatever is true.
 
 Today (fire-and-forget `/intent`): the server finishes the turn regardless of the tab.
@@ -344,7 +366,7 @@ PROJECT-PLAN §9) — but it means a long turn that's still running when you ref
 no sign of itself.
 
 **Decision — what a refresh during a running turn should do:** show the generic
-"✶ the desk is working…" state (with the **ask-it-to-stop** affordance), *without* the
+"✶ the AI is working…" state (with the **ask-it-to-stop** affordance), *without* the
 fine-grained in-flight visuals (the new page can't know the exact mid-state — and that's
 fine). When the turn finishes it resolves to the committed result; if it finished during
 the gap, the reload simply shows that result. The user can still mediate (stop) — never
@@ -369,6 +391,34 @@ the browser-close.
 stub a turn finishes in milliseconds, so "still running on refresh" isn't testable, and
 the actor-id seam is the same one the real assistant needs. Recorded here so it isn't
 re-litigated.
+
+---
+
+## 5e. The takeover console — narrating the run
+
+The spotlight (§5c) shows *where* the AI acts; the **console** shows *what* it's doing, in
+words. It's the bottom region of the workspace shell (GRAIN §"Two layout archetypes"), and it
+is the assistant's **collapsed form**: idle, a quiet bar; when the AI takes over, the chat
+aside retracts and the console rises to narrate.
+
+- **One display surface, push-only.** The reasoner emits ordinary render ops to a `console`
+  surface — `clearConsole()` (`replace` a fresh feed at the start of a run) then a `narrate()`
+  per step (`append` one line). `console` is **not** a `SurfaceKind`: nothing *acts* on it, the
+  AI only writes to it (see the note in `contract.ts`). No new op kinds — the dispatcher's
+  existing `append` handler auto-scrolls it because it's a scrolling container.
+- **Each line is an `action-badge` — the verb vocabulary made visible.** A step reads as its
+  verb (`reads` · `types` · `revises` · `clicks` · `commits`) plus a short description. The
+  badge always wears the non-text grain (it's the AI acting), and the label is drawn from the
+  same closed vocabulary the door speaks (`ActionName`), so the narration can't describe an
+  action the system can't actually take.
+- **The takeover is a shell state, not door machinery.** The client sets `data-acting` on
+  `.app-shell` when a spotlight raises, and clicks inside the assistant/console are **not**
+  treated as interrupts (chatting or preparing your next message while the AI works is
+  allowed) — only clicking the *working page* asks it to stop (§5c). This is expressed entirely
+  in `ai-dispatch.js` + `shell.js`; the reasoner just emits ops.
+
+The console makes the AI's process legible without a privileged channel: it's the same
+single-writer → render-op → surface path as everything else, addressed to one more surface.
 
 ---
 

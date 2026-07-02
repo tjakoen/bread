@@ -1,6 +1,7 @@
-# Department of Time — Design System
+# 🍞 Bread — GRAIN's default theme
 
-A monochrome, e-ink / Swiss-editorial aesthetic. The whole identity rests on three
+*Bread* is the visual identity GRAIN ships by default; a consuming product re-skins by overriding token
+slots (CONVENTIONS §1), never by editing components. A monochrome, e-ink / Swiss-editorial aesthetic. The whole identity rests on three
 things: a warm paper surface, soft inky black, and Redaction's grainy serif. No
 color, no shadows, no gradients. Restraint is the brand.
 
@@ -69,7 +70,7 @@ a bigger `--ink` dot. An "off" tracker dot is `--ink-faint`. Keep the palette cl
 **Family — Redaction (MCKL).** A serif drawn from US legal-document typography, with
 built-in *degradation grades* (clean → 10 → 20 → 35 → 50 → 70 → 100) that mimic faxed and
 photocopied print. Chosen deliberately over a neutral grotesque: it pulls the identity
-toward institutional / legal — fitting for "Department of Time" — and, crucially, its
+toward institutional / legal — an archival, records-room gravity — and, crucially, its
 grades let the type carry *meaning* (see Grade as signal, below).
 
 - **Weight:** Regular (400) is the house weight, including for headlines — at this grade the

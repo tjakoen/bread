@@ -1,6 +1,6 @@
 # BATCH — Reference Architecture (Single Source of Truth)
 
-**BATCH** = **B**un · **A**tomic · **T**ypeScript · **C**SS · **H**tmx — a no-build,
+**BATCH** = **B**un · **A**ddressable · **T**ypeScript · **C**SS · **H**tmx — a no-build,
 server-rendered hypermedia stack. Reusable design-system component tags use the
 `b-` prefix (`<b-button>`); your app's own components keep semantic names
 (`item-card`, `app-header`).
@@ -9,18 +9,25 @@ server-rendered hypermedia stack. Reusable design-system component tags use the
 (§14.1); the frontend layer — pages, component catalog, sitemap, the `b-` component
 set, self-closing/prop-text — added and audited 2026-06-27 (§14.4). The **AI
 interaction layer** (server-push over SSE, the one `/intent` door, render ops,
-grade-as-signal) and the **Department of Time** design-system retheme were added and
+grade-as-signal) and the **Bread** design-system retheme were added and
 audited 2026-06-30 (§17, §14.5), then the repo was **reorganized into a monorepo** the
 same day (§3). The code in `batch/ grain/ project/` is the source of truth.
 
-> **Three concerns in this repo (monorepo).** `batch/` is the **stack** this document
+> **The concerns in this repo (monorepo).** `batch/` is the **stack** this document
 > describes (the reusable no-build hypermedia substrate). `grain/` is **GRAIN**, the
 > AI-interaction design system built on BATCH (`docs/GRAIN.md`). `project/` is the
 > product (a personal AI assistant) + its skin; `project/server.ts` is the one place
-> the three meet. No Bun workspaces — plain relative imports, one `package.json` +
+> those three meet. No Bun workspaces — plain relative imports, one `package.json` +
 > `tsconfig`. Each is headed for its own repo once proven; the boundary is kept clean
-> (`batch/` imports nothing from `grain/`/`project/`, verified). Product docs are under
-> `docs/` — start at `docs/README.md`.
+> (`batch/` imports nothing from `grain/`/`project/`, verified). Two further resident
+> concerns build on the stack: **`portfolio/`** (a personal site — temporary resident,
+> moving to its own repo) and, planned, **`MILL/`** — a reusable markdown→GRAIN CMS that
+> sits **above `grain`** (depends on `grain` + `batch`, never the reverse; an *extension
+> of neither*). MILL's core is framework-agnostic (a Markdown→components engine driven by a
+> render adapter); its default adapter emits GRAIN + serves on BATCH. The portfolio *uses*
+> MILL to manage its markdown content — its notes/blog **and** the rendered BATCH/GRAIN docs —
+> but is otherwise a custom BATCH + GRAIN app. See `mill/PLAN.md` (canonical) + `portfolio/PLAN.md`
+> (consumer view). Product docs are under `docs/` — start at `docs/README.md`.
 
 Every code block here has been run on Bun 1.3.14. For the final revision the
 entire backend was assembled exactly as specified and **certified**: `tsc`
@@ -49,6 +56,9 @@ correctly. See §14.1 for the audit log.
 This records *why* the choices were made and what they cost — so future decisions
 are made with eyes open, not by inertia.
 
+> The *values* behind these choices — the beliefs, stated crisply — live in
+> [`PHILOSOPHY.md`](PHILOSOPHY.md). This section is the engineering rationale and the costs.
+
 **Why a hypermedia / server-rendered-fragment stack.** Avoids a client framework,
 a build step, and client/server state-sync bugs; yields a standards-based stack
 that should age slowly. *Cost:* rich client interactions (drag-and-drop,
@@ -58,14 +68,14 @@ island of JS. Accepted because the target (a personal dashboard / second-brain
 surfaces) is mostly request→render→swap.
 
 **Why a custom composition engine instead of a templating library — and is it a
-maintenance trap?** Measured, not assumed: the entire engine is **~120 non-blank
+maintenance trap?** Measured, not assumed: the entire engine is **~180 non-blank
 lines** with **zero runtime dependencies** (only Node-builtin `fs`/`path` plus
 native globals: `HTMLRewriter`, `Response`, `Bun.file`). Crucially, the one part
 that is genuinely dangerous to own — **HTML escaping** — is *delegated to the
 native parser* (`setInnerContent`), not hand-rolled; verified that a
 `<img onerror>` payload in data renders inert. So the "native-first to minimize
 maintenance" thesis **holds**: you are not maintaining a real templating engine,
-you are maintaining ~120 lines whose scariest job is done by the platform.
+you are maintaining ~180 lines whose scariest job is done by the platform.
 *Caveat the platform does NOT cover:* HTML escaping neutralizes markup but **not
 URL schemes** — a data-driven `javascript:`/`data:` value in an `href`/`src`
 survives escaping. So URL-valued bound attributes go through an explicit
@@ -903,7 +913,7 @@ import { readdirSync } from "fs";
 import { join } from "path";
 
 export type MissingMode = "ignore" | "warn" | "throw";
-export interface RenderConfig { componentsDir: string; missing: MissingMode; }
+export interface RenderConfig { componentsDir: string | string[]; missing: MissingMode; }
 
 interface Resolved { found: boolean; value: unknown; }
 function resolvePath(obj: any, path: string): Resolved {
@@ -1228,7 +1238,7 @@ one request — no build step.
 import { readdirSync } from "fs";
 import { join } from "path";
 
-export function createStyleBundle(componentsDir: string) {
+export function createStyleBundle(rt: Runtime, componentsDir: string | string[]) {
   let cache: string | null = null;
 
   function collect(dir: string, out: string[]) {
@@ -1618,7 +1628,7 @@ in-app navigation) and **Components** (anchors to each documented component).
 
 ```typescript
 // /framework/catalog/catalog.ts (shape)
-export function createCatalog(componentsDir: string) {
+export function createCatalog(rt: Runtime, componentsDir: string | string[], sitemap?: Sitemap) {
   // findDocs(): recurse for *.md   parseDoc(): #→name, ##→group, ###→label, ```html→panel
   // html(): live = inject fence verbatim (author-controlled, not user data);
   //         source = HTML-escaped in <pre><code> + a clipboard Copy button.
@@ -1727,7 +1737,7 @@ pages expand `b-*` tags, archived button is inert, badge is single-class.
 
 ### 14.5 AI interaction layer + design-system audit (2026-06-30) — verified
 
-Added the AI interaction layer (§17), the Department of Time retheme, the catalog
+Added the AI interaction layer (§17), the Bread retheme, the catalog
 upgrades, and the global ⌘K palette. Full audit findings:
 
 | Area | Result |
@@ -1934,3 +1944,65 @@ all routes serve (`/`, `/home`, `/about`, `/loop`, `/catalog`, `/components.css`
 `/ai/manifest`, `/search.json`, `/sitemap.xml`, `/robots.txt`, `/api/*`, `/ui/*`,
 `/fonts/*`, `/scripts/*`); the `/intent` door returns 202 on a valid intent and 400
 on an unknown verb; SSE confirms/rolls-back land over `/stream`. See §14.5.
+
+---
+
+## 18. Static export / prerender (opt-in — foreshadowed in §0.5)
+
+An optional `dist/` export, layered **on top of** the running server — never a second
+renderer. The server already produces final, component-expanded HTML; the exporter is a
+**projection of it**: boot the app, enumerate routes, fetch each, write the bytes. If it
+ever re-implements composition, it has become a build step and violated the stack's
+premise ("the server is the no-build step", §0.5). It stays a crawler + writer.
+
+The moving parts already exist: `createSitemap().routes()` (§11.4) enumerates every page;
+`renderPage` (§9) emits plain HTML with all `b-*` tags expanded; `/components.css`,
+`styles/*`, `/fonts/*` and `/scripts/*` are static. Headless drive is proven (`bun run shots`).
+
+### The boundary (what is and isn't exportable)
+
+The stack is request→render→swap, so an export freezes only the **initial document**.
+Draw the line explicitly or the export silently ships broken pages:
+
+- **Exportable — content pages.** Pages whose HTML is complete server-side: the entrance,
+  editorial pages, and especially `/catalog` and `/grain` (the GRAIN showcase — fully-static output —
+  live previews + copyable source, zero runtime data). These are the primary use case: a
+  shareable, hostable design-system + component reference.
+- **NOT exportable — operable surfaces.** Anything behind the one door: `/intent`,
+  `/stream` (SSE), render ops (§17). These are dynamic by definition; a static copy has no
+  backend to talk to. The AI loop cannot be a static file.
+- **In between — pages with htmx reads.** A page with `hx-get="/ui/…" hx-trigger="load"`
+  exports as a *shell* (`Loading…`) that XHRs a backend that isn't there. Handle via the
+  two tiers below.
+
+### Two tiers
+
+1. **Shell export (trivial).** Walk `sitemap.routes()` + `/catalog` + the portfolio pages
+   (`/`, `/grain`, served from `config.portfolioPagesDir`, not in the sitemap), fetch each,
+   write `dist/<route>/index.html`; copy the referenced assets **plus the data routes islands
+   fetch** — `/search.json` (⌘K palette), `/sitemap.xml`, `/robots.txt` — which are not linked
+   assets a crawler of `href`/`src` would find. Correct for pages with no dynamic reads.
+   **Absolute paths need a root-served host.** Every ref is absolute (`/styles`, `/scripts`,
+   `/assets/sprite.svg`); they resolve fine on a **root** host (custom domain, a `user.github.io`
+   repo, most CDNs) but **404 on a *project* GitHub Pages site** served under
+   `user.github.io/<repo>/` — a subpath. To ship under a subpath the exporter must rewrite
+   absolute→relative (or inject `<base>` / honor a `PUBLIC_BASE_PATH`). Never `file://` either
+   (browsers forbid file-origin fetch, so htmx/asset loads fail — the web-platform limit §0.5
+   documents).
+2. **True prerender (phase 2, optional).** For each `hx-trigger="load"` target, also fetch
+   its `/ui/*` fragment, inline it where the target sits, and strip the trigger — the page
+   is then complete with no backend. This is the only tier that makes a data-backed page
+   genuinely static.
+
+### Placement
+
+A reusable **`batch/export`** capability (not a project-local script), exposed as
+`bun run export`. It boots a composition root, reads `sitemap.routes()` + a caller-supplied
+allowlist, fetches over `localhost`, copies `config.assetDirs` + `config.fontsDir` verbatim,
+and writes `dist/`. It lives in **`batch/`** on purpose: crawl-sitemap→write-files is a pure
+substrate concern, so it must travel with the framework — then *any* BATCH site (the portfolio
+and its `/grain` showcase, and others later) gets Pages hosting from the one tool, per BATCH's
+extraction philosophy. No change to `batch/`/`grain/`/`project` runtime code — the export is an
+outside observer, so it can't regress the live path. Deferred until shareable static files are
+actually needed (§16 "deferred by design"). (See `portfolio/PLAN.md` piece 1, which drives the
+first real use.)

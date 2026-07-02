@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tjakoen Stolk — building AI-first software</title>
+  <meta name="description" content="Portfolio of Tjakoen Stolk — AI-first interfaces, built with my own no-build hypermedia stack and served as plain static files.">
+  <!-- default theme (LINKED): tokens → base/skin → grade mechanism -->
+  <link rel="stylesheet" href="/styles/variables.css">
+  <link rel="stylesheet" href="/styles/global.css">
+  <link rel="stylesheet" href="/styles/grain.css">
+  <link rel="stylesheet" href="/components.css">
+  <style>
+    /* portfolio-home LAYOUT only (tokens only — this composes GRAIN, it isn't the design system) */
+    .home__lede { color: var(--color-muted); font-size: var(--text-lg); max-width: 54ch; line-height: var(--leading-relaxed); }
+    .home__lede em { font-style: normal; text-decoration: underline; }
+
+    .work { display: grid; gap: var(--space-4); margin-top: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+    .work__card { display: flex; flex-direction: column; gap: var(--space-2);
+      border: 1px solid var(--color-line); border-radius: var(--radius-md); padding: var(--space-5);
+      text-decoration: none; color: var(--color-fg); transition: background-color 0.15s; }
+    .work__card:hover { background: var(--paper-2); }
+    .work__card[aria-disabled="true"] { pointer-events: none; opacity: 0.6; }
+    .work__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
+    .work__name { font-size: var(--text-xl); }
+    .work__kind { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); }
+    .work__desc { color: var(--color-muted); font-size: var(--text-sm); line-height: var(--leading-normal); margin: 0; }
+    .work__go { font-size: var(--text-sm); text-decoration: underline; margin-top: auto; }
+
+    .home__note { margin-top: var(--space-8); color: var(--color-muted); font-size: var(--text-sm); max-width: 60ch; }
+    .home__foot { margin-top: var(--space-8); padding-top: var(--space-5); border-top: 1px solid var(--color-line);
+      color: var(--color-muted); font-size: var(--text-sm); }
+    .home__foot em { font-style: normal; text-decoration: underline; }
+  </style>
+</head>
+<body data-screen="portfolio">
+  <main class="container">
+    <p class="eyebrow">Portfolio · <span class="name">Tjakoen Stolk</span></p>
+    <h1 class="masthead">Building AI-first software.</h1>
+    <hr class="rule">
+    <p class="home__lede">Interfaces where a person <em>and</em> an AI operate the same controls — built with my own
+      no-build hypermedia stack and served as plain static files. <em>This whole site is the proof</em>: it runs on the
+      frameworks below, and its assistant runs entirely in your browser.</p>
+
+    <div class="section-head"><span>Work</span></div>
+    <div class="work">
+      <a class="work__card" href="/grain">
+        <div class="work__head"><span class="work__name name">GRAIN</span><span class="work__kind">Design system</span></div>
+        <p class="work__desc">An AI-interaction design system: one shared vocabulary for humans and AI, with the AI's
+          presence shown as a visible signal (grain = AI). Built on BATCH.</p>
+        <span class="work__go">See the system →</span>
+      </a>
+
+      <a class="work__card" href="/batch" aria-disabled="true">
+        <div class="work__head"><span class="work__name name">BATCH</span><span class="work__kind">Substrate</span></div>
+        <p class="work__desc">Bun · Addressable · TypeScript · CSS · htmx — a no-build, server-rendered hypermedia stack.
+          The substrate everything here stands on.</p>
+        <span class="work__go">Coming soon</span>
+      </a>
+
+      <a class="work__card" href="/dashboard">
+        <div class="work__head"><span class="work__name name">Department of Time</span><span class="work__kind">Product</span></div>
+        <p class="work__desc">A personal AI assistant — a desk that writes back — built on BATCH + GRAIN. The reference
+          product for the whole stack.</p>
+        <span class="work__go">Open the workspace →</span>
+      </a>
+    </div>
+
+    <p class="home__note">An in-browser AI demo is on the way: ask a question and “the desk” answers — grain text
+      streaming in, settling to clean — with a tiny model running client-side, no backend, no key.</p>
+
+    <div class="home__foot">
+      <p>Built with <b class="name">BATCH</b> + <b class="name">GRAIN</b>, served static on GitHub Pages.
+        <em>The site practises what it preaches.</em></p>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # BATCH
 
-**B**un · **A**tomic · **T**ypeScript · **C**SS · **H**tmx
+**B**un · **A**ddressable · **T**ypeScript · **C**SS · **H**tmx
 
 A no-build, server-rendered hypermedia stack — and a working reference app that
 proves it out. No client framework, no bundler, no template language. Just web
@@ -11,13 +11,16 @@ standards, a runtime, and ~600 lines of glue.
 > as-is. Read [`ARCHITECTURE.md`](./ARCHITECTURE.md) for the full reasoning — it's
 > the single source of truth.
 
-> **Three concerns in this repo (monorepo).** `batch/` is **the stack** (BATCH — the
+> **Four concerns in this repo (monorepo).** `batch/` is **the stack** (BATCH — the
 > generic no-build substrate this README + [`ARCHITECTURE.md`](./ARCHITECTURE.md)
 > describe). `grain/` is **GRAIN**, the AI-interaction design system built on BATCH
-> ([`docs/GRAIN.md`](./docs/GRAIN.md)). `project/` is **the product** — a personal AI
-> assistant — plus its skin; `project/server.ts` wires the three. No Bun workspaces:
-> relative imports, one root `package.json` + `tsconfig`. Each is headed for its own
-> repo once proven; the boundaries are kept clean. Start at
+> ([`docs/GRAIN.md`](./docs/GRAIN.md)). On top sit three independent consumers: `project/`
+> — **the product**, a personal AI assistant; `mill/` — **MILL**, a Markdown→GRAIN CMS (a
+> reusable layer above grain; *planned*); and `portfolio/` — the personal site, a custom
+> BATCH+GRAIN app that *uses* MILL for its content. `project/server.ts` is the composition
+> root. No Bun workspaces: relative imports, one root `package.json` + `tsconfig`. Each is
+> headed for its own repo once proven; the boundaries are kept clean. The *why* lives in
+> [`PHILOSOPHY.md`](./PHILOSOPHY.md); start reading at [`CLAUDE.md`](./CLAUDE.md) or
 > [`docs/README.md`](./docs/README.md).
 
 > **New here (AI or human)?** Start at [`CLAUDE.md`](./CLAUDE.md) — the orientation +
@@ -39,9 +42,10 @@ platform instead:
   edit, refresh, done.
 - **Server-rendered hypermedia.** Pages and fragments are HTML. htmx handles the
   interactions. The browser never sees a component tag.
-- **Atomic components, one file each.** A component's `.html` is simultaneously the
-  designer's mockup, the production template, and the documentation of its own
-  bindings. Its `.css` sits right next to it.
+- **Atomic components, one file each** (atoms → molecules → organisms, the method
+  [Brad Frost](https://atomicdesign.bradfrost.com/) named). A component's `.html` is
+  simultaneously the designer's mockup, the production template, and the documentation of
+  its own bindings. Its `.css` sits right next to it.
 - **Standards first, native second, library last.** The composition engine uses
   Bun's native `HTMLRewriter` (the Cloudflare Workers API) for parsing/escaping —
   the scariest job is done by the platform, not hand-rolled.
@@ -152,7 +156,7 @@ project/                 # the app + skin (built on grain)
 ├── domain|data|services|routes|view|config
 ├── components/          #   item-card, loop-card, app-header, …
 ├── pages/               #   flat .html; folders only group subpages
-├── styles/              #   Department of Time tokens + @font-face, base skin
+├── styles/              #   Bread tokens + @font-face, base skin
 ├── fonts/ vendor/       #   self-hosted Redaction · vendored htmx
 └── server.ts            #   composition root — the only place batch+grain+project meet
 package.json · tsconfig.json   # one each, at the root (no workspaces)

@@ -1,0 +1,105 @@
+# PHILOSOPHY.md — the *why*
+
+The beliefs behind this stack. This is the single source of truth for **why** the project is
+built the way it is; the linked docs are the single source of truth for **how**. If a belief here
+and a mechanism there ever disagree, the mechanism doc wins for *how*, and we fix the wording here.
+
+> Altitude: this file states values in a sentence or two and points *down* to the doc that
+> implements each. It does not re-explain mechanisms. Read it first; follow the arrows for detail.
+
+## The thesis (the one thing everything serves)
+
+> **Every surface is addressable and operable by both a human and an AI through one shared
+> vocabulary, and the AI's presence is a visible signal (*grain = AI*).**
+
+A human click and an AI decision become the **same `Intent`**, enter through **one door**
+(`POST /intent`), and return as **`RenderOp`s** pushed over SSE. There is **no privileged AI→DOM
+back channel**. The AI earns no shortcut a person doesn't have — it drives the same controls.
+→ *how:* [CONVENTIONS §3](CONVENTIONS.md) · [ARCHITECTURE §17](ARCHITECTURE.md) · [docs/AI-INTERFACE.md](docs/AI-INTERFACE.md)
+
+### The stance behind it: augmentation, not automation
+
+The AI is an **extension of you, not a replacement.** That is *why* it uses the same interface: a
+human click and an AI decision are the same primitive, which puts human and AI on **equal footing** —
+the AI gets no affordance you lack, and does nothing behind your back. Because it acts through the
+visible controls and shows its hand (grain = AI), you can **watch what it does, see how it works, and
+learn from it** — a demonstration, not an opaque result handed back from offstage. This is the
+*intelligence-augmentation* tradition (Licklider's man–computer symbiosis, Engelbart's augmenting
+human intellect) and its modern form, human-centered AI (Shneiderman): amplify and empower the person,
+keep them in control, don't automate them away. → the argued, cited version:
+[the whitepaper](portfolio/notes/whitepaper-one-vocabulary.md).
+
+## The bets
+
+Each is a conviction, not a preference. We hold them until the code proves one wrong.
+
+- **No build step.** The server *is* the build step — it composes final HTML on every request.
+  Edit, refresh, done. A `dist/` only ever appears as a *projection* of the running server, never a
+  second renderer. → [ARCHITECTURE §0.5](ARCHITECTURE.md), [§18](ARCHITECTURE.md)
+- **Native-first.** Standards → runtime-native → library, in that order. Modern HTML/CSS/JS are
+  strong enough that a framework is a cost, not a given. No Tailwind, no SCSS, no client framework.
+  → [ARCHITECTURE §0](ARCHITECTURE.md), [CONVENTIONS §2](CONVENTIONS.md)
+- **Hypermedia, server-rendered.** Fragments over the wire, htmx for reads/nav; avoids a client
+  framework, a build, and client/server state-sync bugs. → [ARCHITECTURE §0.5](ARCHITECTURE.md)
+- **Fast because there's less.** No client framework, no hydration, static-serveable output → fast
+  by construction. *This is a claim we intend to measure, not just assert* (Lighthouse + real SEO
+  wins are an open task before we print numbers on the `/batch` page).
+- **The AI gets a modality, not a chat channel.** A finite vocabulary of real action primitives —
+  like keys on a piano: structured at the primitive level, infinitely expressive in combination.
+  The AI reads a generated **index** (what's *possible*) against a live **snapshot** (what's *true
+  now*), and the surface's own affordances are its **physics**. → [docs/AI-INTERFACE.md](docs/AI-INTERFACE.md)
+- **Grade-as-signal.** Type grade carries meaning: **grain = AI / in-transit**, clean = human /
+  committed. The AI's presence is always shown, never hidden. → [CONVENTIONS §4.5](CONVENTIONS.md) ·
+  [docs/DESIGN-SYSTEM.md](docs/DESIGN-SYSTEM.md)
+- **Tokens only.** No hardcoded colors, ever. Components read semantic `var(--token)`s; re-skinning
+  repoints tokens in one place, never edits a component. → [CONVENTIONS §5](CONVENTIONS.md)
+- **Atomic design, credited.** Components compose bottom-up as atoms → molecules → organisms — the
+  method **Brad Frost** named ([*Atomic Design*, 2013](https://atomicdesign.bradfrost.com/)). We use
+  the taxonomy deliberately; the atomic layer lives in GRAIN. → [ARCHITECTURE §2](ARCHITECTURE.md) ·
+  [docs/DESIGN-SYSTEM.md](docs/DESIGN-SYSTEM.md)
+- **Layers point inward; seams are ports.** `batch` imports nothing outward; `grain` imports nothing
+  from `batch` except the `OpChannel` port; consumers wire the rest. Reach across a layer → add a
+  port, don't reach. → [CONVENTIONS §1](CONVENTIONS.md), [§10](CONVENTIONS.md)
+- **Tests are part of the work.** Three tiers — unit / integration / e2e — written as you build, not
+  after. → [CONVENTIONS §6](CONVENTIONS.md)
+- **Content is Markdown; pages are a projection of it.** Human-authored content lives as `.md` +
+  images and is rendered to GRAIN pages by **MILL** — one content source, many consumers (human page,
+  RAG corpus, published docs). → [mill/PLAN.md](mill/PLAN.md)
+
+## What we reject
+
+- A build step that turns source into a separate artifact (export stays a crawl-and-freeze).
+- A privileged AI back channel, or any hidden AI action (grain always shows).
+- Hardcoded styling in components; per-component theme overrides.
+- Framework/library reached for before standards and native APIs are exhausted.
+- Skeuomorphic chrome and generic template polish (see `portfolio/FEATURES.md` anti-features).
+- Unbounded model trust — the AI is grounded (RAG) and acts only through the closed vocabulary.
+
+## The four concerns (one direction of dependency)
+
+```
+batch/   BATCH — the substrate (Bun · Addressable · TypeScript · CSS · htmx); no build step
+  └─ grain/   GRAIN — an AI-interaction design system + its default theme
+       ├─ project/     the product ("Project")
+       ├─ mill/        the Markdown→GRAIN CMS (a layer above grain; PLANNED)
+       └─ portfolio/   the personal site (a custom BATCH+GRAIN app that *uses* MILL for content)
+```
+
+`project/`, `mill/`, and `portfolio/` are independent consumers of `grain` + `batch`.
+→ canonical diagram + rules: [CLAUDE.md](CLAUDE.md) · [CONVENTIONS §1](CONVENTIONS.md)
+
+## Where each truth lives (so nothing forks)
+
+| For the… | Read |
+|---|---|
+| **why / beliefs** | **this file** |
+| substrate mechanism + trade-offs | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| build rules (layering, tokens, testing, vocabulary) | [CONVENTIONS.md](CONVENTIONS.md) |
+| AI contract (surfaces, ops, manifest, "AI acts") | [docs/AI-INTERFACE.md](docs/AI-INTERFACE.md) |
+| visual identity / grade-as-signal | [docs/DESIGN-SYSTEM.md](docs/DESIGN-SYSTEM.md) |
+| the design system overview | [docs/GRAIN.md](docs/GRAIN.md) |
+| the CMS | [mill/PLAN.md](mill/PLAN.md) |
+| the operable SSOT (types) | `grain/ai/contract.ts` |
+
+Showcase pages (`/grain`, `/batch`) and the whitepaper are **projections** of these docs —
+teasers that link back, never forks.

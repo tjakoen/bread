@@ -5,20 +5,23 @@ each thing — so new code (and new sessions) extend the grain instead of fighti
 When a rule and the surrounding code disagree, the surrounding code wins until this doc
 is updated; keep them in sync.
 
-> Companion docs: [`ARCHITECTURE.md`](ARCHITECTURE.md) (the substrate), [`docs/GRAIN.md`](docs/GRAIN.md)
-> (the design system + AI layer), [`docs/AI-INTERFACE.md`](docs/AI-INTERFACE.md) (the contract),
+> Companion docs: [`PHILOSOPHY.md`](PHILOSOPHY.md) (the why), [`ARCHITECTURE.md`](ARCHITECTURE.md)
+> (the substrate), [`docs/GRAIN.md`](docs/GRAIN.md) (the design system + AI layer),
+> [`docs/AI-INTERFACE.md`](docs/AI-INTERFACE.md) (the contract),
 > [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) (the visual identity), [`grain/README.md`](grain/README.md) (usage).
 
 ---
 
 ## 1. Layers & boundaries
 
-Three top-level concerns, one direction of dependency:
+Four concerns, one direction of dependency (each layer builds only on those below):
 
 ```
-project/  the app — domain, data, services, routes, pages, DOMAIN components, server.ts
+batch/   the no-build hypermedia substrate (render, http, assets, catalog, platform)
    └─ grain/   the design system + optional AI-interaction layer (default theme lives here)
-        └─ batch/   the no-build hypermedia substrate (render, http, assets, catalog, platform)
+        ├─ project/    the app — domain, data, services, routes, pages, DOMAIN components, server.ts
+        ├─ mill/       the Markdown→GRAIN CMS (a reusable layer above grain; planned)
+        └─ portfolio/  the personal site (a custom BATCH+GRAIN app that uses MILL for content)
 ```
 
 **Hard rules (enforced by review; verified in the audit):**
@@ -33,6 +36,18 @@ project/  the app — domain, data, services, routes, pages, DOMAIN components, 
 
 A consuming product **re-skins by overriding token slots** in its own sheet linked after
 GRAIN's three (`variables.css` → `global.css` → `grain.css`) — never by editing components.
+
+**What "no-build / native-first" governs (and what it doesn't).** The constraint is about the
+*product's runtime*, not the dev toolbox. It means exactly two things: (1) **no build step** — Bun
+runs the TypeScript directly, no bundler/transpiler between source and server; (2) **native-first**
+— the product ships (near-)zero framework JS to the browser (the `bun run audit` numbers are the
+proof). It does **not** mean "zero dependencies." Two things are always fair game and are **not**
+violations: **platform builtins** (`fs`, `path`, `node:fs/promises` — provided by Bun; batch reads
+files with them throughout) and **devDependencies** used by tooling that never ships to the client
+(`@playwright/test` drives the e2e tests, `bun run shots`, and `bun run audit` — it measures the
+product from the outside, it isn't part of it). The bar to defend is the `dependencies` block in
+`package.json`: keep third-party *runtime* deps at zero (today only `bun` itself). A dev tool
+importing playwright, or the substrate importing `fs`, is the stack working as intended.
 
 ---
 

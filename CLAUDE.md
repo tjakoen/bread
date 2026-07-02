@@ -6,14 +6,26 @@ this file too.
 
 ## What this is
 
-A **no-build, server-rendered hypermedia** stack and a product built on it. Three layers,
-one direction of dependency:
+A **no-build, server-rendered hypermedia** stack and the things built on it. One direction of
+dependency — each layer builds only on the layers below it:
 
 ```
-project/  the product — a personal AI assistant ("Department of Time") + its skin
-   └─ grain/   GRAIN — an AI-interaction design system + its default theme (the look)
-        └─ batch/   BATCH — the substrate (Bun · Atomic · TypeScript · CSS · htmx); no build step
+batch/   BATCH — the substrate (Bun · Addressable · TypeScript · CSS · htmx); no build step
+  └─ grain/   GRAIN — an AI-interaction design system + its default theme (the look)
+       ├─ project/     the product — a personal AI assistant ("Project") + its skin
+       ├─ MILL/        the markdown CMS (PLANNED; its OWN reusable project) — feed it .md + images, it renders GRAIN pages
+       └─ portfolio/   this personal site — a custom BATCH + GRAIN app; *uses MILL* to manage its content (notes/blog)
 ```
+
+`project/`, `MILL/`, and `portfolio/` are independent consumers of `grain` + `batch`. The portfolio is
+its own custom app — **MILL doesn't *build* it**; the portfolio just *uses* MILL to manage its
+markdown content (the notes/blog), while its bespoke surfaces (hero desk, calendar, etc.) are its own
+work. Dependency purity: `grain` imports nothing from `batch` except the `OpChannel` port; **MILL
+depends on both `grain` (components) and `batch` (substrate), never the reverse — so MILL is an
+*extension of neither*, a new layer above both** (`batch → grain → MILL`). MILL's core is
+framework-agnostic (a Markdown→components engine driven by a render adapter); the BATCH+GRAIN adapter
+is the default. That MILL exists at all is part of the pitch: it's BATCH + GRAIN proving they compose
+into a real, reusable tool. **Canonical MILL plan: `mill/PLAN.md`.**
 
 The defining idea: a UI where **every surface is addressable and operable by both a human
 and an AI through one shared vocabulary**, with the AI's presence shown as a visible signal
@@ -23,15 +35,16 @@ pushed over SSE. No privileged AI→DOM back channel.
 
 ## Start here (reading order)
 
-1. **[CONVENTIONS.md](CONVENTIONS.md)** — the build standard (layering, components, tokens,
+1. **[PHILOSOPHY.md](PHILOSOPHY.md)** — the *why* (the beliefs the whole stack serves). **Read first.**
+2. **[CONVENTIONS.md](CONVENTIONS.md)** — the build standard (layering, components, tokens,
    the action vocabulary, the 3-tier testing bar, the extraction plan). **The rulebook.**
-2. **[ARCHITECTURE.md](ARCHITECTURE.md)** — the substrate's reasoning (single source of truth).
-3. **[docs/GRAIN.md](docs/GRAIN.md)** + **[docs/AI-INTERFACE.md](docs/AI-INTERFACE.md)** — the
+3. **[ARCHITECTURE.md](ARCHITECTURE.md)** — the substrate's reasoning (single source of truth).
+4. **[docs/GRAIN.md](docs/GRAIN.md)** + **[docs/AI-INTERFACE.md](docs/AI-INTERFACE.md)** — the
    design system and the AI contract (surfaces, ops, manifest, the "AI acts" protocol).
-4. **[docs/DESIGN-SYSTEM.md](docs/DESIGN-SYSTEM.md)** — the visual identity / grade-as-signal.
+5. **[docs/DESIGN-SYSTEM.md](docs/DESIGN-SYSTEM.md)** — the visual identity / grade-as-signal.
 
 The SSOT for what's operable is **`grain/ai/contract.ts`** (`SurfaceKind`, `ActionName`,
-`ACTIONS`, `RenderOp`). The composition root — the only place the three layers meet — is
+`ACTIONS`, `RenderOp`). The composition root — the only place the layers meet — is
 **`project/server.ts`**. The reference screen is **`/loop`** (`project/pages/loop.html`).
 
 ## Commands
@@ -43,6 +56,7 @@ bun run test       # unit + integration (bun test)
 bun run test:e2e   # Playwright e2e (first run: bunx playwright install chromium)
 bun run test:all   # everything
 bun run shots      # capture UI screenshots (+ a gallery) — see "Seeing the UI" below
+bun run audit      # perf + SEO/AEO baseline (Playwright) → audit/report.md + report.json
 ```
 
 ## Seeing the UI (headless / remote)
@@ -81,12 +95,17 @@ This is the contract for not drifting. After any change, sync everything in its 
 | **A design token / the theme** | `grain/styles/variables.css` only (never per-component) |
 | **The `/loop` demo or its surfaces** | `grain/ai/reasoner.ts` (the scripted demo) ↔ `project/pages/loop.html` surfaces → **e2e** (`project/e2e/`) |
 | **The client dispatcher or a UI interaction** | `grain/scripts/ai-dispatch.js` → **e2e** (only tier that covers it) |
+| **The static export / prerender** | keep it a *projection* of the running server (fetch, don't re-render) → `batch/export` (`bun run export`, framework-generic) → respect the exportable boundary (no operable `/intent`+SSE surfaces) → ARCHITECTURE §18 |
 | **Layering / cross-layer deps** | re-verify import purity; if you reach across, add a port instead → CONVENTIONS §1/§10 |
 | **Anything user-visible in behavior** | the matching doc (`ARCHITECTURE` / `GRAIN` / `AI-INTERFACE` / `DESIGN-SYSTEM` / `CONVENTIONS`) |
+| **A concept doc** (`ARCHITECTURE`/`CONVENTIONS`/`GRAIN`/`AI-INTERFACE`) | the portfolio showcase that *renders* it — re-check the pitch/teaser sections still summarize it truly: `docs/GRAIN.md`+`AI-INTERFACE.md` → `/grain` (`portfolio/GRAIN-PAGE.md`, `/grain/docs`); `ARCHITECTURE`+`CONVENTIONS` → `/batch` (`portfolio/BATCH-PAGE.md`, `/batch/docs`). Docs are the single source; pages are trailheads, never forks |
 | **A notable decision or non-obvious fact** | write a **memory** (see below) so the next session inherits it |
 
 **Definition of done:** code + the right test tier(s) (unit / integration / e2e per CONVENTIONS §6)
 + docs synced (this table) + `tsc` and `bun test` green + a memory if a decision was made.
+
+**Before committing / after a big change:** run the alignment audit — [AUDIT.md](AUDIT.md) (a repeatable
+runbook: green gate, layering purity, tokens-only, persona-neutral GRAIN, naming, docs-synced).
 
 ## Memory
 

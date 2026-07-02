@@ -50,17 +50,18 @@ Everything else GRAIN needs (the write capability, the render-a-surface function
 | **Manifest** | the AI's instruction manual per screen — harvested from components, can't drift | `grain/ai/manifest.ts`, `grain/ai/accepts.ts` |
 | **Grade-as-signal** | grain = AI / in-transit, clean = human / committed — one inherited switch | `DESIGN-SYSTEM.md` §3, `AI-INTERFACE.md` §5 |
 | **The "AI acts" protocol** | spotlight the surface, it enters AI-mode by kind (button → working, input → composed clean, text → grain), act, hand back — mediated, never force-killed | `AI-INTERFACE.md` §5c |
+| **The takeover console** | when the AI takes over, the assistant retracts and a console narrates each step as an **action-badge** (the verb vocabulary made visible: `reads → types → revises → clicks → commits`) | `AI-INTERFACE.md` §5e, `components/atoms/action-badge` |
 
 ## How it stacks
 
 ```
 Product (the assistant) — domain components + pages + wiring (+ optional theme override)
-   └─ GRAIN   — the AI-operable design system + its DEFAULT theme, "Department of Time"
+   └─ GRAIN   — the AI-operable design system + its DEFAULT theme, "Bread"
         │        (tokens, Redaction fonts, base/skin, grade mechanism, the AI layer)
         └─ BATCH — no-build hypermedia substrate (../ARCHITECTURE.md)
 ```
 
-*Design system vs. theme:* GRAIN ships the **Department of Time** look as its **default
+*Design system vs. theme:* GRAIN ships the **Bread** look as its **default
 theme** — it's GRAIN's identity (the warm-paper, Redaction-grain, bread vibe). A product
 on GRAIN uses it directly and only **overrides token slots** (in its own sheet, linked
 after GRAIN's) if it wants a different vibe. New design work generally lands **in GRAIN**
@@ -69,6 +70,31 @@ after GRAIN's) if it wants a different vibe. New design work generally lands **i
 The detailed contract is **[AI-INTERFACE.md](./AI-INTERFACE.md)** (envelopes, manifest,
 the two write paths, the AI-acts protocol); the visual identity and grade mechanics are
 **[DESIGN-SYSTEM.md](./DESIGN-SYSTEM.md)**.
+
+## Two layout archetypes — editorial & workspace
+
+GRAIN ships two ways to lay out a page; both read the same tokens and the same grade
+mechanism, so the AI layer works identically in either.
+
+- **Editorial** — the single-column `.container` (reading, marketing, docs). The portfolio
+  and content pages use it.
+- **Workspace** — the **`app-shell`**: a full-viewport grid of five regions (left **rail**,
+  **topbar** with **tabs**, **main**, right **aside** = the assistant, bottom **console**),
+  the "work-y" VS Code-style archetype. Because the render engine can't project children into
+  a component, the shell and its parts (`side-rail`, `tab-bar`, `nav-item`, `tab`) are
+  **layout class-contracts** (a `.css` + a `.md` example, no `.html` tag) that a page applies
+  to plain elements — not data-bound tags. The product wraps them once in a domain organism,
+  **`app-frame`** (`project/components/organisms/app-frame`), that carries the rail, tabs,
+  assistant, and console as the shared chrome on every page; `/dashboard` and `/loop` compose it.
+
+**The AI lives in the shell.** The right **aside** holds the assistant conversation
+(`chat.send` → your bubble + the AI's streamed reply, `chat-message`); when the AI *takes
+over* (a spotlight op raises `data-acting` on `.app-shell`), the chat retracts and the bottom
+**console** rises to narrate the run as `action-badge`s (`AI-INTERFACE.md` §5e). The console
+is styled in the **grain serif** (not a monospace terminal) — the AI's narration is its
+*speech*, so it wears the same grain voice as everything else the AI authors, not a
+developer-console aesthetic. `grain/scripts/shell.js` manages the rail collapse/drawer and the
+chat⇄console swap; it knows nothing about the AI door.
 
 ## Repo layout (monorepo, separated now)
 
