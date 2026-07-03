@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-themes="sourdough baguette brioche">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,6 +9,9 @@
   <link rel="stylesheet" href="/styles/global.css">
   <link rel="stylesheet" href="/styles/grain.css">
   <link rel="stylesheet" href="/components.css">
+  <script src="/scripts/shell.js" defer></script>
+  <script src="/scripts/theme.js" defer></script>
+  <script type="module" src="/scripts/ai-dispatch.js"></script>
   <style>
     .lede { color: var(--color-muted); font-size: var(--text-lg); max-width: 56ch; line-height: var(--leading-relaxed); }
     .lede em { font-style: normal; text-decoration: underline; }
@@ -26,7 +29,10 @@
   </style>
 </head>
 <body data-screen="mill">
-  <main class="container">
+  <div class="app-shell" data-rail-collapsed="false" data-surface="screen">
+    <portfolio-frame />
+    <main class="app-shell__main">
+      <div class="board">
     <p class="eyebrow">🌾 <span class="name">MILL</span> · Content engine</p>
     <h1 class="masthead">Markdown in, living layouts.</h1>
     <hr class="rule">
@@ -53,6 +59,8 @@
       and <a href="/batch"><span class="name">BATCH</span></a>.
       <p>🤖 Built with Claude. I don't prompt and pray, I prompt and prove.</p>
     </div>
-  </main>
+      </div>
+    </main>
+  </div>
 </body>
 </html>
