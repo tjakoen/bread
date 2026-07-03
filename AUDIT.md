@@ -29,8 +29,10 @@ grep -rn "import" grain --include=*.ts | grep -i "batch"             # grain imp
 ```
 Only `project/server.ts` wires the layers. New design-system work lives in `grain/` by default; `mill/`/`portfolio/` sit above grain (`batch → grain → mill`), consume, never reverse.
 
-### 3. One vocabulary / SSOT — CONVENTIONS §3, AI-INTERFACE §1
-- Verbs/surfaces come from `grain/ai/contract.ts` (`ActionName`/`SurfaceKind`/`ACTIONS`), referenced in TS. String literals only in HTML attrs (`data-action`/`data-accepts`) + the dispatcher — both drift-guarded at server startup. The manifest is harvested, never hand-typed.
+### 3. One vocabulary / no magic strings / SSOT — CONVENTIONS §3, AI-INTERFACE §1
+- **No magic strings.** Any string referenced twice is a vocabulary → defined once (TS `const`/registry, or a single named-const block in a browser module). Verbs/surfaces come from `grain/ai/contract.ts`, referenced in TS; theming attrs/values/control-names come from the const block in `grain/scripts/theme.js`. The manifest is harvested, never hand-typed.
+- **Cross-layer literals** (HTML attrs, CSS selectors, browser JS) are the only exception — single-sourced on the JS side **and drift-guarded at server startup**: the action vocabulary (`data-action`/`data-accepts` vs `ACTIONS`) and the theming vocabulary (theme flavors in markup vs `[data-theme="…"]` blocks in `variables.css`). Boot the app and confirm **zero `[accepts]`/`[theming]` drift warnings**.
+- Smell-grep for re-typed literals: `rg -n 'data-(action|accepts|theme|color-scheme)="' ` and eyeball that JS/TS references go through a const, not a raw string.
 
 ### 4. Tokens only — CONVENTIONS §5
 ```bash
@@ -45,7 +47,7 @@ GRAIN is product-agnostic: "the desk" is the **product** persona and belongs onl
 
 ### 6. Naming — memories `project-name-temporary`, `batch-rename-open-question`, org rule
 - Product = **"Project"** (temporary) in docs; the old name lingers only in product UI (`project/pages/*`, `portfolio/pages`) pending a product-rename pass.
-- GRAIN's default theme = **"Bread"** 🍞. BATCH = **B**un · **A**ddressable · **T**ypeScript · **C**SS · **H**tmx.
+- GRAIN's default theme = **"Sourdough"** 🍞. BATCH = **B**un · **A**ddressable · **T**ypeScript · **C**SS · **H**tmx.
 - Company name is **"Career Team"** — never other spellings. `grep -rniE "career[ -]?team" . && eyeball casing`.
 
 ### 7. Docs synced — CLAUDE.md "change X → update Y" table
@@ -59,6 +61,14 @@ Each has `.html` / `.css` / `.md` (+ `.ai.md` if it needs one); operable ones de
 
 ### 10. Memory
 Notable decisions/non-obvious facts are captured as agent memories so the next session inherits them.
+
+### 11. Docs align with the platform's features — nothing buried
+Each layer keeps a **tiered capabilities list** ("What X gives you": *Hero* + *Also*) as the single
+source, and every real feature appears in it — headlined or explicitly listed, never omitted.
+- **The lists exist and are current:** `grain/docs/GRAIN.md` §"What GRAIN gives you", `batch/docs/ARCHITECTURE.md` §"What BATCH gives you", `mill/PLAN.md` §"What MILL gives you (PLANNED)".
+- **Walk the code → list:** does the platform *do* something the list doesn't name? (Scan `grain/ai/*`, `batch/http/*` + `batch/audit`, `mill/core`+`adapters`.) A shipped capability missing from its list = a finding (it's buried). A listed capability that no longer exists = a finding (stale).
+- **Tiering sane:** heroes are the reasons the layer exists; useful-but-quiet features are under *Also*, not omitted. PLANNED items are marked as such (don't imply shipped).
+- **Teasers are projections, not forks:** the README + landing-page (`/grain`, `/batch`) capability blurbs summarize the source list truly and don't add features the source doesn't have (ties to check 7).
 
 ## Report template
 - **✅ Passing:** (list the checks that passed)

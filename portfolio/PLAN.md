@@ -255,9 +255,13 @@ and absorbs pieces 8–10 below.
   (orthogonal axes; the axis refactor + `theme.js` + the accent wiring landed this pass). Three themes
   ship: **Sourdough** (default, hueless), **Baguette** (clean, soft-blue accent), **Brioche** (warm,
   honey-gold accent) — plus the **one-signature-hue accent** (`--color-accent`, full reach: links /
-  focus / `::selection` / primary button; success+danger stay monochrome; DESIGN-SYSTEM §2). A **Themes
-  tab** under GRAIN lists them with live preview + "Use this theme"; a **topbar light/dark toggle** sets
-  `data-color-scheme` (defaults to `prefers-color-scheme`, persisted). Pure token flips — **the live
+  focus / `::selection` / primary button; success+danger stay monochrome; DESIGN-SYSTEM §2). Two topbar controls sit
+  side by side, site-wide: a **light/dark toggle** (`data-color-scheme`, defaults to
+  `prefers-color-scheme`) and a **theme-cycle toggle** that rotates the flavor through the available
+  themes (Sourdough → Baguette → Brioche → …). In addition, a **Themes tab** under GRAIN is the
+  *showcase* — each theme listed with a description + live preview + a "Use this theme" button. Both
+  persist (localStorage); `theme.js` reads the flavor list from `<html data-themes="…">` so the cycle
+  is consumer-configurable. Pure token flips — **the live
   proof of "re-skin by token override, never edit components"**; `grade-as-signal` survives every
   theme+dark (conformance tests). Client-side view preferences (static-safe), not the door.
   - **Deferred (planned, memory `grain-drivable-demos` + `grain-demo-page-structure`):** the catalog /
