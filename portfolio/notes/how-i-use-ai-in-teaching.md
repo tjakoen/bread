@@ -33,10 +33,37 @@ a better teacher, and taking it away, deliberately, where its presence would rob
 thing they came to learn. This post is the honest version of both halves: exactly how I use it, and
 exactly where I don't.
 
+It's the same with my students as it is with me: whether they use AI or not was never the question I
+care about. The only thing I'm precious about is whether they actually learned the thing. Reach for
+every tool in the box or none of them, the bar doesn't move: **if you can't explain it back to me,
+you didn't learn it.**
+
 The belief underneath it all is simple enough to fit on a napkin, and it's the same one I hand my
 students on day one: AI doesn't *add* to what you can do, it *multiplies* it, and
 [ten times zero is still zero](ten-times-zero.md). Keep that in your pocket; everything below is that
 idea, applied to the job of teaching.
+
+## The rules I give my students
+
+So here's what that belief turns into on the ground, because "learning is the point" is not the same
+as "anything goes." I'm blunt about vibe coding, and the rules follow the multiplier straight down:
+
+- **In the lab, use AI all you want.** That's practice. Practice is where you're supposed to have
+  training wheels.
+- **On the major activities, you get your course material and your own previous work, nothing
+  else.** No generating your way out of the thing the activity exists to teach.
+- **Exams come straight out of your head. No tools.** If you learned it, this is easy. If you didn't,
+  no autocomplete is going to save you, and that's the whole point.
+
+And the one that makes the room go quiet:
+
+> If I flag your work as vibe-coded and you can't explain it back to me when I ask: automatic fail
+> on that activity.
+
+Not because you used a tool. Because you shipped something with your name on it that you don't
+understand. In the real world that's how you get found out; in my class it's just a faster, cheaper
+version of the same lesson. **If you can't explain it, you didn't build it,** and that's not a high
+bar. That's *the* bar.
 
 ## What I actually use it for
 
@@ -113,28 +140,6 @@ student's work. The mechanics of that (grading off a snapshot, a separate delibe
 the access model) are the plumbing at the heart of the
 [build-story post](how-i-turned-github-into-a-classroom.md); what matters *here* is the shape of the
 decision. The interesting engineering was never the AI. It was building the guardrails around it.
-
-## The rules I give my students
-
-I don't police *how* you get to understanding; I care that you get there. But I'm blunt about vibe
-coding, and the rules follow the multiplier:
-
-- **In the lab, use AI all you want.** That's practice. Practice is where you're supposed to have
-  training wheels.
-- **On the major activities, you get your course material and your own previous work, nothing
-  else.** No generating your way out of the thing the activity exists to teach.
-- **Exams come straight out of your head. No tools.** If you learned it, this is easy. If you didn't,
-  no autocomplete is going to save you, and that's the whole point.
-
-And the one that makes the room go quiet:
-
-> If I flag your work as vibe-coded and you can't explain it back to me when I ask: automatic fail
-> on that activity.
-
-Not because you used a tool. Because you shipped something with your name on it that you don't
-understand. In the real world that's how you get found out; in my class it's just a faster, cheaper
-version of the same lesson. **If you can't explain it, you didn't build it,** and that's not a high
-bar. That's *the* bar.
 
 ## Where I refuse to use it
 
