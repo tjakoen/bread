@@ -12,7 +12,7 @@ summary: >
   *modality* for AI — a design-system claim, independent of what is built with it or where it runs.
 ---
 
-> **Status: working draft.** This is a *projection* of [PHILOSOPHY.md](../../PHILOSOPHY.md) — the
+> **Status: working draft.** This is a *projection* of [PHILOSOPHY.md](../PHILOSOPHY.md) — the
 > beliefs are canonical there; this paper situates them in the literature and argues the contribution.
 > Related-work coverage is strongest for agent–UI protocols, GUI agents, and mixed-initiative HCI
 > (adversarially verified); provenance, generative-UI, accessibility-as-affordance, and intent-based UI

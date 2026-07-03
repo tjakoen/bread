@@ -9,9 +9,14 @@
   <link rel="stylesheet" href="/styles/variables.css">
   <link rel="stylesheet" href="/styles/global.css">
   <link rel="stylesheet" href="/styles/grain.css">
-  <link rel="stylesheet" href="/components.css">
+  <link rel="stylesheet" href="/components.css"><!-- includes GRAIN's AI module (the "AI is acting" spotlight), reused by the surface demo -->
   <!-- demo-only island: the Catalog peek sidebar (hover a component → catalog scrolls to it). ⌘K is global. -->
   <script src="/scripts/catalog-peek.js" defer></script>
+  <!-- reusable demo-box island (ES module): runs the declarative scripted demos below -->
+  <script type="module" src="/scripts/demo-box.js"></script>
+  <!-- the "One surface, both operators" showcase demo (ES module, lives in portfolio/ — it's
+       showcase-specific; it REUSES grain's spotlight + type-effect modules rather than reimplementing) -->
+  <script type="module" src="/portfolio-scripts/surface-demo.js"></script>
   <style>
     /* ---------------------------------------------------------------------------
        Demo-site LAYOUT only (NOT the design system). This page is GRAIN's own site,
@@ -39,7 +44,7 @@
     .site__bar-actions { display: flex; align-items: center; gap: var(--space-3); margin-left: auto; }
 
     /* one editorial column, rules between sections */
-    .site__section { max-width: var(--site-max); margin: 0 auto; padding: var(--space-8) var(--page-pad); }
+    .site__section { max-width: var(--site-max); margin: 0 auto; padding: var(--space-7) var(--page-pad); }
     .site__section + .site__section { border-top: 1px solid var(--color-line); }
     .site__lede { color: var(--color-muted); font-size: var(--text-lg); max-width: 54ch; line-height: var(--leading-relaxed); }
     .site__why { color: var(--color-muted); font-size: var(--text-sm); max-width: 60ch; }
@@ -50,42 +55,59 @@
       margin: 0 0 var(--space-5); max-width: 18ch; }
     .hero__cta { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
 
-    /* the signature micro-moment: a line settling grain → clean, read instantly */
-    .signature { position: relative; display: inline-block; margin-top: var(--space-6);
-      font-size: var(--text-2xl); line-height: 1.3; }
-    .signature__take { display: block; }
-    .signature__take--grain { position: absolute; inset: 0; }
-    @media (prefers-reduced-motion: no-preference) {
-      .signature__take--grain { animation: sig-grain 6s ease-in-out infinite; }
-      .signature__take--clean { animation: sig-clean 6s ease-in-out infinite; }
-    }
-    @keyframes sig-grain { 0%,8% { opacity: 1; } 20%,100% { opacity: 0; } }
-    @keyframes sig-clean { 0%,8% { opacity: 0; } 20%,88% { opacity: 1; } 100% { opacity: 0; } }
+    /* the signature micro-moment: the AI types a line — in grain, and it STAYS grain */
+    .signature { display: block; margin-top: var(--space-6); font-size: var(--text-2xl); line-height: 1.3; }
+    .signature__line { min-height: 1.3em; }
     .signature__cap { display: block; margin-top: var(--space-3); font-size: var(--text-sm); color: var(--color-muted); }
+    .sig-replay { background: transparent; border: 0; padding: 0; cursor: pointer; color: var(--color-muted);
+      font: inherit; font-size: var(--text-sm); text-decoration: underline; }
+    .sig-replay:hover { color: var(--ink); }
 
     /* grade-as-signal panel */
     .grade { display: grid; gap: var(--space-6); margin-top: var(--space-6);
       grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
     .grade__card { border: 1px solid var(--color-line); border-radius: var(--radius-md); padding: var(--space-5); }
     .grade__card h3 { font-size: var(--text-lg); margin: 0 0 var(--space-3); }
-    .sig-msg { max-width: 90%; font-size: var(--text-base); padding: var(--space-2) var(--space-3);
-      border: 1px solid var(--color-line); border-radius: var(--radius-md); margin-bottom: var(--space-3); }
-    .sig-msg--you { margin-left: auto; background: var(--color-bg); }
-    .sig-msg--ai { background: transparent; }
-    .grade__line { min-height: 1.6em; margin: var(--space-2) 0; }
+    .grade__card .field { margin-bottom: var(--space-3); }
+    .grade__card .list__item { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
     .grade__legend { display: flex; flex-wrap: wrap; gap: var(--space-5); margin-top: var(--space-6);
       font-size: var(--text-sm); color: var(--color-muted); }
     .grade__legend b { color: var(--color-fg); font-weight: var(--font-weight-regular); }
 
-    /* the components composition — labelled specimens; hover any to peek the catalog */
-    .specimens { display: grid; gap: var(--space-5); margin-top: var(--space-6);
-      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
-    .specimen { border: 1px solid var(--color-line); border-radius: var(--radius-md); padding: var(--space-4);
-      display: flex; flex-direction: column; gap: var(--space-3); }
-    .specimen__label { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-muted); }
-    .specimen__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
-    .mini-rail { display: flex; flex-direction: column; gap: var(--space-1); }
-    .mini-rail .nav-item { padding: var(--space-2) var(--space-3); }
+    /* the headline proof: the SAME words, large, clean vs grain — so you can actually see the
+       texture change (Redaction vs Redaction 50). Small body text hides the grade. */
+    .grade-show { margin: var(--space-6) 0; display: flex; flex-direction: column; gap: var(--space-4); }
+    .grade-show__row { display: flex; align-items: baseline; gap: var(--space-4); margin: 0; flex-wrap: wrap; }
+    .grade-show__tag { flex: 0 0 6rem; font-size: var(--text-xs); text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--color-muted); }
+    .grade-show__text { font-size: var(--text-3xl); line-height: 1.2; }
+
+    /* a real composed surface (rail + main), not a specimen grid — every part is a grain component */
+    .surface { display: grid; grid-template-columns: minmax(7rem, 12rem) 1fr; gap: var(--space-5);
+      margin-top: var(--space-6); border: 1px solid var(--color-line); border-radius: var(--radius-md);
+      padding: var(--space-5); }
+    .surface__rail { display: flex; flex-direction: column; gap: var(--space-1);
+      border-right: 1px solid var(--color-line); padding-right: var(--space-4); }
+    .surface__main { display: flex; flex-direction: column; gap: var(--space-5); min-width: 0; }
+    /* chat threads use grain's own .chat-log container (bundled in /components.css) — see chat-log.css */
+    .surface__main .list__item { display: flex; align-items: center; gap: var(--space-3); }
+    .surface__main .list__item .task-label { flex: 1; }
+    .surface__main .list__item.is-done .task-label { text-decoration: line-through; color: var(--color-muted); }
+    [data-ai-run] { font-family: var(--font-grain); }   /* the AI trigger wears grain — it's the machine's move */
+    /* while acting it holds the standard AI-mode state (data-commit="pending" → dashed edge + caret,
+       from b-button); lift it above the spotlight veil so that state is visible over the dim.
+       Pin bg+fg together: a lingering :hover (mouse didn't move after the click) sets color:paper,
+       which over a paper bg would be white-on-white — so state the working look explicitly. */
+    [data-ai-run][data-commit="pending"] { position: relative; z-index: var(--z-ai-surface, 9002);
+      background: var(--paper); color: var(--ink); }
+    /* align-items:end so the Send button lines up with the INPUT, not the label+input block */
+    .surface__compose { display: flex; align-items: flex-end; gap: var(--space-3); flex-wrap: wrap;
+      border-top: 1px solid var(--color-line); padding-top: var(--space-4); }
+    .surface__compose .field { flex: 1; }
+    .verbs { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    @media (max-width: 34rem) { .surface { grid-template-columns: 1fr; }
+      .surface__rail { flex-direction: row; flex-wrap: wrap; border-right: 0; padding-right: 0;
+        border-bottom: 1px solid var(--color-line); padding-bottom: var(--space-3); } }
 
     /* how it works — a small monochrome diagram */
     .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: var(--space-2); margin: var(--space-6) 0; }
@@ -103,21 +125,50 @@
     .site__foot-links { display: flex; flex-wrap: wrap; gap: var(--space-5); margin-bottom: var(--space-4); }
     .site__foot em { font-style: normal; text-decoration: underline; }
 
-    /* the Catalog peek sidebar (demo affordance, slides in from the right) */
-    .catalog-peek { position: fixed; top: 0; right: 0; bottom: 0; z-index: 60; width: min(92vw, 30rem);
-      display: flex; flex-direction: column; background: var(--color-surface); border-left: 1px solid var(--ink);
-      transform: translateX(100%); transition: transform 0.3s ease; }
-    .catalog-peek[data-open="true"] { transform: none; }
-    .catalog-peek__head { display: flex; align-items: center; justify-content: space-between;
+    /* page shell: content column + catalog sidebar sit SIDE BY SIDE, so opening the
+       sidebar SHIFTS the content aside (never overlays it). */
+    .page { display: flex; align-items: stretch; min-height: 100vh; }
+    .page__main { flex: 1 1 auto; min-width: 0; }   /* min-width:0 lets it shrink when the sidebar opens */
+
+    /* the Catalog peek sidebar (demo affordance): a real layout member that grows from
+       0 → its width when open, pushing .page__main narrower rather than covering it. */
+    .catalog-peek { flex: 0 0 0; width: 0; overflow: hidden;
+      position: sticky; top: 0; align-self: flex-start; height: 100vh;
+      display: flex; flex-direction: column; background: var(--color-surface);
+      overscroll-behavior: contain;   /* scrolling the sidebar never chains to the page behind */
+      transition: flex-basis 0.3s ease, width 0.3s ease; }
+    /* border only when open, so the collapsed sidebar leaves no stray hairline (and is truly 0-width) */
+    .catalog-peek[data-open="true"] { flex: 0 0 min(92vw, 30rem); width: min(92vw, 30rem);
+      border-left: 1px solid var(--ink); }
+    .catalog-peek__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4);
       padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-line);
       font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-muted); }
+    .catalog-peek__title { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    /* small sentence-case hint under the CATALOG title — only where the hover mechanic applies */
+    .catalog-peek__hint { display: none; text-transform: none; letter-spacing: normal;
+      font-size: var(--text-xs); line-height: var(--leading-normal); color: var(--color-muted); }
+    @media (hover: hover) and (pointer: fine) { .catalog-peek__hint { display: block; } }
+    .catalog-peek__head-actions { display: flex; align-items: center; gap: var(--space-3); flex: 0 0 auto; }
+    .catalog-peek__expand { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--color-muted); text-decoration: none; border-bottom: 1px solid var(--color-line); }
+    .catalog-peek__expand:hover { color: var(--ink); border-color: var(--ink); }
     .catalog-peek__close { background: transparent; border: 0; font-size: 1.3rem; line-height: 1; cursor: pointer; color: var(--ink); }
-    .catalog-peek__frame { flex: 1; width: 100%; border: 0; background: var(--color-bg); }
-    [data-peek-hl="true"] { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 2px; }
+    .catalog-peek__frame { flex: 1; width: min(92vw, 30rem); border: 0; background: var(--color-bg);
+      overscroll-behavior: contain; }
+
+    /* Mobile: no room to shift a 30rem column, so the sidebar reverts to an overlay drawer. */
+    @media (max-width: 48rem) {
+      .catalog-peek { position: fixed; top: 0; right: 0; bottom: 0; height: auto; z-index: 60;
+        flex-basis: auto; }
+      .catalog-peek[data-open="false"] { width: 0; }
+    }
     @media (prefers-reduced-motion: reduce) { .catalog-peek { transition: none; } }
   </style>
 </head>
-<body data-screen="grain">
+<body class="page" data-screen="grain">
+
+  <!-- content column: shrinks when the catalog sidebar opens, so content SHIFTS aside -->
+  <div class="page__main">
 
   <!-- persistent chrome — outside the peek root, so the bar's own controls don't trigger peek -->
   <header class="site__bar">
@@ -144,16 +195,24 @@
       <p class="site__lede">A human click and an AI decision become the same intent, flow through one door, and
         come back as visible edits. The AI's presence is shown, never hidden — <b class="name">grain</b> is the signature of a machine at work.</p>
 
-      <p class="signature" aria-label="A line the desk writes, settling from grain to clean.">
-        <span class="signature__take signature__take--grain" data-grade="grain" aria-hidden="true">Draft the Thursday plan.</span>
-        <span class="signature__take signature__take--clean">Draft the Thursday plan.</span>
-        <span class="signature__cap">grain while the desk writes → clean once it commits</span>
-      </p>
+      <div class="signature" data-demo="trigger" aria-label="A line the AI types, in grain.">
+        <span class="signature__line" data-grade="grain" id="sig-line">Draft the Thursday plan.</span><span class="caret" id="sig-caret" hidden></span>
+        <span class="signature__cap">the AI types it in grain — and it <b>stays</b> grain (provenance persists) ·
+          <button class="sig-replay" data-demo-play type="button">▷ replay</button></span>
+        <script type="application/json" class="demo-box__steps">
+          [{"type":"#sig-line","value":"Draft the Thursday plan.","caret":"#sig-caret","speed":55}]
+        </script>
+      </div>
 
       <div class="hero__cta">
-        <b-button as="a" href="#components" label="See the components"></b-button>
-        <b-button as="a" href="/catalog" label="Full catalog" variant="soft"></b-button>
+        <!-- opens the Catalog sidebar (a behaviour hook → hand-authored .btn, like the Inspect toggle;
+             b-button forwards only config props, not data-peek). Full-page catalog is one click on
+             from inside the sidebar. -->
+        <button class="btn" type="button" data-peek="open">Browse the components</button>
+        <b-button as="a" href="#how" label="How it works" variant="soft"></b-button>
       </div>
+      <p class="site__why">Every surface on this page is one of GRAIN's own components. Open
+        <b>Inspect</b> (top-right) and hover anything — the sidebar catalog reveals its entry.</p>
     </section>
 
     <!-- 2 · GRADE-AS-SIGNAL — grain = AI / in-transit, clean = human / committed -->
@@ -163,19 +222,37 @@
         acting or a value is in transit; <b>clean</b> type means a human wrote it or it has committed. Same words,
         two typefaces — no badges to learn.</p>
 
+      <!-- the proof, at a size where the texture reads: same line, clean (Redaction) vs grain (Redaction 50) -->
+      <div class="grade-show">
+        <p class="grade-show__row"><span class="grade-show__tag">a person</span><span class="grade-show__text">Draft the Thursday plan.</span></p>
+        <p class="grade-show__row"><span class="grade-show__tag">the AI</span><span class="grade-show__text" data-grade="grain">Draft the Thursday plan.</span></p>
+      </div>
+
       <div class="grade">
-        <div class="grade__card">
+        <div class="grade__card" data-demo="loop">
           <h3>Two hands, one thread</h3>
-          <div class="sig-msg sig-msg--you">Plan my afternoon around the review.</div>
-          <div class="sig-msg sig-msg--ai" data-grade="grain">On it — drafting a plan and triaging today's items.</div>
-          <p class="site__why">You (clean) and the desk (grain) in one conversation — you can tell who spoke at a glance.</p>
+          <!-- real chat-message components in a flex thread: you (clean, right) + the AI (grain, left) -->
+          <div class="chat-log">
+            <div class="chat-message" data-role="you"><span class="chat-message__who">You</span><span class="chat-message__body">Plan my afternoon around the review.</span></div>
+            <div class="chat-message" data-role="ai" data-grade="grain"><span class="chat-message__who">GRAIN</span><span class="chat-message__body" id="ai-typing">On it — drafting a plan and triaging today's items.</span></div>
+          </div>
+          <p class="site__why">You (clean) and the AI (grain) in one conversation — the AI's line <b>stays</b> grain; provenance never evaporates into looking human.</p>
+          <script type="application/json" class="demo-box__steps">
+            [{"type":"#ai-typing","value":"On it — drafting a plan and triaging today's items.","speed":34},{"wait":2800}]
+          </script>
         </div>
 
-        <div class="grade__card">
-          <h3>A value going grain, then settling</h3>
-          <p class="grade__line" data-grade="grain"><span class="ai-text">Thursday, 3 deep-work blocks</span><span class="caret"></span></p>
-          <p class="grade__line settled">Thursday, 3 deep-work blocks</p>
-          <p class="site__why">While the desk fills a field it reads grain with a live caret; on commit it settles to clean.</p>
+        <div class="grade__card" data-demo="loop">
+          <h3>Your optimistic action settles</h3>
+          <!-- settling to clean is for a HUMAN's own value (AI-INTERFACE §5): grain in-transit → clean committed -->
+          <ul class="list">
+            <li class="list__item" id="settle-row"><span>Archive last week's notes</span><span class="badge" data-status="archived" id="settle-badge">archived</span></li>
+          </ul>
+          <p class="site__why">Archiving is <b>your</b> action: grain while in-transit, then clean once it commits.
+            AI speech, by contrast, stays grain — only your committed data reads clean.</p>
+          <script type="application/json" class="demo-box__steps">
+            [{"attr":"#settle-row","name":"data-grade","value":"grain"},{"attr":"#settle-badge","name":"data-status","value":"active"},{"text":"#settle-badge","value":"archiving…"},{"wait":1500},{"clear":"#settle-row","name":"data-grade"},{"attr":"#settle-badge","name":"data-status","value":"archived"},{"text":"#settle-badge","value":"archived"},{"wait":2400}]
+          </script>
         </div>
       </div>
 
@@ -185,77 +262,50 @@
       </div>
     </section>
 
-    <!-- 4 · THE COMPONENTS — a real composition; hover any specimen to peek the catalog -->
-    <section class="site__section" id="components" aria-label="The components">
-      <div class="section-head"><span>The components</span><a class="action" href="/catalog">Full reference → /catalog</a></div>
-      <p class="site__why">Every surface here is one of GRAIN's own atoms on the default theme. Open <b>Inspect</b>
-        (top-right) and hover anything to jump to its entry in the catalog.</p>
+    <!-- 3 · A REAL SURFACE — not a specimen grid: one believable composition that USES the
+         components in context, so hovering any piece reveals it in the sidebar catalog. -->
+    <section class="site__section" aria-label="A surface composed from GRAIN">
+      <div class="section-head">
+        <span>One surface, both operators</span>
+        <!-- run the SAME surface as the AI would (client-side scripted; reuses the real spotlight) -->
+        <button class="btn" data-variant="soft" data-ai-run type="button">▷ Watch the AI act</button>
+      </div>
+      <p class="site__why">A real GRAIN composition you can operate — switch tabs, complete a task, or ask it
+        something. Then <b>watch the AI act</b>: it drives the same controls, in grain, under the spotlight.</p>
 
-      <div class="specimens">
-        <div class="specimen">
-          <span class="specimen__label">Buttons</span>
-          <div class="specimen__row">
-            <b-button label="Commit"></b-button>
-            <b-button label="Draft" variant="soft"></b-button>
-            <b-button label="Small" size="sm"></b-button>
-          </div>
-        </div>
+      <div class="surface" data-surface-demo>
+        <nav class="surface__rail" aria-label="Views">
+          <a class="nav-item" aria-current="page"><b-icon sym="/assets/sprite.svg#tasks"></b-icon><span class="nav-item__label">Tasks</span></a>
+          <a class="nav-item"><b-icon sym="/assets/sprite.svg#loop"></b-icon><span class="nav-item__label">Loops</span></a>
+          <a class="nav-item"><b-icon sym="/assets/sprite.svg#knowledge"></b-icon><span class="nav-item__label">Notes</span></a>
+        </nav>
 
-        <div class="specimen">
-          <span class="specimen__label">Input</span>
-          <b-input label="Ask the desk" placeholder="e.g. plan my Thursday"></b-input>
-        </div>
-
-        <div class="specimen">
-          <span class="specimen__label">Badges</span>
-          <div class="specimen__row">
-            <span class="badge" data-status="active">active</span>
-            <span class="badge" data-status="archived">done</span>
-          </div>
-        </div>
-
-        <div class="specimen">
-          <span class="specimen__label">List</span>
-          <ul class="list">
-            <li class="list__item">Draft the Q3 plan</li>
-            <li class="list__item">Review the design thread</li>
-            <li class="list__item">Archive last week's notes</li>
-          </ul>
-        </div>
-
-        <div class="specimen">
-          <span class="specimen__label">Icons &amp; keys</span>
-          <div class="specimen__row">
-            <b-icon sym="/assets/sprite.svg#spark"></b-icon>
-            <b-icon sym="/assets/sprite.svg#loop"></b-icon>
-            <b-icon sym="/assets/sprite.svg#tasks"></b-icon>
-            <b-kbd keys="⌘K"></b-kbd>
-            <b-icon-button sym="/assets/sprite.svg#check" label="Complete" size="sm" variant="ghost"></b-icon-button>
-          </div>
-        </div>
-
-        <div class="specimen">
-          <span class="specimen__label">Action verbs (the desk's vocabulary)</span>
-          <div class="specimen__row">
-            <span class="action-badge" data-status="active">types</span>
-            <span class="action-badge">revises</span>
-            <span class="action-badge">commits</span>
-          </div>
-        </div>
-
-        <div class="specimen">
-          <span class="specimen__label">Tabs</span>
-          <nav class="tab-bar" aria-label="Example views">
-            <a class="tab" href="#components" aria-current="page">Overview</a>
-            <a class="tab" href="#how">The loop</a>
+        <div class="surface__main">
+          <nav class="tab-bar" aria-label="Range">
+            <a class="tab" aria-current="page">Today</a>
+            <a class="tab">This week</a>
           </nav>
-        </div>
 
-        <div class="specimen">
-          <span class="specimen__label">Nav</span>
-          <div class="mini-rail">
-            <a class="nav-item" href="#components" aria-current="page"><b-icon sym="/assets/sprite.svg#tasks"></b-icon><span class="nav-item__label">Overview</span></a>
-            <a class="nav-item" href="#how"><b-icon sym="/assets/sprite.svg#loop"></b-icon><span class="nav-item__label">The loop</span></a>
+          <div class="chat-log" data-chat-log>
+            <div class="chat-message" data-role="ai" data-grade="grain"><span class="chat-message__who">GRAIN</span><span class="chat-message__body">Drafting three deep-work blocks…</span></div>
+          </div>
+
+          <!-- the AI narrates its run as its verb vocabulary -->
+          <div class="verbs" data-verbs aria-label="What the AI is doing">
+            <action-badge verb="reads"></action-badge>
+            <action-badge verb="types"></action-badge>
+            <action-badge verb="commits"></action-badge>
+          </div>
+
+          <ul class="list" data-tasks>
+            <li class="list__item"><span class="task-label">Draft the Q3 plan</span> <span class="badge" data-status="active">active</span> <b-icon-button sym="/assets/sprite.svg#check" label="Complete" size="sm" variant="ghost"></b-icon-button></li>
+            <li class="list__item"><span class="task-label">Review the design thread</span> <span class="badge" data-status="archived">done</span></li>
+          </ul>
+
+          <div class="surface__compose">
+            <b-input label="Ask" placeholder="Ask GRAIN to do something…"></b-input>
+            <b-button label="Send"></b-button>
+            <b-kbd keys="⌘K"></b-kbd>
           </div>
         </div>
       </div>
@@ -301,9 +351,21 @@
     </footer>
   </div>
 
+  </div><!-- /.page__main -->
+
   <!-- the Catalog peek: embeds /catalog (unchanged) in an iframe; the island scrolls it on hover -->
   <aside class="catalog-peek" data-open="false" aria-label="Component catalog">
-    <header class="catalog-peek__head"><span>Catalog</span><button class="catalog-peek__close" aria-label="Close catalog">×</button></header>
+    <header class="catalog-peek__head">
+      <span class="catalog-peek__title">
+        <span class="catalog-peek__name">Catalog</span>
+        <span class="catalog-peek__hint">Hover an element on the page to see its entry.</span>
+      </span>
+      <span class="catalog-peek__head-actions">
+        <!-- expand the peek into the full-page catalog (top-window nav; the aside lives in the parent) -->
+        <a class="catalog-peek__expand" href="/catalog">Full page ↗</a>
+        <button class="catalog-peek__close" aria-label="Close catalog">×</button>
+      </span>
+    </header>
     <iframe class="catalog-peek__frame" title="Component catalog"></iframe>
   </aside>
 </body>

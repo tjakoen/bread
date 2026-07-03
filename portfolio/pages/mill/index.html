@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MILL — Markdown in, living layouts</title>
+  <meta name="description" content="MILL: a reusable Markdown-to-pages CMS. Feed it markdown + images, it renders GRAIN pages. A layer above BATCH and GRAIN; framework-agnostic core. Planned.">
+  <link rel="stylesheet" href="/styles/variables.css">
+  <link rel="stylesheet" href="/styles/global.css">
+  <link rel="stylesheet" href="/styles/grain.css">
+  <link rel="stylesheet" href="/components.css">
+  <style>
+    .lede { color: var(--color-muted); font-size: var(--text-lg); max-width: 56ch; line-height: var(--leading-relaxed); }
+    .lede em { font-style: normal; text-decoration: underline; }
+    .flag { display: inline-block; margin-top: var(--space-3); font-size: var(--text-xs); text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--color-muted); border: 1px dashed var(--ink); border-radius: var(--radius-pill);
+      padding: 0 var(--space-2); }
+    .facts { display: grid; gap: var(--space-4); margin-top: var(--space-5);
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+    .fact { border: 1px solid var(--color-line); border-radius: var(--radius-md); padding: var(--space-4); }
+    .fact h3 { font-size: var(--text-base); margin: 0 0 var(--space-2); }
+    .fact p { color: var(--color-muted); font-size: var(--text-sm); margin: 0; line-height: var(--leading-normal); }
+    .foot { margin-top: var(--space-8); padding-top: var(--space-5); border-top: 1px solid var(--color-line);
+      color: var(--color-muted); font-size: var(--text-sm); }
+    .foot a { color: var(--color-fg); }
+  </style>
+</head>
+<body data-screen="mill">
+  <main class="container">
+    <p class="eyebrow">🌾 <span class="name">MILL</span> · Content engine</p>
+    <h1 class="masthead">Markdown in, living layouts.</h1>
+    <hr class="rule">
+    <p class="lede">MILL is a reusable Markdown-to-pages CMS. Feed it <em>markdown and images</em> and it renders
+      <span class="name">GRAIN</span> pages. It's the content pipeline behind this site's docs and blog: write the
+      prose, get real pages, no hand-built HTML. It sits <em>above</em> BATCH and GRAIN, an extension of neither.</p>
+    <span class="flag">Planned · only the plan exists so far</span>
+
+    <div class="section-head"><span>The idea</span></div>
+    <div class="facts">
+      <div class="fact"><h3>A layer above</h3><p>It depends on GRAIN for components and BATCH for the substrate, never the reverse. Batch, then grain, then MILL on top.</p></div>
+      <div class="fact"><h3>Framework-agnostic core</h3><p>A Markdown-to-components engine driven by a render-adapter port. The BATCH and GRAIN adapter is the default, not baked in.</p></div>
+      <div class="fact"><h3>Frontmatter picks the layout</h3><p>Frontmatter chooses a layout, content blocks map to component tags. MILL emits the tags, BATCH composes them.</p></div>
+      <div class="fact"><h3>Live, then frozen</h3><p>It renders live on BATCH while you write, and the static export freezes the result. Same content, two modes.</p></div>
+    </div>
+
+    <div class="section-head"><span>The plan</span></div>
+    <p class="lede">MILL is the proof that BATCH and GRAIN compose into a real, reusable tool. The canonical design,
+      the seams, the mapping model, and the build pieces are written up (and will render here through MILL itself,
+      once it lands).</p>
+
+    <div class="foot">
+      Part of <a href="/">tjakoen.github.io</a>. Built on <a href="/grain"><span class="name">GRAIN</span></a>
+      and <a href="/batch"><span class="name">BATCH</span></a>.
+      <p>🤖 Built with Claude. I don't prompt and pray, I prompt and prove.</p>
+    </div>
+  </main>
+</body>
+</html>

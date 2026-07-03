@@ -1,7 +1,8 @@
 # GRAIN showcase — plan (the portfolio's `/grain` section)
 
 > Status: **v1 built (2026-07-01), relocated into the portfolio.** hero · grade-as-signal ·
-> components · catalog-peek · how-it-works · footer — served at **`/grain`** from
+> catalog-peek · how-it-works · footer (the components showcase was removed 2026-07-02 — the
+> sidebar catalog is the reference) — served at **`/grain`** from
 > `portfolio/pages/grain/index.html`, with e2e (`project/e2e/grain-page.e2e.ts`) and shots
 > (`grain`, `grain-peek`). v2 (AI demo) + v3 (re-skin toggle) still to come.
 >
@@ -49,7 +50,7 @@
   chunked into the AI demo's `knowledge.json` (so the desk can answer "how does the intent door
   work?"), and stay the repo docs kept synced by CLAUDE.md's alignment table. No new pipeline — the
   markdown collection we're building anyway. See [[interaction-door-pattern]] and `BATCH-PAGE.md`
-  (batch takes the identical approach with `ARCHITECTURE.md` + `CONVENTIONS.md`).
+  (batch takes the identical approach with `docs/ARCHITECTURE.md` + `docs/CONVENTIONS.md`).
 
 ## Persistent chrome (every section)
 
@@ -58,6 +59,150 @@
 - **Catalog-peek sidebar** (`grain/scripts/catalog-peek.js`): hover any component anywhere → the
   embedded `/catalog` scrolls to its entry + highlights it. Maps rendered CSS class → catalog
   slug. The showcase is the "usage" layer; the catalog is the "specimen" layer; hover bridges.
+
+### Catalog-peek sidebar — layout & behaviour (2026-07-02 refinement) — ✅ BUILT
+
+Supersedes the v1 "slides in from the right as a fixed overlay" implementation. The sidebar is a
+real layout member, not a drawer on top. Shipped 2026-07-02: `.page`/`.page__main` flex shell in
+`portfolio/pages/grain/index.html`; `/catalog` responsive drawer in `batch/catalog/catalog.ts`;
+e2e asserts the content-shift; shots `grain-peek` + new `grain-peek-menu`.
+
+- **Shifts content, never overlays.** Opening the sidebar *pushes* the `.site` content aside
+  (grid / margin shift), so nothing is covered. (v1 used `position: fixed` + `translateX` — replace.)
+- **Scroll is contained to the sidebar.** Scrolling while pointing at the catalog scrolls *only*
+  the catalog, never the page behind it (`overscroll-behavior: contain`; the iframe already keeps
+  wheel events local, this stops any chaining).
+- **The catalog's own menu is collapsed by default in sidebar context.** The embedded `/catalog`'s
+  `.cat-nav` (Pages + Components) starts collapsed so the narrow sidebar spends its width on the
+  specimen, not the menu.
+- **When open, treat the sidebar as "mobile" (space is small).** Uncollapsing the catalog's menu
+  makes it **take over the full sidebar** (a full-width nav-drawer over the main), then collapse
+  back on selection — the small-screen pattern, not a cramped two-column split.
+- **Where this lives:** points 3–4 are implemented as **`/catalog` becoming genuinely responsive
+  at the batch layer** — at narrow widths `.cat-nav` collapses to a toggle that opens full-width
+  over `.cat-main`. The narrow iframe inherits this automatically; real mobile catalog visitors get
+  it too. Not a demo-only hack — a real catalog improvement (native responsive, no build). Point 1
+  (content shift) + point 2 (scroll containment) live in the `/grain` page's own layout CSS.
+
+### "One surface, both operators" — interactive + AI mode (2026-07-03) — ✅ BUILT (client-side v2)
+
+The composed surface is now operable by **both operators**, reusing the loop demo's AI language
+client-side (no server door → survives the static export; matches the v2 plan's tier-0 decision):
+
+- **Human-operable.** Switch tabs / rail views, complete a task (the check `icon-button` flips its
+  badge to done — your committed action, clean), and Ask + Send (appends your line clean + a grain
+  AI reply that types in). Contained island `grain/scripts/surface-demo.js`, scoped to
+  `[data-surface-demo]`.
+- **AI mode — "▷ Watch the AI act".** A scripted AI drives the *same* controls under GRAIN's real
+  **spotlight** (`.ai-backdrop`/`.ai-spotlit`/`.ai-acting-label` from `grain/ai/ai.css`, bundled in
+  `/components.css`): it types into the Ask field (grain, dashed edge), "sends", streams a grain
+  reply, then completes a task — narrated by the `action-badge` verb strip (reads → types →
+  commits). Click the backdrop to stop. Reduced-motion → instant final state, no spotlight.
+- This is the on-thesis payoff: **a human click and an AI action operate one surface through the
+  same controls**, with the AI's presence shown (grain + spotlight). The AI run has 4 beats (reads →
+  types into Ask → completes a task → drafts a new grain task — AI-authored stays grain). No mediated
+  interrupt (it's a mini demo; backdrop-click stops). e2e covers human ops, the AI run outcome (grain
+  reply + task done + drafted grain task), and the spotlight (with motion). Shot: `grain-ai-acting`.
+- **Grade legibility (2026-07-03):** the Redaction grades differ by ink/halftone *texture*, invisible
+  at body-text size (people read it as "the grade isn't changing" — but the fonts load and
+  `--type-font` flips correctly). The grade-as-signal section now leads with a `.grade-show` specimen:
+  the same line at `--text-3xl`, clean vs grain, so the texture actually reads. Rule: show grade at
+  ≥`--text-2xl`.
+- **Root grade fix (2026-07-03):** `data-grade` on a bare `<span>`/`<div>` set the CSS var but never
+  applied the font (only type primitives like `p`/`li`/`.t` did) — so the hero signature, the
+  grade-show line, and the legend word rendered *clean* despite `data-grade="grain"` (the reported
+  inconsistency). Fixed at the root in grain.css: `[data-grade] { font-family: var(--type-font); }` —
+  a graded element now renders in its grade, not just its covered descendants. Nested grades still
+  inherit and the catalog's chrome-neutralize is unaffected (verified across loop + catalog).
+- **Polish (2026-07-03):** chat messages sit in a **`chat-log`** container so you=right / AI=left
+  read as a thread; Send bottom-aligns to the input; section rhythm tightened.
+
+### GRAIN hardening pass (2026-07-03) — ✅ BUILT (first slice)
+
+A review found the recurring mistakes were **silent-failure contracts** (mechanisms that quietly
+no-op when misused). First slice = design the live traps out + add conformance tests:
+
+- **Designed out:** (a) grade now applies on any element (`[data-grade]{font-family}` — see above);
+  (b) **`chat-log`** is now a real grain container (`grain/components/organisms/chat-log`) so
+  `chat-message`'s `align-self` can't silently misalign — chat-message.md documents the parent
+  requirement; (c) the AI **click pulse** is self-sufficient (`.is-click` in `grain/ai/ai.css` no
+  longer needs a sibling `.ai-spotlit`).
+- **GRAIN conformance tests** (`project/e2e/grain-conformance.e2e.ts`): assert usage CONTRACTS in a
+  real browser (computed style / geometry) — grade renders grain on a bare span, chat aligns in a
+  chat-log, a pending input shows the dashed edge, reduced-motion stills the caret. On the grain
+  split (CONVENTIONS §10) this becomes grain's own e2e harness.
+- **Symmetry test** (`grain-page.e2e.ts`): completing a task by a human click and by the AI produce
+  the *identical* result — the "one interface, both operators" thesis made testable.
+
+### Components used in context + live simulations (2026-07-03) — ✅ BUILT
+
+The page now **uses** the full grain component set in real compositions (not a specimen grid), so
+hovering any element reveals it in the sidebar (MAP extended: `chat-message`, `t`→typography):
+
+- **Grade-as-signal is live.** Two `demo-box`es loop: the AI reply **types in and stays grain**
+  (provenance persists — `AI-INTERFACE.md` §5; the "resolve to clean" flourish was dropped, and
+  `DESIGN-SYSTEM.md` §3 was corrected to match). The second shows a **human's** optimistic action
+  settling (grain in-transit → clean committed) — settling is *yours*, never AI speech. The hero
+  signature is a **trigger** `demo-box` (types on load + a "▷ replay").
+- **"One surface, both operators"** — a real composed panel (rail `nav-item`s, `tab-bar`/`tab`,
+  `chat-message`, `action-badge` verb strip, `list` + `badge` + `icon-button`, `input`/`button`/`kbd`).
+  A believable interface, so every part bridges to its catalog entry.
+- **`demo-box` primitive** (`grain/scripts/demo-box.js`): a reusable, contained scripted-demo island.
+  A demo is markup + a `<script type="application/json" class="demo-box__steps">` step list
+  (`type`/`attr`/`clear`/`text`/`wait`), with `data-demo="loop|trigger|once"`. Reduced-motion runs
+  one instant pass (no typing, no waits, no loop) → sensible final state. Keeps demo JS out of pages.
+
+### Entering & leaving the catalog (2026-07-03) — ✅ BUILT
+
+- **Hero "Browse the components" opens the sidebar** (a `data-peek="open"` hook, not a link →
+  hand-authored `.btn`, since `b-button` forwards only config props). The peek island now honours
+  `data-peek` values `open` / `close` / `toggle`.
+- **Sidebar → full page.** The peek header carries a **"Full page ↗"** link (`.catalog-peek__expand`
+  → `/catalog`) so the peek expands into the full catalog in one click.
+- **Catalog "← Back".** `/catalog` gained a `.cat-back` control (the component nav isn't an obvious
+  exit); prefers real `history.back()`, falls back to `/`. **Hidden when embedded** in the peek
+  iframe (`window.self !== window.top`) — the host supplies its own close/expand there. (batch layer.)
+- **Bug fixed in passing:** the Input catalog example used `autofocus`, which stole focus and
+  scroll-jumped `/catalog` on every load (and hung Playwright). Replaced with a `data-force="focus"`
+  parallel on `.field__input` — the same static-pseudo-state convention the button already uses.
+  Note: the site's global `scroll-behavior: smooth` makes chained link-nav→click flaky in Playwright;
+  e2e reaches `/catalog` via settled `goto`s instead.
+
+### Hover-to-peek: reveal one, cross-fade (2026-07-03, supersedes the scroll approach) — ✅ BUILT
+
+Pointing at the main page drives the sidebar catalog (`grain/scripts/catalog-peek.js`). It used to
+*scroll* the embedded catalog to the hovered entry, but a far entry scrolled wildly and the
+Typography fallback ping-ponged up/down the long list. Now it **reveals one entry at a time**:
+
+- **Single mode.** The catalog (batch) supports a `data-peek-single` mode: only the
+  `.cat-doc.is-peek-active` entry renders, fading in (`cat-peek-fade`, off under reduced-motion).
+  The peek island sets the mode on iframe load and toggles which entry is active — **no scrolling**,
+  so distance is irrelevant. The full-page `/catalog` (no host) stays the single long list.
+- **Pointer-only (desktop).** The reveal/fade is gated on `(hover: hover) and (pointer: fine)` —
+  on touch it would be undrivable, so there the sidebar just shows the **full, scrollable catalog**
+  (no single mode). e2e covers both.
+- **Hold the last reveal.** Only hovering an actual component switches the entry; moving over prose
+  or gaps holds the current one — so you can travel the pointer to the sidebar and scroll the
+  revealed entry without it changing out from under you. (Dropped the Typography catch-all that used
+  to thrash the reveal on every gap.)
+- **No box outline.** The live switch already shows what you're pointing at, so the hovered element
+  isn't outlined anymore.
+- **Debounced.** The reveal is debounced (~70ms) so sweeping the pointer doesn't strobe the fade.
+- **Nav still works in the sidebar.** In single mode, clicking a component link in the catalog's
+  own (collapsible) nav activates that entry instead of hash-scrolling to a hidden one
+  (`window.__catSetActive`).
+
+### "No catalog items on the main page" (from `grain-demo-page-structure`) — ✅ RESOLVED 2026-07-02
+
+The decision: the sidebar *is* the component reference, so **the main page is philosophy / whys, not
+a components showcase** — don't embed catalog items there. The v1 **"The components"** specimens grid
+that contradicted this has been **removed** (`index.html`; its `.specimens`/`.specimen`/`.mini-rail`
+CSS too). The page is now hero · grade-as-signal · how-it-works · footer — still built *from* grain
+components (the hero CTA is a real `b-button`, how-it-works a real `b-list`), so Inspect + hover
+bridges each element to its sidebar-catalog entry (a hero hint points this out). **Still owed:** the
+philosophy sections that should fill the page out — native-first, no-build, atomic/Brad Frost,
+design-system tokens, charts (enumerated in `grain-demo-page-structure`); the page is intentionally
+sparse until then.
 
 ## Sections (single scrolling page)
 
@@ -70,8 +215,9 @@
    flip a `b-badge` → narrate steps as `action-badge`s. Interruptible (mediated stop). Uses the
    real dispatcher + `RenderOp` vocabulary; the reasoner runs **client-side** on the static host
    (see "The AI demo" below) — a human click and an AI decision are still the same `Intent` → ops.
-4. **The components.** A compact real composition of the atoms/molecules (button, input, badge, list,
-   icon, kbd, tabs, nav, cards). Each hover-links to the catalog. "Full reference → /catalog."
+4. ~~**The components.**~~ **Removed 2026-07-02** — no components showcase on the main page by
+   design (the sidebar catalog is the reference). The page is still built *from* grain atoms so
+   Inspect + hover bridges each element to its catalog entry. See the "no catalog items" note below.
 5. **How it works.** One vocabulary (`contract.ts`) → one door (`/intent`) → `RenderOp`s over SSE;
    the self-describing manifest; no build step (BATCH). A small diagram. **Teaser only** —
    deep-links to the rendered concept docs (`docs/GRAIN.md` + `docs/AI-INTERFACE.md`) at

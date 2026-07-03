@@ -101,7 +101,7 @@ prerender crawl that boots the app, walks its routes, and writes static files.
   showcase section splits into three doc modes, each on its own surface: **pitch** (the narrative
   showcase page), **component reference** (`/catalog` — grain only, auto-generated specimens), and
   **concepts / how-to-build** (rendered `docs/*.md`). grain publishes `docs/GRAIN.md` +
-  `docs/AI-INTERFACE.md` at `/grain/docs`; batch publishes `ARCHITECTURE.md` + `CONVENTIONS.md` at
+  `docs/AI-INTERFACE.md` at `/grain/docs`; batch publishes `docs/ARCHITECTURE.md` + `docs/CONVENTIONS.md` at
   `/batch/docs`. The vehicle is the **markdown content collection (piece 3)** — no new pipeline, no
   new prose. The showcase's concept sections are *teasers* that deep-link into these. Consequence,
   free: the same mds are the human docs pages, the AI demo's `knowledge.json` (RAG), and the repo
@@ -254,3 +254,12 @@ better than assumed:**
   (no-build, request-time render, one-vocabulary/one-door). No catalog (batch has no components);
   its reference layer is rendered docs at `/batch/docs`. Planned, built after `/grain` +
   the export pipeline. See `BATCH-PAGE.md`.
+- **Course-platform landing page at `/course-platform`** (`portfolio/pages/course-platform/`) — a
+  single **showcase-only** page for an *external* project, the GitHub-native course platform
+  (github.com/tjakoen/github-native-course-platform). Unlike `/grain` and `/batch`, it is **NOT a
+  stack section and ships NO docs** — the full write-up lives in that repo's own README; this page is
+  just a visual trailhead (screenshots + gifs) that links out. It's the same *pattern* as the other
+  pages (a custom BATCH + GRAIN page composed from GRAIN components, export-frozen), but for a
+  separate personal project rather than a layer of this stack. Distinct from the résumé's *technical
+  projects* / *educator* notes, which describe it in prose — this is its own picture-led landing.
+  Planned, not built.

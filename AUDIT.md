@@ -3,8 +3,8 @@
 A repeatable, whole-project audit that checks the repo still obeys **its own rules**. Run it before a
 commit, after a big change, or whenever you (human or AI) want to confirm nothing has drifted from the
 canon: **[CLAUDE.md](CLAUDE.md)** (operating rules + the "change X → update Y" table),
-**[CONVENTIONS.md](CONVENTIONS.md)** (build standard), **[ARCHITECTURE.md](ARCHITECTURE.md)** (the
-substrate), **[PHILOSOPHY.md](PHILOSOPHY.md)** (the why). Those docs *define* "aligned"; this file is the
+**[CONVENTIONS.md](batch/docs/CONVENTIONS.md)** (build standard), **[ARCHITECTURE.md](batch/docs/ARCHITECTURE.md)** (the
+substrate), **[PHILOSOPHY.md](portfolio/PHILOSOPHY.md)** (the why). Those docs *define* "aligned"; this file is the
 procedure for verifying it. It references them — it does not restate them (single source of truth).
 
 ## How to run it

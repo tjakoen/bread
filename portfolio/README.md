@@ -1,5 +1,9 @@
 # portfolio — the personal site
 
+[![Made with Claude](https://img.shields.io/badge/Made_with-Claude-D97757?logo=anthropic&logoColor=white)](https://tjakoen.github.io/notes/ten-times-zero)
+[![Code: Apache 2.0](https://img.shields.io/badge/code-Apache_2.0-blue)](LICENSE)
+[![Content: all rights reserved](https://img.shields.io/badge/content-all_rights_reserved-lightgrey)](NOTICE)
+
 Tjakoen's personal site (`tjakoen.github.io`) — a **custom BATCH + GRAIN app** that doubles as the
 strongest possible proof the stack works: AI-first design, served as plain static files, with a
 lightweight AI demo that runs entirely in the visitor's browser.
@@ -22,4 +26,4 @@ lightweight AI demo that runs entirely in the visitor's browser.
 - **[FEATURES.md](FEATURES.md)** — the feature menu (north star, the desk, anti-features, reuse table).
 - **[CONTENT-BACKLOG.md](CONTENT-BACKLOG.md)** — the content to author (guardrails: public repo, neutral).
 - **[GRAIN-PAGE.md](GRAIN-PAGE.md)** · **[BATCH-PAGE.md](BATCH-PAGE.md)** — the `/grain` and `/batch` showcase plans.
-- **[../PHILOSOPHY.md](../PHILOSOPHY.md)** — the beliefs the site proves.
+- **[PHILOSOPHY.md](PHILOSOPHY.md)** — the beliefs the site proves.

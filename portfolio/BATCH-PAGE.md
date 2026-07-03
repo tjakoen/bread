@@ -21,8 +21,8 @@
   are the depth.
 - **Docs = the `docs/*.md` we already maintain, rendered — not new prose** *(shared with
   `GRAIN-PAGE.md`)*. batch's two doc modes: **pitch** (this showcase — the idea, the "no build"
-  claim, why it holds) and **concepts / how-to-build** (`ARCHITECTURE.md` = the substrate's
-  reasoning / single source of truth; `CONVENTIONS.md` = the build standard — layering, components,
+  claim, why it holds) and **concepts / how-to-build** (`docs/ARCHITECTURE.md` = the substrate's
+  reasoning / single source of truth; `docs/CONVENTIONS.md` = the build standard — layering, components,
   tokens, the 3-tier testing bar). Publish those through the portfolio's markdown content collection
   (`PLAN.md` piece 3) at **`/batch/docs`**. The showcase sections stay *teasers* that deep-link into
   the rendered docs — never a fork of them. **One source, three consumers:** the same mds render the
@@ -57,17 +57,17 @@ callouts deep-link to `/batch/docs`.
 4. **The four concerns, one direction of dependency.** Each layer builds only on those below:
    `batch` (substrate) → `grain` (design system) → `mill` (the CMS) → the consuming apps (`project`,
    `portfolio`); the composition root is the only place they're wired (`project/server.ts`). Import
-   purity as a feature. Deep-links to `CONVENTIONS.md` §1/§10.
+   purity as a feature. Deep-links to `docs/CONVENTIONS.md` §1/§10.
 5. **Atomic + tokens, live.** Server-side Atomic templating, `var(--token)` theming, htmx for
    reads/loads/nav. A compact "here's a route rendered live" example.
 6. **The testing bar.** The 3-tier standard (unit / integration / e2e) as part of the build, not an
-   afterthought — teaser into `CONVENTIONS.md` §6.
+   afterthought — teaser into `docs/CONVENTIONS.md` §6.
 7. **Footer.** Built on BATCH (self-referential); links (`/batch/docs` = rendered concept docs,
    `/grain` = the design system on top, repo); "this section is itself served by BATCH."
 
 ## Docs surface (`/batch/docs`)
 
-Rendered from `ARCHITECTURE.md` + `CONVENTIONS.md` (and any future `docs/*.md`) through the
+Rendered from `docs/ARCHITECTURE.md` + `docs/CONVENTIONS.md` (and any future `docs/*.md`) through the
 markdown content collection (`PLAN.md` piece 3) — the same pipeline that renders the feed and
 `/grain/docs`. No bespoke markdown build; the live app renders the mds, the export freezes them.
 Keep the showcase sections as summaries that link *into* these — the docs are the single source, the
@@ -93,7 +93,7 @@ them — alongside `/batch/docs` pages and the shared allowlist (`/components.cs
 This plan describes surfaces whose *content* lives elsewhere. When those move, this page and its
 docs surface must follow — enforced by CLAUDE.md's alignment table:
 
-- The concept docs it renders are `ARCHITECTURE.md` + `CONVENTIONS.md`. Editing the substrate's
+- The concept docs it renders are `docs/ARCHITECTURE.md` + `docs/CONVENTIONS.md`. Editing the substrate's
   reasoning or the build standard → those docs update → `/batch/docs` re-renders them for free
   (it's a projection), but re-check that the showcase *teaser* sections still summarize them truly.
 - Touching the contract / door / `RenderOp` vocabulary follows the existing contract rows in the

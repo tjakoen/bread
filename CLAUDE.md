@@ -35,17 +35,23 @@ pushed over SSE. No privileged AI→DOM back channel.
 
 ## Start here (reading order)
 
-1. **[PHILOSOPHY.md](PHILOSOPHY.md)** — the *why* (the beliefs the whole stack serves). **Read first.**
-2. **[CONVENTIONS.md](CONVENTIONS.md)** — the build standard (layering, components, tokens,
+1. **[PHILOSOPHY.md](portfolio/PHILOSOPHY.md)** — the *why* (the beliefs the whole stack serves). **Read first.**
+2. **[CONVENTIONS.md](batch/docs/CONVENTIONS.md)** — the build standard (layering, components, tokens,
    the action vocabulary, the 3-tier testing bar, the extraction plan). **The rulebook.**
-3. **[ARCHITECTURE.md](ARCHITECTURE.md)** — the substrate's reasoning (single source of truth).
-4. **[docs/GRAIN.md](docs/GRAIN.md)** + **[docs/AI-INTERFACE.md](docs/AI-INTERFACE.md)** — the
+3. **[ARCHITECTURE.md](batch/docs/ARCHITECTURE.md)** — the substrate's reasoning (single source of truth).
+4. **[grain/docs/GRAIN.md](grain/docs/GRAIN.md)** + **[grain/docs/AI-INTERFACE.md](grain/docs/AI-INTERFACE.md)** — the
    design system and the AI contract (surfaces, ops, manifest, the "AI acts" protocol).
-5. **[docs/DESIGN-SYSTEM.md](docs/DESIGN-SYSTEM.md)** — the visual identity / grade-as-signal.
+5. **[grain/docs/DESIGN-SYSTEM.md](grain/docs/DESIGN-SYSTEM.md)** — the visual identity / grade-as-signal.
 
 The SSOT for what's operable is **`grain/ai/contract.ts`** (`SurfaceKind`, `ActionName`,
 `ACTIONS`, `RenderOp`). The composition root — the only place the layers meet — is
 **`project/server.ts`**. The reference screen is **`/loop`** (`project/pages/loop.html`).
+
+**Working mainly in one layer?** The future-repo folders carry their **own `CLAUDE.md`** —
+[`batch/CLAUDE.md`](batch/CLAUDE.md) and [`grain/CLAUDE.md`](grain/CLAUDE.md) — with that layer's
+non-negotiables and the hard-won *"don't repeat these"* lessons (the silent-failure contracts, the
+control lifecycle, "use the vocabulary, don't reinvent it"). Read the layer's file alongside this
+one; on the split it travels with the folder. The full doc map is [`DOCS.md`](DOCS.md).
 
 ## Commands
 
@@ -88,9 +94,9 @@ This is the contract for not drifting. After any change, sync everything in its 
 
 | You change… | …also update |
 |---|---|
-| **An action verb** (add/modify) | `contract.ts` (`ActionName` + `ACTIONS` + `accepts`) → reasoner branch → **unit test** (reasoner) + **integration test** (door path) → `docs/AI-INTERFACE.md` (vocab) |
+| **An action verb** (add/modify) | `contract.ts` (`ActionName` + `ACTIONS` + `accepts`) → reasoner branch → **unit test** (reasoner) + **integration test** (door path) → `grain/docs/AI-INTERFACE.md` (vocab) |
 | **A surface kind** | `contract.ts` (`SurfaceKind`) → `ai-routes.ts` manifest targets → any page `data-surface` → tests |
-| **A `RenderOp` kind/field** | `contract.ts` (`RenderOpKind`/`RenderOp`) → dispatcher `applyOp`/`applyType` (`ai-dispatch.js`) → `docs/AI-INTERFACE.md` → tests |
+| **A `RenderOp` kind/field** | `contract.ts` (`RenderOpKind`/`RenderOp`) → dispatcher `applyOp`/`applyType` (`ai-dispatch.js`) → `grain/docs/AI-INTERFACE.md` → tests |
 | **A component** | follow CONVENTIONS §4 checklist (`.html`/`.css`/`.md`, tokens, AI-mode, `data-kind`/`data-accepts` if operable) → add a test for any behavior → it auto-appears in `/catalog` |
 | **A design token / the theme** | `grain/styles/variables.css` only (never per-component) |
 | **The `/loop` demo or its surfaces** | `grain/ai/reasoner.ts` (the scripted demo) ↔ `project/pages/loop.html` surfaces → **e2e** (`project/e2e/`) |
@@ -98,7 +104,7 @@ This is the contract for not drifting. After any change, sync everything in its 
 | **The static export / prerender** | keep it a *projection* of the running server (fetch, don't re-render) → `batch/export` (`bun run export`, framework-generic) → respect the exportable boundary (no operable `/intent`+SSE surfaces) → ARCHITECTURE §18 |
 | **Layering / cross-layer deps** | re-verify import purity; if you reach across, add a port instead → CONVENTIONS §1/§10 |
 | **Anything user-visible in behavior** | the matching doc (`ARCHITECTURE` / `GRAIN` / `AI-INTERFACE` / `DESIGN-SYSTEM` / `CONVENTIONS`) |
-| **A concept doc** (`ARCHITECTURE`/`CONVENTIONS`/`GRAIN`/`AI-INTERFACE`) | the portfolio showcase that *renders* it — re-check the pitch/teaser sections still summarize it truly: `docs/GRAIN.md`+`AI-INTERFACE.md` → `/grain` (`portfolio/GRAIN-PAGE.md`, `/grain/docs`); `ARCHITECTURE`+`CONVENTIONS` → `/batch` (`portfolio/BATCH-PAGE.md`, `/batch/docs`). Docs are the single source; pages are trailheads, never forks |
+| **A concept doc** (`ARCHITECTURE`/`CONVENTIONS`/`GRAIN`/`AI-INTERFACE`) | the portfolio showcase that *renders* it — re-check the pitch/teaser sections still summarize it truly: `grain/docs/GRAIN.md`+`AI-INTERFACE.md` → `/grain` (`portfolio/GRAIN-PAGE.md`, `/grain/docs`); `ARCHITECTURE`+`CONVENTIONS` → `/batch` (`portfolio/BATCH-PAGE.md`, `/batch/docs`). Docs are the single source; pages are trailheads, never forks |
 | **A notable decision or non-obvious fact** | write a **memory** (see below) so the next session inherits it |
 
 **Definition of done:** code + the right test tier(s) (unit / integration / e2e per CONVENTIONS §6)
@@ -113,11 +119,17 @@ Claude Code keeps **per-project memories** (decisions, preferences, context) out
 they surface automatically at the start of each session. When you make a real decision or learn
 something non-obvious, write one so the next session inherits it. If a recalled memory
 contradicts the code, trust the code and fix the memory. (These are agent memory, not committed
-files — durable, repo-worthy rules belong in `CONVENTIONS.md` or this file.)
+files — durable, repo-worthy rules belong in `batch/docs/CONVENTIONS.md` or this file.)
 
 ## Working notes
 
 - Commit/push only when asked; branch off `main` if you must (this is a private monorepo —
   the user often merges to `main` directly).
+- **This monorepo is temporary scaffolding** — each layer becomes its own repo once proven.
+  The map for that split (what goes where) is [`SPLIT-PLAN.md`](./SPLIT-PLAN.md).
+- **Personal cross-repo standards** (writing voice, the note/blog template, README badges, a starter
+  `CLAUDE.md`) live in [`portfolio/standards/`](./portfolio/standards/) — public + reusable in any
+  repo. Writing anything under his byline? `VOICE.md` (how it reads) + `NOTE-STANDARD.md` (how a note
+  is built) are the rulebook.
 - Run from the repo root (relative paths in `project/config.ts` assume it).
 - Bun lives at `~/.bun/bin` — `export PATH="$HOME/.bun/bin:$PATH"` if `bun` isn't found.
