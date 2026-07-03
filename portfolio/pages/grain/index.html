@@ -14,9 +14,10 @@
   <script src="/scripts/catalog-peek.js" defer></script>
   <!-- reusable demo-box island (ES module): runs the declarative scripted demos below -->
   <script type="module" src="/scripts/demo-box.js"></script>
-  <!-- the "One surface, both operators" showcase demo (ES module, lives in portfolio/ — it's
-       showcase-specific; it REUSES grain's spotlight + type-effect modules rather than reimplementing) -->
-  <script type="module" src="/portfolio-scripts/surface-demo.js"></script>
+  <!-- THE REAL DISPATCHER — the same one client-JS island /loop uses. The composed surface below
+       is operated through the ONE DOOR: a human's Ask and the AI's "Watch the AI act" both post an
+       Intent to POST /intent and render back over SSE. No showcase-only AI→DOM back channel. -->
+  <script type="module" src="/scripts/ai-dispatch.js"></script>
   <style>
     /* ---------------------------------------------------------------------------
        Demo-site LAYOUT only (NOT the design system). This page is GRAIN's own site,
@@ -104,10 +105,26 @@
     .surface__compose { display: flex; align-items: flex-end; gap: var(--space-3); flex-wrap: wrap;
       border-top: 1px solid var(--color-line); padding-top: var(--space-4); }
     .surface__compose .field { flex: 1; }
-    .verbs { display: flex; flex-wrap: wrap; gap: var(--space-2); }
     @media (max-width: 34rem) { .surface { grid-template-columns: 1fr; }
       .surface__rail { flex-direction: row; flex-wrap: wrap; border-right: 0; padding-right: 0;
         border-bottom: 1px solid var(--color-line); padding-bottom: var(--space-3); } }
+
+    /* the terminal: hidden at rest; RISES while the AI acts (backdrop on) and lifts above the
+       spotlight veil so its narration is readable over the dim — the /grain analogue of /loop's
+       app-shell console takeover. */
+    .surface-term { display: none; }
+    body:has(.ai-backdrop.is-on) .surface-term { display: block; position: relative;
+      z-index: var(--z-ai-surface, 9002); margin-top: var(--space-5);
+      border: 1px solid var(--ink); border-radius: var(--radius-md); overflow: hidden;
+      background: var(--paper); }
+    .surface-term__bar { display: flex; align-items: center; gap: var(--space-2);
+      padding: var(--space-2) var(--space-4); border-bottom: 1px solid var(--color-line);
+      font-family: var(--font-grain); font-size: var(--text-sm); color: var(--color-muted); }
+    .surface-term .console__feed { padding: var(--space-3) var(--space-4); max-height: 12rem;
+      overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-2); }
+    .surface-term .console__line { display: flex; align-items: baseline; gap: var(--space-3);
+      font-size: var(--text-sm); }
+    @media (prefers-reduced-motion: reduce) { .surface-term { scroll-behavior: auto; } }
 
     /* how it works — a small monochrome diagram */
     .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: var(--space-2); margin: var(--space-6) 0; }
@@ -267,14 +284,16 @@
     <section class="site__section" aria-label="A surface composed from GRAIN">
       <div class="section-head">
         <span>One surface, both operators</span>
-        <!-- run the SAME surface as the AI would (client-side scripted; reuses the real spotlight) -->
-        <button class="btn" data-variant="soft" data-ai-run type="button">▷ Watch the AI act</button>
+        <!-- run the SAME surface as the AI would — a real Intent through the door (demo.run). The
+             server's reasoner pushes the RenderOps; the dispatcher applies them (like /loop). -->
+        <button class="btn" data-variant="soft" data-ai-run data-action="demo.run" data-target="screen" type="button">▷ Watch the AI act</button>
       </div>
-      <p class="site__why">A real GRAIN composition you can operate — switch tabs, complete a task, or ask it
-        something. Then <b>watch the AI act</b>: it drives the same controls, in grain, under the spotlight.</p>
+      <p class="site__why">A real GRAIN composition, operated through the <b>one door</b>. <b>Ask it something</b>
+        yourself, or <b>watch the AI act</b> — both post the same Intent to <span class="name">/intent</span> and
+        render back over SSE. There is no privileged AI&nbsp;→&nbsp;DOM path; the same page powers this demo.</p>
 
-      <div class="surface" data-surface-demo>
-        <nav class="surface__rail" aria-label="Views">
+      <div class="surface" data-surface="screen" data-surface-demo>
+        <nav class="surface__rail" data-surface="grain-rail" aria-label="Views">
           <a class="nav-item" aria-current="page"><b-icon sym="/assets/sprite.svg#tasks"></b-icon><span class="nav-item__label">Tasks</span></a>
           <a class="nav-item"><b-icon sym="/assets/sprite.svg#loop"></b-icon><span class="nav-item__label">Loops</span></a>
           <a class="nav-item"><b-icon sym="/assets/sprite.svg#knowledge"></b-icon><span class="nav-item__label">Notes</span></a>
@@ -286,34 +305,42 @@
             <a class="tab">This week</a>
           </nav>
 
-          <div class="chat-log" data-chat-log>
-            <div class="chat-message" data-role="ai" data-grade="grain"><span class="chat-message__who">GRAIN</span><span class="chat-message__body">Drafting three deep-work blocks…</span></div>
+          <!-- the assistant thread: your message settles clean; the AI's reply streams in and STAYS grain -->
+          <div class="chat-log" data-chat-log data-surface="chat-log">
+            <div class="chat-message" data-role="ai" data-grade="grain"><span class="chat-message__who">GRAIN</span><span class="chat-message__body">Ask me to plan something — or watch me act.</span></div>
           </div>
 
-          <!-- the AI narrates its run as its verb vocabulary -->
-          <div class="verbs" data-verbs aria-label="What the AI is doing">
-            <action-badge verb="reads"></action-badge>
-            <action-badge verb="types"></action-badge>
-            <action-badge verb="commits"></action-badge>
-          </div>
-
-          <ul class="list" data-tasks>
-            <li class="list__item"><span class="task-label">Draft the Q3 plan</span> <span class="badge" data-status="active">active</span> <b-icon-button sym="/assets/sprite.svg#check" label="Complete" size="sm" variant="ghost"></b-icon-button></li>
+          <ul class="list" data-tasks data-surface="grain-tasks">
+            <li class="list__item" data-surface="grain-task"><span class="task-label">Draft the Q3 plan</span> <span class="badge" data-status="active" data-surface="grain-task-badge">active</span></li>
             <li class="list__item"><span class="task-label">Review the design thread</span> <span class="badge" data-status="archived">done</span></li>
           </ul>
 
+          <!-- operable controls, wired to the real door (raw input/button so they carry data-action +
+               data-surface, exactly like /loop's composer) — chat.send → your bubble + the AI's reply -->
           <div class="surface__compose">
-            <b-input label="Ask" placeholder="Ask GRAIN to do something…"></b-input>
-            <b-button label="Send"></b-button>
+            <label class="field">
+              <span class="field__label">Ask</span>
+              <input class="field__input" type="text" placeholder="Ask GRAIN to do something…"
+                     data-action="chat.send" data-target="chat-log" data-surface="grain-ask" aria-label="Ask GRAIN">
+            </label>
+            <button class="btn" data-action="chat.send" data-target="chat-log" data-from="grain-ask">Send</button>
             <b-kbd keys="⌘K"></b-kbd>
           </div>
         </div>
       </div>
+
+      <!-- the terminal: rises while the AI acts (like /loop's console takeover) so a run is always
+           legible — the reasoner narrates each step here (data-surface="console"). Shown only during
+           a run via :has(.ai-backdrop.is-on) and lifted above the spotlight veil. -->
+      <section class="surface-term" aria-label="What the AI is doing" aria-live="polite">
+        <div class="surface-term__bar"><b-icon sym="/assets/sprite.svg#spark" size="sm"></b-icon> the AI is acting…</div>
+        <div class="console__feed" data-surface="console"></div>
+      </section>
     </section>
 
     <!-- 5 · HOW IT WORKS — one vocabulary → one door → RenderOps over SSE -->
     <section class="site__section" id="how" aria-label="How it works">
-      <div class="section-head"><span>How it works</span><a class="action" href="/ai/manifest">manifest</a></div>
+      <div class="section-head"><span>How it works</span><a class="action" href="/ai/manifest?screen=grain">manifest</a></div>
       <p class="site__why">The whole system is one closed vocabulary of verbs and surfaces
         (<span class="name">contract.ts</span>). A human click and an AI decision are the same
         <b>Intent</b>; both flow through <b>one door</b> and return as <b>RenderOp</b>s pushed over SSE.
@@ -346,8 +373,8 @@
         <a href="/loop">The reference screen (/loop)</a>
       </div>
       <p>Built on <b class="name">BATCH</b> — no build step. <em>This site is itself built with GRAIN</em>, on the
-        default theme; a product re-skins it by overriding tokens. More coming: a live "watch the AI act"
-        demo and a re-skin toggle.</p>
+        default theme; a product re-skins it by overriding tokens. The "watch the AI act" demo above runs
+        through the real door; a re-skin toggle is still to come.</p>
     </footer>
   </div>
 

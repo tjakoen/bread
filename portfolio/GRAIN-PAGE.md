@@ -15,22 +15,25 @@
 > **Hosting: GitHub Pages, root-served.** The portfolio is the **`tjakoen.github.io`** user site
 > (domain root), so `/grain` (and future `/batch`) are subpaths of ONE root site — which is why
 > absolute asset paths work (see Hosting below). Ships as a static `dist/` export
-> (ARCHITECTURE §18 — a crawler over the running server, not a second renderer). No backend at
-> runtime, so the AI demo runs client-side.
+> (ARCHITECTURE §18 — a crawler over the running server, not a second renderer). The "Watch the AI
+> act" / Ask demo is an *operable* surface (real `/intent` + SSE): it runs on the live server and is
+> inert on the static export (§18 boundary).
 
 ## Decisions (2026-07-01)
 
 - **The GRAIN showcase is a portfolio section (`/grain`), not grain's own site.** grain repo =
   framework + `/catalog` self-doc; the narrative site lives in the portfolio that consumes it.
 - **Neutral, default theme.** A consuming product re-skins via token overrides.
-- **AI demo fidelity: same vocabulary, same dispatcher — client-side reasoner** *(revised
-  2026-07-01; supersedes the earlier "reuse the real door + SSE" decision, which needs a server
-  the static host doesn't have).* The "Watch the AI act" section keeps the honest parts — the
-  `RenderOp` vocabulary and the real `ai-dispatch.js` dispatcher applying ops to the DOM — and
-  swaps only the **transport**: server-backed (dev) it may use the real `/intent` → SSE door;
-  on static GitHub Pages a **client-side reasoner emits the identical ops locally** and feeds
-  the same dispatcher. One demo, both modes; the vocabulary stays real, not a fake animation.
-  See [[interaction-door-pattern]] and "The AI demo" below.
+- **AI demo fidelity: the REAL door — no client-side reasoner** *(revised 2026-07-04; reverts the
+  2026-07-01 "client-side reasoner" decision in favour of the original "reuse the real door + SSE"
+  — ROADMAP A.2, honest-pitch bar).* The "Watch the AI act" section (and the human Ask/Send) post a
+  real `Intent` to `POST /intent`; the server's reasoner decides and pushes `RenderOp`s back over
+  SSE; the real `ai-dispatch.js` applies them. There is **no showcase-only client-side op emitter**
+  — the page whose whole claim is "no privileged AI→DOM back channel" no longer has one. The demo
+  verb is `demo.run` (the reasoner branches a `/grain`-specific scenario on `intent.screen`).
+  **Consequence (accepted):** the demo is an *operable surface*, so on the static `dist/` export it
+  is inert (ARCHITECTURE §18 — the AI loop can't be a static file). Live render (dev/prod server)
+  is where it runs. See [[interaction-door-pattern]] and "The AI demo" below.
 - **AI-demo brain: scripted now, model-later.** Ship the deterministic scripted reasoner first
   (like `/loop` — reliable showcase, zero download). Design the reasoner as a seam so a real
   in-browser model (embeddings → optional local LLM) can drop in later as an upgrade tier.
@@ -84,25 +87,29 @@ e2e asserts the content-shift; shots `grain-peek` + new `grain-peek-menu`.
   it too. Not a demo-only hack — a real catalog improvement (native responsive, no build). Point 1
   (content shift) + point 2 (scroll containment) live in the `/grain` page's own layout CSS.
 
-### "One surface, both operators" — interactive + AI mode (2026-07-03) — ✅ BUILT (client-side v2)
+### "One surface, both operators" — through the REAL door (2026-07-04) — ✅ BUILT (server v3)
 
-The composed surface is now operable by **both operators**, reusing the loop demo's AI language
-client-side (no server door → survives the static export; matches the v2 plan's tier-0 decision):
+The composed surface is operable by **both operators through the one door** — the real
+`ai-dispatch.js` posting to `POST /intent` and applying the server's `RenderOp`s over SSE (the
+same path `/loop` uses). The prior client-side `surface-demo.js` op-emitter is **deleted**
+(ROADMAP A.2): the page that argues "no privileged AI→DOM back channel" no longer ships one.
 
-- **Human-operable.** Switch tabs / rail views, complete a task (the check `icon-button` flips its
-  badge to done — your committed action, clean), and Ask + Send (appends your line clean + a grain
-  AI reply that types in). Contained island `grain/scripts/surface-demo.js`, scoped to
-  `[data-surface-demo]`.
-- **AI mode — "▷ Watch the AI act".** A scripted AI drives the *same* controls under GRAIN's real
-  **spotlight** (`.ai-backdrop`/`.ai-spotlit`/`.ai-acting-label` from `grain/ai/ai.css`, bundled in
-  `/components.css`): it types into the Ask field (grain, dashed edge), "sends", streams a grain
-  reply, then completes a task — narrated by the `action-badge` verb strip (reads → types →
-  commits). Click the backdrop to stop. Reduced-motion → instant final state, no spotlight.
-- This is the on-thesis payoff: **a human click and an AI action operate one surface through the
-  same controls**, with the AI's presence shown (grain + spotlight). The AI run has 4 beats (reads →
-  types into Ask → completes a task → drafts a new grain task — AI-authored stays grain). No mediated
-  interrupt (it's a mini demo; backdrop-click stops). e2e covers human ops, the AI run outcome (grain
-  reply + task done + drafted grain task), and the spotlight (with motion). Shot: `grain-ai-acting`.
+- **Human-operable.** Ask + Send posts `chat.send` through the door → your line settles clean, the
+  AI's reply streams into a grain bubble over SSE. (Tabs/rail are static visual composition; the
+  human *write* path is the door, not client JS.)
+- **AI mode — "▷ Watch the AI act".** The trigger posts `demo.run` (target `screen`) through the
+  door; the server reasoner runs a `/grain`-specific scenario (branched on `intent.screen`) and
+  pushes the ops back over SSE. `ai-dispatch.js` applies them under GRAIN's real **spotlight**
+  (`.ai-backdrop`/`.ai-spotlit`/`.ai-acting-label` from `grain/ai/ai.css`, bundled in
+  `/components.css`): reads the rail, types into the Ask field (grain), streams a grain reply into
+  the chat, completes a task, then drafts a new grain task. Reduced-motion → instant final state.
+- This is the on-thesis payoff: **a human Ask and an AI run operate one surface through the same
+  door**, with the AI's presence shown (grain + spotlight). The AI run has 5 beats (reads → types
+  into Ask → replies in chat → completes a task → drafts a new grain task — AI-authored stays grain).
+  Stopping is **mediated** (click the working page → a confirm dialog → `desk.stop`; the single
+  writer hands back cleanly — never a force-kill). e2e covers the human door path (chat.send), the AI
+  run outcome (grain reply + task done + drafted grain task), and the mediated-stop spotlight (with
+  motion). Shot: `grain-ai-acting`.
 - **Grade legibility (2026-07-03):** the Redaction grades differ by ink/halftone *texture*, invisible
   at body-text size (people read it as "the grade isn't changing" — but the fonts load and
   `--type-font` flips correctly). The grade-as-signal section now leads with a `.grade-show` specimen:
@@ -210,11 +217,11 @@ sparse until then.
    Live micro-moment: a line settling grain → clean (the signature, read instantly).
 2. **Grade-as-signal.** grain = AI / in-transit, clean = human / committed. Live: a human message
    (clean) beside the desk's (grain); a field that goes grain while the AI fills it. One-sentence why.
-3. **Watch the AI act** — labelled *Demonstration*. A contained "desk" that acts through the
-   vocabulary: spotlight → stream a grain line → draft a `b-list` plan → revise a line (backspace) →
-   flip a `b-badge` → narrate steps as `action-badge`s. Interruptible (mediated stop). Uses the
-   real dispatcher + `RenderOp` vocabulary; the reasoner runs **client-side** on the static host
-   (see "The AI demo" below) — a human click and an AI decision are still the same `Intent` → ops.
+3. **Watch the AI act** — a contained surface that the AI acts on through the vocabulary:
+   spotlight → stream a grain line into the Ask → reply in the chat → complete a task → draft a
+   new grain task. Interruptible (mediated stop). Uses the real dispatcher + `RenderOp` vocabulary
+   through the **real server door** (`demo.run` → `/intent` → SSE) — a human click and an AI
+   decision are the same `Intent` → ops. (Operable, so inert on the static export; §18.)
 4. ~~**The components.**~~ **Removed 2026-07-02** — no components showcase on the main page by
    design (the sidebar catalog is the reference). The page is still built *from* grain atoms so
    Inspect + hover bridges each element to its catalog entry. See the "no catalog items" note below.
@@ -229,7 +236,7 @@ sparse until then.
 
 ## Hosting & static export (GitHub Pages)
 
-Ships as a static `dist/` via ARCHITECTURE §18 (`bun run export`, when built) — a crawler over the
+Ships as a static `dist/` via ARCHITECTURE §18 (`bun run export`) — a crawler over the
 running server, not a second renderer. The portfolio pages (`/`, `/grain`) aren't in the sitemap
 (served from `config.portfolioPagesDir`), so the export walks them explicitly alongside `/catalog`.
 
@@ -245,13 +252,18 @@ running server, not a second renderer. The portfolio pages (`/`, `/grain`) aren'
   `/ai/manifest`). On the static site those are shell-only or absent — keep `/grain` self-contained
   or point such links at the live/dev instance.
 
-## The AI demo (v2) — client-side reasoner + model tiering
+## The AI demo — model tiering (a FUTURE, separate static-only option)
 
-The hosted "Watch the AI act" section runs with **no backend**: keep the real `ai-dispatch.js`
-dispatcher and the `RenderOp` vocabulary; replace only the server leg (`/intent` + SSE) with a
-**client-side reasoner** that emits the same ops. Same demo works server-backed in dev and static
-on Pages. The reasoner is a **seam** (`decide(intent) → RenderOp[]`) with tiers, gated on
-weight/WebGPU with graceful fallback:
+> **Superseded for `/grain` (2026-07-04).** The `/grain` "Watch the AI act" demo now runs through
+> the **real server door** (`demo.run` → `/intent` → SSE), not a client-side reasoner — see the
+> decision above. It is therefore inert on the static export (§18). The client-side tiering below is
+> **no longer how `/grain` works**; it's retained only as the design for a *separate*, backend-free
+> AI demo (e.g. a static-hosted variant or the portfolio-wide chat island, memory
+> [[lightweight-model-demo-strategy]]) if that is ever wanted. Not built.
+
+A backend-free demo would keep the real `ai-dispatch.js` dispatcher and the `RenderOp` vocabulary,
+replacing only the server leg (`/intent` + SSE) with a **client-side reasoner** that emits the same
+ops — a **seam** (`decide(intent) → RenderOp[]`) with tiers, gated on weight/WebGPU with fallback:
 
 0. **Scripted (ship first).** Deterministic op sequence, like `/loop`'s stub. Zero download,
    reliable showcase. Proves the vocabulary end-to-end client-side.
@@ -272,8 +284,11 @@ AI-demo decision — the portfolio-wide chat island is the same idea, generalize
 - **v1 ✅ (2026-07-01):** hero + grade-as-signal + components + catalog-peek + how-it-works + footer.
   At `portfolio/pages/grain/index.html`; e2e at `project/e2e/grain-page.e2e.ts` (portfolio home +
   3 showcase tests, green); shots `grain` + `grain-peek`. `tsc` + `bun test` green.
-- **v2:** the "Watch the AI act" section — real dispatcher + `RenderOp` vocabulary, client-side
-  reasoner (tier 0 scripted first; tiers 1–2 optional). See "The AI demo" above.
+- **v2 (2026-07-03):** the "Watch the AI act" section — first shipped with a client-side
+  op-emitter (`surface-demo.js`). Superseded by v3.
+- **v3 ✅ (2026-07-04):** rebuilt through the REAL door (ROADMAP A.2) — `demo.run` + `chat.send`
+  via `/intent` + SSE, `surface-demo.js` deleted. See the decision + "One surface, both operators"
+  above. Optional client-side model tiers remain a separate, unbuilt static-only option.
 - **v3:** the re-skin theme toggle.
 - **export:** `batch/export` (`bun run export`) → static `dist/` for Pages (ARCHITECTURE §18,
   `PLAN.md` piece 1) — emit `/search.json` + walk the portfolio pages.
