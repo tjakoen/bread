@@ -34,6 +34,20 @@ said stop.
 
 I didn't stop. I couldn't quite make myself walk away, so instead I went after the actual problem.
 
+```mermaid
+flowchart LR
+  A[Teach all week] --> B[Grading piles up]
+  B --> C[Procrastinate, exactly like<br/>I warn my students not to]
+  C --> D[1am marking before<br/>a full workday]
+  D --> E{Quit?}
+  E -->|the old loop| A
+  E -->|what I did instead| F[Automate the grind]
+  F --> G[Grading runs as a GitHub Action]
+  G --> H[My hours go back to the students]
+```
+
+*The loop I was stuck in, and the exit I built instead of taking the other one.*
+
 ## First, why I teach at all
 
 Let me get the money question out of the way, since I brought it up. I don't teach for the money.

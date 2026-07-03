@@ -12,11 +12,12 @@ summary: >
   and an AI that manages me.
 ---
 
-> **Draft, my own voice, plain text for now.** Diagrams and styling are stripped while the writing
-> settles; figures and presentation come later via MILL/GRAIN. Companion to the technical docs
+> **Draft, my own voice.** Styling and presentation come later via MILL/GRAIN; the desk figure
+> awaits a real capture from the live demo. Companion to the technical docs
 > ([PHILOSOPHY.md](../PHILOSOPHY.md), [ARCHITECTURE.md](../../batch/docs/ARCHITECTURE.md),
-> [mill/PLAN.md](../../mill/PLAN.md)) and the whitepaper draft
-> [One Vocabulary, Two Operators](whitepaper-one-vocabulary.md).
+> [mill/PLAN.md](../../mill/PLAN.md)), the technical side of the native-first bet
+> ([The Browser Grew Up While I Was Busy With Frameworks](the-browser-grew-up.md)), and the
+> whitepaper draft [One Vocabulary, Two Operators](whitepaper-one-vocabulary.md).
 
 ## A confession, up front
 
@@ -26,7 +27,16 @@ And I tried the tools. All of them. Notion, Obsidian, Craft, Apple Reminders, th
 
 So I would bounce to the next app, learn *its* system, fall off *that* one, and go around again, collecting abandoned workspaces like a very tidy hoarder.
 
-> *Figure: the productivity-app treadmill: a loop (pick a new app → learn its system → it does not fit → quit, feel guilty → repeat) circling the words still disorganized, with one arrow breaking out of the loop and asking what if it adapted to me instead.*
+```mermaid
+flowchart LR
+  A[Pick a new app] --> B[Learn its system]
+  B --> C[It does not fit]
+  C --> D[Quit, feel guilty]
+  D --> A
+  D -.->|the way out| E[What if it adapted to me instead?]
+```
+
+*The productivity-app treadmill. Every lap ends in the same place: still disorganized.*
 
 > I wanted to stay exactly as disorganized as I am, and have the software deal with it.
 
@@ -40,9 +50,19 @@ Which is why I do not really have hobbies. Some people decompress with the gym, 
 
 One of my teaching classes became INTROWEB: basic HTML and CSS. It was not supposed to be mine; it got added to my load. Happy accident. Prepping lessons, I fell down a rabbit hole (shout-out to [Coding2GO](https://www.youtube.com/@coding2go)) and realized something I had stopped believing: **modern HTML, CSS, and JavaScript are genuinely good now.**
 
-I had lived inside frameworks for years, because when I started, the native platform really was not enough for anything serious. But I have never *liked* frameworks. They bug me the same way a productivity app does: they make you do things their way. So it turned into a dare to myself: *build this as natively as possible.* No framework, no build step, just the platform. Down that hole I met the tools that make native-first realistic today: htmx, Bun, and a lot of CSS I had underestimated.
+I had lived inside frameworks for years, because when I started, the native platform really was not enough for anything serious. But I have never *liked* frameworks. They bug me the same way a productivity app does: they make you do things their way. So it turned into a dare to myself: *build this as natively as possible.* No framework, no build step, just the platform. Down that hole I met the tools that make native-first realistic today: htmx, Bun, and a lot of CSS I had underestimated. The feature-by-feature ledger of what the browser can do now is its own note: [The Browser Grew Up While I Was Busy With Frameworks](the-browser-grew-up.md).
 
-> *Figure: the plan vs. what actually happened: a straight arrow (get organized → done) over a squiggly line that detours through teaching INTROWEB, rediscovering HTML/CSS, a Bun and htmx rabbit hole, and hours talking to an AI, before arriving at a whole stack.*
+```mermaid
+flowchart LR
+  subgraph Plan["The plan"]
+    P1[Get organized] --> P2[Done]
+  end
+  subgraph Actual["What actually happened"]
+    A1[Get organized] --> A2[Teach INTROWEB] --> A3[Rediscover HTML and CSS] --> A4[A Bun and htmx rabbit hole] --> A5[Hours talking to an AI] --> A6[A whole stack]
+  end
+```
+
+*The plan, and the scenic route the plan actually took.*
 
 ## The real idea: an AI that manages me
 
@@ -66,7 +86,17 @@ The assistant needed a surface to drive, and my no-framework rule needed a backe
 
 I landed on **Bun** for a concrete reason, not the usual hype: it is the one runtime that parses HTML on the server out of the box, so I could keep inventing my own tags and still have a no-build server compose them, without dragging in a whole library to do the one thing I was trying to avoid. It runs TypeScript straight, ships its own database, and otherwise minds its business. Every choice paid down the same debt: fewer moving parts standing between me and a working page.
 
-> *Figure: BATCH, no build, no dist folder: the usual way (source → build → dist → server → browser) above the BATCH way (browser requests a page → the Bun server composes templates and my own component tags on the spot → finished HTML), composed fresh on every request.*
+```mermaid
+flowchart LR
+  subgraph Usual["The usual way"]
+    U1[Source] --> U2[Build] --> U3[dist folder] --> U4[Server] --> U5[Browser]
+  end
+  subgraph BATCH["The BATCH way"]
+    B1[Browser asks for a page] --> B2[The Bun server composes templates<br/>and my own component tags] --> B3[Finished HTML]
+  end
+```
+
+*No build, no dist folder: the page is composed fresh on every request.*
 
 ## GRAIN: making the machine visible
 
@@ -74,9 +104,19 @@ Then the thing actually had to look and behave like something, and here is a con
 
 Underneath the look is the part that keeps it honest. A human click and an AI decision resolve to the same intent, go through one write door, and come back as operations that redraw the surface. The AI gets no secret key I do not also hold. It plays the same piano I do, in the same room, where I can watch its hands.
 
-> *Figure: the desk at work (a recreation of the loop demo): the desk's own AI cursor moves to a Plan my day button and presses it (the same button a person would click), then writes the day out in grained ink and revises a line in place. A human click and an AI decision are the exact same action.*
+> *Figure (to be captured, not drawn: a real screenshot of the live loop demo): the desk's own AI cursor moves to a Plan my day button and presses it (the same button a person would click), then writes the day out in grained ink and revises a line in place. A human click and an AI decision are the exact same action.*
 
-> *Figure: how GRAIN talks to the frontend: a human click and an AI decision both become the same Intent, pass through one write door (POST /intent) to a single writer that emits render ops, which are pushed over SSE, and the surface updates.*
+```mermaid
+flowchart LR
+  H[Human click] --> I[The same Intent]
+  A[AI decision] --> I
+  I --> D[One write door<br/>POST /intent]
+  D --> W[A single writer<br/>emits render ops]
+  W --> R[Pushed over SSE]
+  R --> S[The surface updates]
+```
+
+*One vocabulary, one door: a human click and an AI decision are the same action all the way down.*
 
 ## MILL: because I refuse to write raw HTML
 
@@ -84,7 +124,19 @@ The last piece was born of pure cheapness. Once this was worth showing people, I
 
 So I built **MILL:** Markdown In, Living Layouts. Feed it Markdown and it renders real GRAIN pages out of components: frontmatter picks the layout, each block becomes a component, BATCH composes the result. The sneaky payoff is that one pile of writing does three jobs at once: it is the page you read, the knowledge the assistant can lean on, and the docs I publish. Write it once; it turns up everywhere it is needed and nowhere it is not.
 
-> *Figure: MILL, one source, many pages: a Markdown file (frontmatter + images) goes into MILL, which maps frontmatter to a layout and each block to a component; BATCH composes the tags; and the same source fans out to the page you read, the assistant's knowledge, and the published docs.*
+```mermaid
+flowchart LR
+  M[Markdown + images] --> MILL[MILL]
+  MILL --> L[Frontmatter picks the layout]
+  MILL --> K[Each block becomes a component]
+  L --> C[BATCH composes the page]
+  K --> C
+  C --> P1[The page you read]
+  C --> P2[The assistant's knowledge]
+  C --> P3[The published docs]
+```
+
+*One source, many pages: write it once, and it turns up everywhere it is needed.*
 
 ## Slowing down long enough to get it right
 

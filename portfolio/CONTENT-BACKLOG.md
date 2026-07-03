@@ -13,9 +13,14 @@
 
 Where the notes actually stand, so a fresh session can pick up mid-stream:
 
-- **All six notes are DRAFT, voice-audited against `standards/VOICE.md`, and swept em-dash-free.**
+- **All notes are DRAFT, voice-audited against `standards/VOICE.md`, and swept em-dash-free.**
   The origin story was swept carefully (it is the protected exemplar). The whitepaper keeps its
-  em-dashes by choice (formal register).
+  em-dashes, literal-token backticks, and footer-less ending **by choice** (formal register; ruled
+  2026-07-04) — but carries full frontmatter (readingTime + tags added) and now cross-links
+  origin-story + ten-times-zero from its status block.
+- **Cross-link graph is closed (2026-07-04):** the-browser-grew-up is linked from origin-story (two
+  spots) and ten-times-zero; the whitepaper links into the note cluster. Every note has ≥1 inbound
+  link from a sibling.
 - **Locked decisions:** teaching count is "100 to 150 students a semester" (a range, everywhere);
   money stays vague with no ratio-in-words; em-dashes are banned in prose (VOICE); the repo footer
   tagline is em-dash-free and canonical in `standards/README-STANDARD.md`.
@@ -25,11 +30,15 @@ Where the notes actually stand, so a fresh session can pick up mid-stream:
   timeline SVG (all on the scaffold), plus the playbook-loop and mistakes-loop mermaids. Rollout to
   the OTHER notes is still PENDING.
 - **Pending work (approved, not yet done):**
-  1. **Visualization rollout (remaining notes):** ten-times-zero is DONE. Still owed: origin-story's
-     six figures, and a lead visual for each bare note (grading-flow mermaid for the teaching pair).
-     Build all to `standards/FIGURES.md`.
-  2. **ten-times-zero editorial trim:** thin the formula (it hits every signature move), cut
-     over-bolding, pick one driving metaphor, break the repeated "Amateur/Professional" antithesis.
+  1. **Visualization rollout — mostly DONE (2026-07-04):** ten-times-zero was already done;
+     origin-story now has 5 of 6 rendered (the "desk at work" figure stays a placeholder on purpose —
+     it should be a real screenshot of the live /loop demo, not a drawing); the teaching pair each
+     carry a lead mermaid (why-i-teach: the quit-loop + exit; how-i-use-ai: the feedback wall);
+     the-browser-grew-up's replacement-map SVG is rendered. Remaining: capture the desk screenshot.
+  2. **ten-times-zero editorial trim — first pass done (2026-07-04):** de-bolded the sprint bullets
+     and the "Fast and documented" line, cut the second definition-of-professional from the
+     "I've done this job before" closer, broke one vibe/professional antithesis repeat. A deeper
+     pass (one driving metaphor, thinning the formula further) still deserves the user's own eye.
   3. **"Watch Its Hands"** whitepaper companion: plain-language, in-voice, sells the paper to normal
      people. Blueprint (hooks + concept-translations) is in this session's plan; leads with the piano.
 
@@ -165,6 +174,19 @@ name luck as luck, keep money vague, keep the events-platform telling neutral. S
       tokens, names-as-data, safe-by-default) → empty-org→graded-hello-world validation loop. **DRAFT**
       at `notes/how-i-turned-github-into-a-classroom.md`. Deep technical detail belongs in the external
       repo's docs (ARCHITECTURE/LESSONS), which the planned `/course-platform` landing page links to.
+- [~] **The Browser Grew Up While I Was Busy With Frameworks** — the mildly-technical *native-first*
+      companion to the origin story (which carries the narrative of *why* I left frameworks; this one
+      goes a level deeper on the *how*). Feature-by-feature account of the native primitives that
+      retired a library (View Transitions, dialog, details, has/color-mix, constraint validation,
+      plain-links tabs), the no-build + static-export payoff, the categorical advantages (zero runtime
+      deps, own-the-surface, native = accessible/future-proof, one JS file shipped), and the honest
+      ledger: perf is a **well-founded bet, not measured** (ties to the Framework comparison follow-up
+      below, `bun run audit`), plus native-as-direction-not-religion (still uses htmx/Bun/one script).
+      **DRAFT** at `notes/the-browser-grew-up.md`. Cross-links origin-story + ten-times-zero, and is
+      linked back from both (de-orphaned 2026-07-04); duplicated sentences shared with origin-story
+      (Bun-for-a-reason, stale-dist, Coding2GO) were rewritten here so the joke lives in one place.
+      All figures rendered (replacement-map SVG on the scaffold, 2026-07-04). **TODO before publish:**
+      link the framework-comparison bench once it exists.
 - [x] **~~Fifty Tiny Things Before One Big One~~ — CUT (2026-07-03).** A standalone design-philosophy
       note had no lane: the atomic/DRY/tokens core is just Brad Frost (credit + link him where design
       comes up — origin-story already does), and the genuinely-original bits (grade-as-signal,

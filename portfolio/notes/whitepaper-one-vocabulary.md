@@ -5,6 +5,9 @@ author: "Tjakoen Stolk"
 status: DRAFT
 type: whitepaper
 date: 2026-07-02
+updated: 2026-07-03
+readingTime: "~28 min"
+tags: [ai, design-systems, hci, provenance, grain]
 summary: >
   A research-style positioning of GRAIN, an AI-interaction design system: a UI where a human click and
   an AI decision resolve to the same closed, semantic action-vocabulary through one write door, with the
@@ -12,11 +15,14 @@ summary: >
   *modality* for AI — a design-system claim, independent of what is built with it or where it runs.
 ---
 
-> **Status: working draft.** This is a *projection* of [PHILOSOPHY.md](../PHILOSOPHY.md) — the
-> beliefs are canonical there; this paper situates them in the literature and argues the contribution.
-> Related-work coverage is strongest for agent–UI protocols, GUI agents, and mixed-initiative HCI
-> (adversarially verified); provenance, generative-UI, accessibility-as-affordance, and intent-based UI
-> are sourced but await a second verification pass (see §8).
+> **Status: working draft, revised 2026-07-03.** This is a *projection* of
+> [PHILOSOPHY.md](../PHILOSOPHY.md) — the beliefs are canonical there; this paper situates them in
+> the literature and argues the contribution. The narrative version of the same stance is
+> [the origin story](origin-story.md); the working method behind the claims is
+> [Ten Times Zero Is Still Zero](ten-times-zero.md). Three research passes so far: agent–UI protocols /
+> GUI agents / mixed-initiative HCI (verified), provenance / generative-UI (verified), and a
+> shipped-landscape sweep (2026-07-03) that added Builder.io Agent-Native and Meta Astryx as the
+> closest contemporaries and narrowed the novelty claim accordingly (§3.2, §4, §8).
 
 ## Abstract
 
@@ -31,13 +37,22 @@ as an **in-surface provenance signal** ("grade-as-signal"): every operable surfa
 in its own idiom — degraded type for text, a dashed edge for controls — and the mark *persists* after the
 action commits; human, committed content stays clean. The purpose is **augmentation, not automation**: the AI is
 framed as an *extension of the operator* — on equal footing, acting in full view, its work legible
-enough to learn from — not a replacement working offstage. The contribution is deliberately a
-**synthesis and a working existence proof**: the ingredients are drawn from existing work, but their
-**conjunction** — human=AI **symmetry** over one closed vocabulary, a **single-writer door**, and
-**provenance-as-grade** — is a coherent, opinionated position the literature gestures toward yet
-does not occupy, and we demonstrate it in a working system. We are equally explicit
-about its limits: the claimed *benefits* (that symmetry aids controllability; that grade-as-signal is a
-legible, correctly-interpreted cue) require original user studies we have not yet run.
+enough to learn from — not a replacement working offstage. The industry is now converging on this
+ground from several directions at once — agent-*ready* design systems make components legible to AI
+**authors** at development time (Meta's Astryx); agent-*native* frameworks give a runtime agent and
+the UI **shared actions** (Builder.io's Agent-Native); agent-UI protocols standardize the **channel**
+(AG-UI, MCP Apps, A2UI) — which we read as validation of the direction. The contribution is
+deliberately a **synthesis and an existence proof**: the ingredients are drawn from existing work,
+but their **conjunction** — human=AI **symmetry** over one closed vocabulary, a **single-writer
+door**, and **provenance-as-grade** — is a coherent, opinionated position the converging traffic has
+not yet reached: the nearest contemporary (Agent-Native) shares the first two properties and carries
+no provenance surface at all, so the third — disclosure rendered in the operable surface, coupled to
+the same door that admits the action — is load-bearing. We are equally explicit about limits: the
+reference implementation enforces the door, the registry, and the grade for the human operator
+today, with a scripted reasoner standing behind the model seam (a live model driving the vocabulary
+end-to-end is the declared next milestone); and the claimed *benefits* (that symmetry aids
+controllability; that grade-as-signal is a legible, correctly-interpreted cue) require original user
+studies we have not yet run.
 
 ## 1. Introduction
 
@@ -47,7 +62,17 @@ the human interface the way a person would, by perceiving the screen and emulati
 reverse-engineers an interface that was designed for eyes and hands, and the human's role collapses to
 issuing instructions and watching.
 
-We take a different stance, summarized as one sentence:
+That paradigm is no longer the only current. Through 2025–2026 the industry has been converging,
+from several directions at once, on the idea that software should be *legible to* and *operable by*
+AI as a first-class design concern: Meta's **Astryx** ships a design system built to be read and
+used by AI *authors* at development time [Astryx 2026]; Builder.io's **Agent-Native** framework
+gives a runtime agent and the UI *shared actions* [Builder.io 2026]; the agent-UI protocol family
+(AG-UI, MCP Apps, A2UI) standardizes the agent↔app *channel*; and position papers now argue over
+what an "agent-first web" should even mean [arXiv 2606.19116]. A crowded road is evidence of a real
+destination. This paper stakes out the specific point on that road the traffic has not yet reached —
+and names precisely which neighbours hold which pieces of it (§3).
+
+We take a stance summarized as one sentence:
 
 > **Every surface is addressable and operable by both a human and an AI through one shared vocabulary,
 > and the AI's presence is a visible signal.**
@@ -100,8 +125,11 @@ user-study track (§5), not asserted as a result.
   interaction layer validates `(surface, action)` against the registry and hands it to the **one writer**
   (the reasoner), which holds the only mutation capability and returns `RenderOp`s over SSE. So *neither*
   operator has a privileged path: the human does not reach the database directly any more than the AI
-  reaches the DOM directly. (A documented seam for user-owned ground-truth data may take a direct route;
-  it is out of scope here.)
+  reaches the DOM directly. (One documented seam exists: *user-owned ground-truth* data — the user's own
+  knowledge base, notes, preferences — may take a direct route, because the write path is chosen by
+  the data's **ownership category**, not by convenience; AI-behavioral state and AI reasoning
+  artifacts must use the door. There is no generic direct-write endpoint, and no datum is writable
+  by both paths. Details are out of scope here.)
 - **Index vs. snapshot.** The manifest is the *space of the possible*; the per-request state is *what is
   true now*. The AI needs both — the former for its move set, the latter for where it stands.
 - **Grade-as-signal (every surface, not only type).** The AI's hand is shown *in the operable surface
@@ -144,14 +172,17 @@ occupies all three at once.
 |---|---|:--:|:--:|---|
 | GUI agents / Computer Use [Zhang'24; Anthropic'24] | imitates human input (pixels, DOM, clicks) | ✗ AI mimics; human instructs by chat | ✗ | — none inherent |
 | Agent–UI protocols (AG-UI, MCP-UI, MCP Apps, A2UI) | agent proposes / streams UI; app renders | ✗ asymmetric agent↔app | ✗ event / data channel | varies |
+| Agent-native frameworks (Builder.io Agent-Native '26) | operates app-authored typed actions ("every agent action is also a button") | **✓** shared actions, human & agent | ~ one executor behind *many* doors (UI, HTTP, MCP, A2A, CLI) | — none in-surface (permissions + audit logs) |
+| Agent-ready design systems (Astryx '26) | *authors* UI code at dev time (CLI / MCP manifest) | ✗ authoring symmetry only; no runtime operation | n/a | — none |
 | Generative UI (Vercel; "Software as Content") | AI *assembles* the interface at runtime | ~ SaC shares a surface, but generative | ✗ | — none inherent |
 | Mixed-initiative / interface agents (Horvitz; Lieberman) | a separate agent observes & suggests | ✗ complementary; own affordances | ✗ | agent chrome (icon, dialog) |
 | Hypermedia affordances (HATEOAS; Signifiers; "web verbs") | agent discovers & invokes affordances | ✗ machine / agent-only | n/a | — none |
 | Provenance systems (C2PA, SynthID, Carbon for AI, sparkle) | *disclosure only — not an interaction model* | n/a | n/a | metadata · watermark · container badge · icon |
 | **GRAIN (this work)** | **operates a closed, app-authored vocabulary** | **✓ identical primitive** | **✓ one `/intent`, one writer** | **in-surface grade (type + control edges), persistent** |
 
-*Table 1 — Positioning. The contribution is the row that is ✓ on all three axes simultaneously; no prior
-cluster is. (`~` = partial; `n/a` = the axis doesn't apply to that kind of system.)*
+*Table 1 — Positioning. The contribution is the row that is ✓ on all three axes simultaneously; no
+prior cluster is. The nearest, Agent-Native, holds the first two and none of the third — which is
+what makes the provenance axis load-bearing. (`~` = partial; `n/a` = the axis doesn't apply.)*
 
 ### 3.1 Agent–UI interaction protocols (AG-UI, MCP-UI, MCP Apps)
 
@@ -169,9 +200,54 @@ MCP Apps reaches this independently via iframe sandboxing. **Differ:** each is a
 agent↔app negotiation — an agent-proposed generative tree, a mediated event channel, or a privileged
 bidirectional model↔UI data channel. **None funnels a human click and an AI decision through one
 identical closed vocabulary.** The "no AI→DOM back channel" principle is therefore *not* our novelty;
-the **symmetric single-door shared vocabulary** is.
+the **symmetric single-door shared vocabulary** is — with one important contemporary exception,
+next.
 
-### 3.2 GUI agents and computer-use — the primary foil
+### 3.2 Agent-native frameworks and agent-ready design systems — the closest contemporaries
+
+**Builder.io "Agent-Native" (2026) — the nearest neighbour, and the strongest validation.** An
+open-source framework (announced May 2026) whose core primitive, `defineAction()`, binds a typed
+schema to server-side logic such that *"every action the agent can take is also a button in the UI,
+and every button the user clicks runs the same logic the agent uses"* [Builder.io 2026]. The action
+set is application-authored and closed (the agent cannot invent capabilities), and every action runs
+one validate → authorize → apply → broadcast pipeline.
+
+**Intersect:** this is our symmetry claim, shipped — property 1 substantially, and property 2
+functionally (one action executor). As of mid-2026, human=AI symmetry over an app-authored action
+vocabulary can no longer be presented as novel *on its own*, and we cite Agent-Native as
+confirmation that the point is real, buildable, and wanted. **Differ:** three things, one of them
+decisive. (a) *Transport:* Agent-Native exposes its one executor through **many** doors — UI, HTTP,
+MCP, A2A, CLI — where we keep **literally one** endpoint, and that choke point is itself
+load-bearing: provenance is stamped at the door, which is what makes the grade trustworthy (§2).
+(b) *Rendering:* Agent-Native broadcasts state to clients; we return addressed hypermedia
+`RenderOp`s against named surfaces, which is what lets the operator *watch the AI act on the real
+controls*. (c) *Decisive:* **Agent-Native has no provenance surface at all.** Agency is governed by
+permissions and audit logs — off-surface — and an agent's completed work is visually
+indistinguishable from a human's. The conjunction we claim therefore *rests* on provenance-as-grade
+being coupled to the same door that enforces the symmetry (§3.6, §4).
+
+The academic articulation of the same instinct is *"Terminal Is All You Need"* (2026): the terminal
+already gives human and agent representational compatibility — same medium, same actions, the
+agent's activity visible in the medium itself [arXiv 2603.10664]. We agree with the instinct and
+note what the terminal lacks: the vocabulary is open (free-form text, not an application-authored
+contract), there is no single writer, and visibility scrolls away rather than persisting. It is the
+concept; ours is the contract. At the other pole, "agent-first web" proposals argue for **dual-layer**
+content — a human-readable surface plus a separate agent-optimized one [arXiv 2606.19116] — the
+anti-symmetric answer to the same pressure; we take the opposite bet (one surface, two operators).
+
+**Meta Astryx (2026) — the same slogan, a different lifecycle phase.** Astryx is a React design
+system (160+ components, eight years internal) that is "agent ready" in the *authoring* sense: a CLI
+and an MCP server with a machine-readable manifest let an AI **build with** the components —
+scaffold, browse docs, generate themes — so that "a person and an AI assistant build the same way"
+[Astryx 2026]. There is no runtime story: no action vocabulary on the living page, no write door, no
+disclosure of AI presence to an end user. The comparison is clarifying rather than threatening, and
+it forces a terminology distinction this paper now makes explicit: **agent-ready** (Astryx) = the AI
+can *author* the UI at development time; **agent-operable** (this work) = the AI can *operate* the
+UI at runtime, as a peer of the person using it. The two are complementary — a design system could
+be both — but they answer different questions, and only the second raises the provenance question at
+all.
+
+### 3.3 GUI agents and computer-use — the primary foil
 
 ```mermaid
 flowchart LR
@@ -209,7 +285,7 @@ gaps: the "agents perform far below humans" framing (WebArena 14.4% vs. human
 78%) is **already stale** — IBM's CUGA reported 61.7% by Feb 2025 — and must be cited, if at all, only
 as a dated baseline.
 
-### 3.3 Mixed-initiative interaction and interface agents (the lineage)
+### 3.4 Mixed-initiative interaction and interface agents (the lineage)
 
 Our intellectual ancestry, not our mechanism. **Horvitz (CHI 1999)** reframes agents-vs-direct-
 manipulation as a false dichotomy and seeks "an elegant coupling of automated services with direct
@@ -226,7 +302,7 @@ but Letizia *observes and suggests* in a parallel process; it does not actuate t
 cite it as such. **Differ:** none of this prior work makes the agent operate the *identical* action
 vocabulary as the human through a single write door. That symmetry-as-mechanism is ours.
 
-### 3.4 Hypermedia, HATEOAS, and affordances-as-API
+### 3.5 Hypermedia, HATEOAS, and affordances-as-API
 
 Our substrate is hypermedia: state transitions are advertised by the representation itself
 [htmx/HATEOAS]. Most relevant, **Vachtsevanou et al. (AAMAS 2023)** elevate *signifiers* to a
@@ -237,7 +313,7 @@ is a *closed, human-facing UI* vocabulary shared symmetrically with a person, no
 hypermedia API for a multi-agent system. Whether "affordances-as-API" already subsumes our claim is an
 open question (§8).
 
-### 3.5 Provenance and disclosure; generative UI; accessibility
+### 3.6 Provenance and disclosure; generative UI; accessibility
 
 *(Second research pass, verification completed: 21 claims confirmed, 4 refuted. The automated synthesis
 step returned a stub, so this section was merged by hand from the verified set. Provenance-**benefit**
@@ -249,13 +325,19 @@ comparison sharpens the contribution. The prevailing techniques disclose provena
 **SynthID** embeds an imperceptible watermark; IBM's **Carbon for AI** applies a light metaphor to the
 *container / chrome* plus a discrete AI-label component [Carbon for AI]; and even the ubiquitous
 **sparkle** badge is not, on its own, a reliable signal that AI is involved — a "sparkle is sufficient"
-claim did not survive our verification [Google Design]. Ours is the narrow, distinct case:
-provenance rendered **in the operable surface itself** — the type of the words, the edge of a control, the
-outline of a card — so the grade *is* the mark, carried by the very thing the AI produced or touched, with
-nothing separate to overlook or strip. And because the grade encodes provenance (not mere liveness), it
-**persists** after the action settles. We do not claim it is
-provably better — whether such a cue is legible across sighted and non-sighted users is an open empirical
-question (§5) — only that it is a different and largely unoccupied point.
+claim did not survive our verification [Google Design]. The *idea* of marking AI content in the
+surface is also beginning to appear on its own: design-system guidance now proposes background
+tints, icons, or border styles to distinguish LLM-generated from verified content [Deka 2025], and
+"point-of-decision provenance" appears among the ownership-aware co-writing patterns studied by
+Zhang et al. [2026] — so the bare concept of in-surface disclosure is not ours either. The
+defensible form is narrower, and we state it precisely: provenance rendered **in the operable
+surface itself** — the type of the words, the edge of a control, the outline of a card — so the
+grade *is* the mark, carried by the very thing the AI produced or touched, with nothing separate to
+overlook or strip; **persistent** after the action settles (provenance, not mere liveness); and
+**coupled to the action system** — the same door that admits the `Intent` stamps the provenance the
+grade renders, so the disclosure cannot drift from the act. We do not claim it is provably better —
+whether such a cue is legible across sighted and non-sighted users is an open empirical question
+(§5) — only that it is a different and, in this coupled form, unoccupied point.
 
 ```mermaid
 flowchart TD
@@ -298,18 +380,26 @@ working system:
    architectural discipline that makes "what the AI may do" literally equal to "what the UI affords."
 3. **Provenance-as-grade.** AI presence disclosed *in the operable surface itself* — a persistent grade
    on the content and controls the AI produced or touched (type, control edges, card outlines) — rather
-   than in an adjacent badge, icon, or metadata record.
+   than in an adjacent badge, icon, or metadata record; and coupled to the vocabulary, because the
+   provenance the grade renders is stamped at the same door that admits the action.
 
-Each ingredient has prior art (§3); no mapped system combines all three. The nearest neighbour on
-*symmetry* — "Software as Content" (2026) — shares a bidirectional human–agent surface but *generates*
-the application at runtime rather than exposing a closed vocabulary operated identically (§3.5); the
-generate-vs-operate distinction is what keeps the combination ours. A dedicated adversarial prior-art
-search (agent-UI protocols, generative UI, action-log / command-pattern architectures, agent-native
-CLIs) surfaced *no* system that operates a human and an AI through one closed, application-defined
-vocabulary; the nearest candidate's parallel to our model did not survive verification. Naming what is
-*not* ours is part of the claim: it is by drawing the borrowed pieces honestly that the shape of the new combination — and the
-gap it fills — becomes visible. A coherent, buildable position is a contribution; occupying it in running
-code is the proof.
+Each ingredient has prior art (§3); no mapped system combines all three — but the map moved under
+us, and we say so. A first adversarial search (July 2026) surfaced no system operating a human and
+an AI through one closed, application-defined vocabulary; a second sweep days later surfaced exactly
+one that does — **Builder.io Agent-Native** (§3.2), which holds properties 1 and 2 and carries no
+provenance surface at all. The consequence is absorbed rather than resisted: symmetry and the
+single writer are no longer individually novel, and the claim now rests where the evidence puts it —
+on the **full conjunction**, in which provenance-as-grade is not a decoration on the architecture
+but *enforced by it* (the door that admits the `Intent` stamps the provenance the grade renders).
+We regard the arrival of a well-adopted framework on two of our three axes as validation, not
+erosion: a position converged upon from independent directions is a real position. The other
+near-misses hold their earlier verdicts — "Software as Content" (2026) shares a bidirectional
+human–agent surface but *generates* the application at runtime rather than exposing a closed
+vocabulary operated identically (§3.6); "web verbs" is agent-only; Astryx is design-time (§3.2).
+Naming what is *not* ours is part of the claim: it is by drawing the borrowed pieces honestly that
+the shape of the combination — and the gap it fills — becomes visible. A coherent, buildable
+position is a contribution; occupying it in running code is the proof, and §6 states plainly how
+much of that occupation stands today.
 
 ## 5. Evaluation (planned)
 
@@ -335,7 +425,9 @@ evaluation has one real track, plus an explicit out-of-scope note.
   instead of grade. Measures — H1: predicted-vs-actual action agreement, error/undo rate, a control
   questionnaire; H2: provenance-recognition accuracy and reaction time, with a screen-reader/low-vision
   arm; H3: post-task ability to perform the task unaided (learning transfer). Pre-register hypotheses and
-  analyses. This is what moves the claims from *argued* to *demonstrated*.
+  analyses. For H2's method, the ownership-recognition instrument of Zhang et al. [2026] (N=176,
+  co-writing provenance patterns) is the nearest published template. This is what moves the claims
+  from *argued* to *demonstrated*.
 
 **Out of scope.** What is built with GRAIN, how it is bundled, and where it is deployed do not bear on the
 modality and are not evaluated here. (In passing: the reference implementation is light enough to run the
@@ -344,6 +436,16 @@ demo entirely in the browser, and a fuller no-build / native-first comparison li
 
 ## 6. Limitations and threats
 
+- **Implementation status (honesty over rhetoric).** The reference implementation enforces the
+  door, the registry validation, and grade rendering — with unit, integration, and conformance
+  tests — for the *human* operator; provenance is stamped server-side and spoof-tested. The reasoner
+  behind the model seam is today a **scripted stub**: no live model has yet read the manifest and
+  driven the vocabulary end-to-end, so the manifest's adequacy as an instruction set is untested.
+  The build order is deliberate — the modality (vocabulary, door, grade, control lifecycle) is being
+  finished *first*, so that the model, when wired, arrives into a contract rather than a scaffold —
+  but until that milestone, "existence proof" refers to the architecture, and this paper says so.
+  Two legacy direct-write routes predating the door also remain in the demo application and are
+  being retired into the documented ownership seam (§2).
 - **Fast-moving ground.** The agent-UI protocol landscape (AG-UI, MCP Apps) is months old and shifting;
   capability benchmarks age in weeks. Positioning must be dated, not absolute.
 - **Vendor framing.** The AG-UI "tools/agents/users" layering is the ecosystem's self-description; we
@@ -360,14 +462,27 @@ The question "should an AI operate the human interface?" is largely settled — 
 **how**. The prevailing answer is imitation under instruction. We offer the alternative: a single closed
 vocabulary that a human and an AI operate *identically*, through one door, with the AI's hand shown in
 the type. In the older language of the field this is an **augmentation** stance, not an automation one
-— the machine extends the operator's reach without leaving their sight. It is a synthesis and an
-existence proof rather than an invention — a coherent, under-explored point in the design space,
-occupied here in running code. That is the contribution, and it is enough.
+— the machine extends the operator's reach without leaving their sight. The field's own trajectory
+argues for the destination: authoring symmetry (Astryx), action symmetry (Agent-Native), and
+standardized channels (AG-UI, MCP Apps) have all shipped; what none of them carries is the operator
+seeing, in the surface itself, whose hand did what. It is a synthesis and an existence proof rather
+than an invention — a coherent, under-explored point in the design space, occupied here in running
+code, architecture first and the live model next (§6). That is the contribution, and it is enough.
 
 ## 8. Open questions / next research pass
 
+- **Third pass (2026-07-03) — the landscape moved; absorbed in this revision.** An adversarial
+  sweep against the *shipped* landscape (not only papers) surfaced: **Builder.io Agent-Native**
+  (May 2026) — symmetry + a single executor, no provenance surface; now cited as the closest
+  contemporary (§3.2, Table 1) and the reason the novelty claim was narrowed to the full
+  conjunction. **Meta Astryx** (June 2026) — design-time "agent-ready"; prompted the
+  agent-ready/agent-operable terminology split (§3.2). *Terminal Is All You Need* (arXiv
+  2603.10664) — concept-level symmetry + in-medium visibility; cited as the academic articulation.
+  *Who Owns the Text?* (arXiv 2601.10236) and Deka (2025) — in-surface provenance as an articulated
+  idea; property 3 restated as shipped + persistent + door-coupled. The abstract, §1, §3, §4, and §6
+  were revised accordingly, including an explicit implementation-status limitation.
 - **Verification done (2026-07-02):** the second pass completed its 3-vote check — 21 claims confirmed,
-  4 refuted — but the automated synthesis returned a stub, so §3.5 was merged by hand from the verified
+  4 refuted — but the automated synthesis returned a stub, so §3.6 was merged by hand from the verified
   set. Re-running only the synthesis would restore an auto-generated summary; the verdicts themselves are
   settled.
 - **Prior-art hunt outcome:** no system was found that operates a human and an AI through one *closed,
@@ -389,6 +504,12 @@ occupied here in running code. That is the contribution, and it is enough.
 
 - Amershi, S., Weld, D., Vorvoreanu, M., et al. (2019). *Guidelines for Human-AI Interaction.* CHI '19. https://dl.acm.org/doi/10.1145/3290605.3300233
 - Anthropic (2024). *Introducing computer use, a new Claude 3.5 Sonnet, and Claude 3.5 Haiku.* https://www.anthropic.com/news/3-5-models-and-computer-use
+- Astryx / Meta (2026). *Astryx — an open source design system that's fully customizable and agent ready.* https://astryx.atmeta.com · https://astryx.atmeta.com/blog/introducing-astryx · https://github.com/facebook/astryx
+- Builder.io (2026). *Agent-Native architecture.* https://www.builder.io/blog/agent-native-architecture · https://github.com/BuilderIO/agent-native · https://www.agent-native.com/docs/what-is-agent-native
+- arXiv:2603.10664 (2026). *Terminal Is All You Need* (human–agent representational compatibility in the terminal medium). https://arxiv.org/abs/2603.10664
+- arXiv:2606.19116 (2026). *Towards an Agent-First Web* (position; dual-layer human/agent content — cited as the anti-symmetric foil). https://arxiv.org/abs/2606.19116
+- Zhang, Bu, Dhillon (2026). *Who Owns the Text?* (ownership-aware human–AI co-writing; point-of-decision provenance; N=176). arXiv:2601.10236. https://arxiv.org/abs/2601.10236
+- Deka, N. (2025). *The AI-Ready Design System: the 5 components your component library must update first.* Medium (Design Bootcamp). https://medium.com/design-bootcamp/the-ai-ready-design-system-the-5-components-your-component-library-must-update-first-531309f35d85
 - AG-UI (2025). *Agent-User Interaction Protocol — documentation.* https://docs.ag-ui.com/introduction · https://docs.ag-ui.com/agentic-protocols
 - Bunt, A., Conati, C., McGrenere, J. (2007). *Supporting Interface Customization using a Mixed-Initiative Approach.* IUI 2007. https://www.sciencedirect.com/science/article/abs/pii/S1071581905001114
 - C2PA. *Content Credentials: C2PA Technical Specification — Explainer.* https://spec.c2pa.org/specifications/specifications/2.4/explainer/Explainer.html

@@ -134,6 +134,19 @@ There's even a defensive line of code whose only job is to strip the instructor-
 it can leak into the student copy. **The machine drafts; the teacher signs.** I let AI write the
 first pass. I never let it grade or speak to a student on its own.
 
+```mermaid
+flowchart LR
+  S[Student pushes work] --> E[AI drafts feedback<br/>grounded in the rubric]
+  E --> SF[Student-facing half<br/>prose only, no scores, no fixes]
+  E --> IF[Instructor-only half<br/>proposed grade + soft flags]
+  SF --> R[Held for my review]
+  IF --> R
+  R --> T[I edit and sign]
+  T --> D[Delivered to the student's repo<br/>in a deliberate, separate step]
+```
+
+*The wall: the machine drafts both halves; nothing reaches a student until I sign it.*
+
 **The bug I kept having to fix: keep the machine off the students' repos.** A recurring theme in the
 commit history is *me hardening boundaries* so a bad automated run couldn't quietly corrupt a real
 student's work. The mechanics of that (grading off a snapshot, a separate deliberate publish step,

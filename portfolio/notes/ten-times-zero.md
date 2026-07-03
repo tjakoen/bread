@@ -1,20 +1,18 @@
 ---
 title: "Ten Times Zero Is Still Zero"
-subtitle: "\"Vibe coder\" gets used as an insult: prompt and pray, ship a house of cards. I claim it anyway, with one word in front: professional. AI is a multiplier, not an addend, and ten times zero is still zero, so I made sure I wasn't zero first. Here's the receipt: on the portfolio you're reading this on, I wrote more documentation than code."
+subtitle: "\"Vibe coder\" gets used as an insult: prompt and pray, ship a house of cards. I claim it anyway, with one word in front: professional. The receipt is the portfolio you're reading this on: I wrote more documentation than code."
 author: "Tjakoen Stolk"
 status: DRAFT
 type: note
 date: 2026-07-03
-readingTime: "~9 min"
+readingTime: "~13 min"
 tags: [ai, vibe-coding, workflow, fundamentals, native-first, batch, grain]
 summary: >
   How I actually work with AI, and why it holds up. AI is a multiplier, not an addend; it
-  multiplies what you already are, and ten times zero is still zero. I hand the typing to a machine
-  because I earned the judgment to catch it when it's wrong. Then the receipt: on this portfolio I
-  wrote more documentation than code, 56% of everything written is prose, not code, built across
-  a ten-hour overnight sprint with an AI co-authoring every commit (I still write plenty of the code
-  myself). That ratio is the whole argument: professional vibe coding is the human writing the rails
-  and the AI writing much of the code inside them. Includes the playbook.
+  multiplies what you already are, and ten times zero is still zero, so I made sure I wasn't zero
+  first. Then the receipt, pulled from this portfolio's own git history: more documentation than
+  code, written fast, with an AI co-authoring every commit. Professional vibe coding is the human
+  writing the rails and the AI writing much of the code inside them. Includes the playbook.
 ---
 
 > **Draft: my voice, plain text for now.** Figures and styling come later via MILL/GRAIN. This is
@@ -24,11 +22,9 @@ summary: >
 > [I Nearly Quit Teaching](why-i-teach.md). All numbers are a snapshot of the
 > [batch-stack](../../README.md) repo at the time of writing.
 
-> **One of my students?** If you followed this link off a repo footer and what you actually want to
-> know is how I feel about *you* using AI, that's a different post, and I wrote it for you:
-> [How I Teach With AI, and Where I Lock It Out](how-i-use-ai-in-teaching.md). It's the honest
-> version of both halves: where I lean on it hard, and where I ban it from the room. This one is the
-> belief sitting underneath it. Go read that first; come back here for the receipts.
+> **One of my students?** If what you actually want to know is how I feel about *you* using AI, I
+> wrote that post for you: [How I Teach With AI, and Where I Lock It Out](how-i-use-ai-in-teaching.md).
+> Read that first; this one is the belief underneath it.
 
 ## "Vibe coder" is used as an insult
 
@@ -40,12 +36,10 @@ I call myself one anyway. I just add a word in front: *professional.* And becaus
 the kind of claim that should show up with evidence and not just vibes, I did the one thing the
 label almost never does: I counted.
 
-But before the numbers, the belief they're proving. Because the whole reason I'm *allowed* to let a
+But before the numbers, the belief they're proving. Because the reason I'm *allowed* to let a
 machine do the typing fits on a napkin.
 
 ## AI is a multiplier, not an addend
-
-Here's the idea, and it's the load-bearing one:
 
 > AI doesn't *add* to what you can do. It *multiplies* it. And ten times zero is still zero.
 
@@ -103,33 +97,42 @@ So I did the unglamorous thing. I stopped chasing the next launch and started wo
 variable I could actually fix: me. I slowed down. I went back and learned the foundations properly,
 deeply, not just enough to pass, and I shoved myself into the parts I was worst at, like standing in
 front of a room full of students. Grind, then grind some more. That's the actual plan: work like this
-now so that by my thirties the work is something I picked, on my terms. Relax was never the goal.
-Earned was.
+now so that by my thirties the work is something I picked, on my terms. The goal was never to relax.
+It was to earn the pick.
 
-That, to me, is the whole definition of the word professional. Not the title. The reps.
+That, to me, is the definition of the word professional. Not the title. The reps.
 
 ## So we're clear who's talking
 
-I tell you all that so the next sentence reads as earned instead of as a boast: I could have written
-every line of this project by hand. I manage a team of developers, I teach web development, and I built
-the [platform I grade my students on](why-i-teach.md). I lived inside frameworks for years and then
-walked away from them on purpose, because the web platform grew up while we weren't looking and I'd
-rather build on the thing than on the thing on top of the thing.
+That backstory exists to buy one sentence: I could have written every line of this
+project by hand. I run a team of developers for a living; on the side, I teach software engineering
+part time using a [platform I built](why-i-teach.md); and the thing serving you this very sentence
+is a stack I built from the ground up. Going frameworkless wasn't ignorance of the
+alternatives: I lived inside frameworks for years and walked away on purpose, because [the web
+platform grew up while we weren't looking](the-browser-grew-up.md) and I'd rather build on the thing
+than on the thing on top of the thing.
 
-That's what changes what "vibe coding" means when I do it. A beginner vibe codes because they *can't*
-write the code. I vibe code because I *can*, and I've learned the typing was never the valuable part.
-The value is knowing what to build, how it should be shaped, and when the machine has quietly done
-something dumb. I catch that last one because I've made those same mistakes by hand, expensively,
-enough times to smell them coming. I'm not the passenger. I'm the pilot who happens to have autopilot,
-and I know exactly when to grab the yoke.
+None of that is there to impress you. It's there to place me on the multiplier at the top of this
+post, because that's the whole question: what does the machine have to work with. A beginner vibe
+codes because they *can't* write the code. I vibe code because I *can*, and I've learned the typing
+was never the valuable part. The value is knowing what to build, how it should be shaped, and when
+the machine has quietly done something dumb. I catch that last one because I've made those same
+mistakes by hand, expensively, enough times to smell them coming.
 
 So when I hand the typing to a machine, I'm not skipping the hard part. I did the hard part years ago,
 the boring way and the expensive way both. That's the deal.
 
-## I've done this job before, I just called it management
+One gap in that list, while I'm being honest: I don't hold a single credential in AI. What I've got
+instead is a thick folder of ways I've been wrong with it, which has taught me more than any syllabus
+would, and I still fully intend to go earn the real thing. Chalk it up as the next foundation I
+haven't laid yet.
 
-Here's the reframe that made me good at this faster than I had any right to be: directing an AI isn't
-a new skill I had to go learn. It's the job I've been doing since my early twenties.
+## A decade of rehearsal, billed as management
+
+The reframe that made me good at this faster than I had any right to be: directing an AI isn't a new
+skill I had to go learn. It's the skill my whole twenties turned out to be building: the ventures
+that failed, the team I run, the classroom. I'd been rehearsing for a decade. I just didn't know
+what for.
 
 Think about what a dev manager actually does: hand work to people whose hands you don't control, give
 them enough context to succeed, then read what comes back and catch the problems before they ship. A
@@ -141,8 +144,7 @@ list, top to bottom.
 So I stopped treating the model like a magic oracle or a fancy search box, and started treating it
 like what it actually resembles: a fast, capable, occasionally overconfident junior on my team, or a
 student. The instant I framed it that way I got better at it overnight, because I already knew how to
-do *that.* Give clear direction. Assume good faith, verify anyway. Correct the reasoning, not just the
-output.
+do *that.*
 
 <svg viewBox="0 0 620 250" width="100%" role="img"
      aria-label="Four titles, one skill set. A matrix of four roles (dev manager, tech lead, teacher of 120, and directing an AI) running the same moves. Give direction: a clear brief, the conventions, the lesson, a prompt with docs. Verify anyway: review the pull request, the design review, grade the work, read the output. Then all four do the same last move: correct the reasoning, not just the output. Same moves down every column; only the subject changes."
@@ -174,22 +176,18 @@ output.
   <text x="28" y="232" style="fill:var(--accent);font-size:13px">Same moves down every column. Only the subject changes.</text>
 </svg>
 
-*Same moves, four subjects. Directing an AI isn't a new job; it's the management job I'd been running for a decade, pointed at a faster, less-tenured teammate.*
-
-Some evenings I've got five Claude chats open at once, and it feels *exactly* like running a team:
+Some evenings I've got five to ten Claude sessions open at once, and it feels *exactly* like running a team:
 parcel out the work, keep each one on-brief, stitch what comes back into something that hangs together.
 And when I read through what they produce, it's the same muscle I use reviewing a junior's pull request
 or grading a student's submission, not "is this impressive," but "do they actually understand what
 they shipped, and would it survive contact with reality." My one rule for students turns out to be my
 one rule for the machine: if you can't explain it, you didn't build it.
 
-> Everything I do with the machine is really just my own experience, pressed into practice on it. I'm
-> not learning a new skill with AI. I'm spending the one I already paid for.
+> I'm not learning a new skill with AI. I'm spending the one I already paid for.
 
-That's the honest core of "professional vibe coder." The *professional* part isn't the vibe, and it
-isn't even the discipline; it's the better part of a decade learning how to get good work out of
-people who aren't me, plus a few expensive years learning I had to become that person first. The AI is just the newest,
-fastest, least-tenured member of a team I already knew how to run.
+The AI is just the newest, fastest, least-tenured member of a team I already knew how to run.
+
+## The receipts
 
 Everything below is pulled straight from the git history of the thing you're reading this on: my
 portfolio, built on three tools I made for it. My own no-build framework (BATCH), my own design
@@ -212,8 +210,9 @@ the point, and the ratio won't move.
      (~59% prose). Scope today = the whole batch-stack monorepo; before publishing the portfolio decide
      whether to narrow to the portfolio app (batch+grain+mill + this site) or keep the full stack.
      Update in lockstep when you refresh: this SVG's bar values/labels + aria-label (bar widths are
-     proportional: prose bar = 420px max, code bar = round(420 * code/prose)), the "6,947 prose /
-     5,411 code" pull-quote just above, and the frontmatter subtitle+summary. See CONTENT-BACKLOG.md. -->
+     proportional: prose bar = 420px max, code bar = round(420 * code/prose)) and the "6,947 prose /
+     5,411 code" pull-quote just above. The frontmatter subtitle/summary state the ratio WITHOUT exact
+     counts on purpose (don't re-add numbers there). See CONTENT-BACKLOG.md. -->
 
 
 ## The one number that matters
@@ -228,11 +227,10 @@ like. The caricature is a person who writes *no* docs, who couldn't produce a sp
 My repo has the inverse problem, if it even is one: there's *more* specification than there is
 implementation.
 
-That's not me tidying up after the fact. It's the actual method. When you work with an AI at speed,
-the scarce resource stops being code and becomes *intent.* The model will happily generate a
-thousand lines an hour. What it can't do is know what you meant, what the rules are, or what "done"
-looks like, unless you wrote it down. So I do. The documentation isn't overhead wrapped around the
-work. The documentation *is* the work; the code is the cheap part the machine handles.
+I didn't tidy that up after the fact. It's the method. When you work with an AI at speed, the scarce
+resource stops being code and becomes *intent.* The model can't know what you meant, what the rules
+are, or what "done" looks like, unless you wrote it down. So I do. The documentation *is* the work;
+the code is the cheap part the machine handles.
 
 <svg viewBox="0 0 620 190" width="100%" role="img"
      aria-label="On this repo: 5,411 lines of code versus 6,947 lines of prose; 56% of everything written is words, not code."
@@ -249,8 +247,6 @@ work. The documentation *is* the work; the code is the cheap part the machine ha
   <text x="28" y="170" style="fill:var(--accent);font-size:13px">56% of everything written is words, not code.</text>
 </svg>
 
-*The inversion: on this repo there's more specification than implementation.*
-
 ## Now the "vibe" part, because I do go fast
 
 <!-- LIVING NUMBERS (refresh occasionally, and definitely before publish): the counts below grow with
@@ -265,16 +261,16 @@ work. The documentation *is* the work; the code is the cheap part the machine ha
 If the docs number makes me sound slow and fussy, the tempo says otherwise. Here's the shape of the
 build:
 
-- **33 commits**, and every single one of them was co-authored with an AI. That's not the machine
+- 33 commits, and every single one of them was co-authored with an AI. That's not the machine
   writing while I watched, I still write plenty of the code myself. Co-authored is the honest word:
   two sets of hands, on every commit.
 - The core of it landed in **one overnight sprint**: 7pm to 5am, a straight ten hours, **31 commits,
   roughly one every twenty minutes.** That's vibe coding at full tilt: in flow, moving fast, the
   machine keeping up with the ideas as fast as I could aim them.
-- **~13,400 lines added** across six calendar days. Real output.
+- ~13,400 lines added across six calendar days. Real output.
 
-Both things are true at once, and that's the entire point. **Fast *and* documented. Vibe *and*
-professional.** The reason I can sprint for ten hours and not wake up to a pile of nonsense isn't
+Both things are true at once, and that's the entire point: fast *and* documented. The reason I can
+sprint for ten hours and not wake up to a pile of nonsense isn't
 that I'm careful *instead* of fast. It's that I did the careful part *first*: I built the rails
 before I opened the throttle.
 
@@ -323,11 +319,9 @@ before I opened the throttle.
   <text x="28" y="144" style="fill:var(--accent);font-size:13px">Every tick, co-authored by a machine.</text>
 </svg>
 
-*Vibe coding at full tilt: in flow, moving fast, the machine keeping up as fast as I could aim it.*
-
 ## The part that actually makes it professional
 
-Here's the honest distinction, and it's got nothing to do with whether you use AI or how fast you
+The distinction that matters has nothing to do with whether you use AI or how fast you
 type. **Amateur vibe coding is unstructured improvisation. Professional vibe coding is structured
 delegation.** Same tools, same speed, wildly different amounts of scaffolding around the model.
 
@@ -337,12 +331,11 @@ And the clearest way to see it is to split the job in two:
 > architecture, the single write door, or what "done" means. *Those were mine.* The machine typed;
 > I engineered.
 
-That's the whole thing in one breath. The taste, the architecture, the judgment about what's worth
-building and what's a trap: that's the human. The typing is a commodity I was thrilled to hand off.
-I don't make the AI reliable by writing cleverer one-off prompts. I make it reliable by building it
-an environment where good work is the path of least resistance.
+The taste, the architecture, the judgment about what's worth building and what's a trap: that's the
+human. I don't make the AI reliable by writing cleverer one-off prompts. I make it reliable by
+building it an environment where good work is the path of least resistance.
 
-That environment is a system, and it's copyable. Here's my playbook.
+That environment is a system, and it's copyable.
 
 ### The playbook
 
@@ -398,17 +391,18 @@ flowchart LR
   E -->|back to the work| A
 ```
 
-*The human writes the intent; the AI writes the code inside these rails. The loop is what keeps fast from turning into fragile.*
+*The loop is what keeps fast from turning into fragile.*
 
 ## The best trick of all: the AI's mistakes are a measurement
 
-Here's the move I'm proudest of, and it turns the whole thing on its head. While I was building one
+Here's the move I'm proudest of. While I was building one
 of GRAIN's showcase pages, I kept making small mistakes: the grain texture not showing on the AI's
 text, a "chat" that rendered as two stacked boxes instead of a conversation, an AI "Send" click that
 didn't actually look like a click. Normal bug-fixing territory. The boring move is to squash each one
 and move on.
 
-Instead we stopped and asked a better question: why do I keep tripping on my *own* system? It's the
+Instead we stopped, the machine and I, and asked a better question: why do I keep tripping on my
+*own* system? It's the
 same reflex I use giving feedback on a code review or grading a student's project: when the same
 mistake keeps coming back, you stop blaming the person making it and start suspecting the thing
 they're using. When half a class flubs the same question, the problem is the question, not the class.
@@ -418,13 +412,13 @@ they're using. When half a class flubs the same question, the problem is the que
 
 So the mistakes stopped being bugs and started being data.
 
-We ran an honest review, and they weren't random. Every one clustered in a single failure mode:
+We ran a proper review, and the mistakes weren't random. Every one clustered in a single failure mode:
 silent-failure contracts. Mechanisms that quietly do nothing when you use them slightly wrong: no
 error, no warning, the documented way just doesn't take. That's the most dangerous kind of design
 there is, especially for a system whose whole pitch is "legible to a human and an AI." A thing that
 fails loudly, you fix. A thing that fails silently, you ship.
 
-And here's why the AI surfaced it in a way I couldn't have alone: an AI working from your docs is the
+The AI surfaced it in a way I couldn't have alone, because an AI working from your docs is the
 ultimate stress-test of clarity. It has no tribal knowledge, no "oh, everyone knows you do it this
 way." So when it trips on your system, that isn't the machine being dumb; it's a free audit telling
 you a tired human on a Friday will trip on the exact same spot. Read the signal instead of just
@@ -437,11 +431,10 @@ the design system is *used correctly*, not merely that the page renders, includi
 human action and an AI action produce the exact same result. Those tests are executable contracts:
 the next person, human or AI, gets caught the moment they misuse the thing, long after I've left the
 conversation. And every fix got proven against reality: computed styles, geometry, screenshots, real
-end-to-end runs, never "it probably looks right." Prompt and prove.
+end-to-end runs, never "it probably looks right."
 
-The one-sentence version: I don't just use AI to write the code. I use *where the AI keeps slipping*
-as a map of where my design isn't clear yet, then I harden the design so neither of us slips there
-again.
+The one-sentence version: *where the AI keeps slipping* is a map of where my design isn't clear yet,
+and I harden the design so neither of us slips there again.
 
 ```mermaid
 flowchart LR
@@ -451,8 +444,6 @@ flowchart LR
   D --> E[Lock it with a test<br/>human = AI parity]
   E -->|becomes a permanent guardrail| A
 ```
-
-*Where the AI keeps slipping is a map of where the design isn't clear yet.*
 
 ## The tell is the ratio
 
@@ -465,8 +456,7 @@ conventions the model read first, the memory it inherited, the tests it has to p
 to survive. That surrounding structure is the profession. The code is just the code.
 
 And it's the same law as the napkin at the top: the model multiplied what I brought. I brought
-conventions, memory, tests, and taste, so it multiplied *those*. Bring nothing and it multiplies
-nothing: ten times zero is still zero.
+conventions, memory, tests, and taste, so it multiplied *those*.
 
 ## The point
 
@@ -480,12 +470,8 @@ same discipline I drill into my students from the other side of the desk, and th
 on my own AI when it grades their work: [how I teach with AI, and where I lock it
 out](how-i-use-ai-in-teaching.md).
 
-One honest caveat, because honesty is the whole game here: I don't hold a single credential in AI.
-What I've got instead is a thick folder of ways I've been wrong with it, which has taught me more than
-any syllabus would, and I still fully intend to go earn the real thing. Chalk it up as the next
-foundation I haven't laid yet.
-
-Ten times zero is still zero. So become a bigger number first, then go make it dangerous.
+Bring nothing and it multiplies nothing: ten times zero is still zero. So become a bigger number
+first, then go make it dangerous.
 
 > I don't prompt and pray. I prompt and prove.
 

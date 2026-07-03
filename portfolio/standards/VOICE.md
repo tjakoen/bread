@@ -60,7 +60,15 @@ no hype, no hiding the hard parts.**
    plainly, without either drama or humble-brag, usually as the setup for what he did about it. The
    vulnerability is what makes the competence believable.
 
-9. **Understate the drama, then bank the lesson.** The big, painful beats land *flattest*. Businesses
+9. **Credentials are mileage, not medals.** When a piece has to establish that he's competent (and
+   sometimes it must, the multiplier thesis depends on it), never list titles bare: a row of clean
+   credentials reads as a boast, and he flagged exactly that. Price each item instead: what it cost,
+   why he had to, what unglamorous thing it actually consists of. *"I run a team of developers, which
+   is mostly reading other people's code and finding the problems politely."* / *"I only built the
+   platform because the grading was about to bury me."* And say why the list is there at all (to
+   place him on the multiplier, not to impress).
+
+10. **Understate the drama, then bank the lesson.** The big, painful beats land *flattest*. Businesses
    that *collapsed*, a launch that *went nowhere*, a plan that *crashed*: no melodrama, the weight is
    in the fact, not the adjective. And every failure closes with what it bought him, plainly, without
    bitterness or humble-brag: *I don't regret it, I learned a lot.* Same reflex with luck, he names it
@@ -211,8 +219,14 @@ commits. Cite real counts; flag when a number is a snapshot rather than a standi
 or none.
 
 **The roles (all true, all at once):** Dev Manager and de facto tech lead on the Spark team at
-**Career Team**. Web-design instructor. Thesis advisor. Interim product lead. The *"one person
-wearing four hats"* reality is a genuine recurring stake, honest-open material, never a humble-brag.
+**Career Team**. Software-engineering instructor. Thesis advisor. Interim product lead. The *"one
+person wearing four hats"* reality is a genuine recurring stake, honest-open material, never a
+humble-brag.
+
+**Naming what he teaches:** *software engineering*, framed as the planning-and-architecture end of
+the craft, never *"web development"* or *"web design"*. Those labels box him into the typing, and the
+typing is the exact part his whole thesis says is not the value. When the subject needs a gloss, it's
+his: less about typing code than about planning and shaping it.
 
 ## The opinion stack: what he argues
 
@@ -334,6 +348,8 @@ Fast pass before anything ships under his name. If a line trips any of these, fi
 - [ ] **An em-dash.** Now a top machine tell too. Rewrite with a comma, period, colon, or parentheses.
 - [ ] **The "it's not just X, it's Y" shape**, an eager sign-off, or anything from *Do not sound like the machine*.
 - [ ] **A vague placeholder where a real name goes.** *"A modern font"* → *Redaction.* *"AI tooling"* → *Claude.*
+- [ ] **A bare credential.** A title or achievement standing alone reads as a boast. Attach its cost,
+  its unglamorous reality, or the reason the reader needs it. Mileage, not medals.
 - [ ] **Buttoned-up all the way through.** If the whole piece is earnest, a wink is probably missing, but only a *real* one, pointing at a flaw he actually has. No real foible on hand? Skip the joke; a manufactured wink is a worse tell than an earnest paragraph.
 - [ ] **A corporate verb.** *leverage, utilize, empower, unlock, seamless.* Delete on sight.
 - [ ] **A benefit claimed but not shown.** Hypothesis? Say so.
