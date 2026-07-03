@@ -188,9 +188,8 @@
     .catalog-peek { position: fixed; top: 0; right: 0; bottom: 0; height: auto; flex-basis: auto; z-index: 60; }
     .catalog-peek[data-open="false"] { width: 0; }
 
-    /* GRAIN section tabs — a centered sub-nav strip at the top of the section */
-    .grain-tabs { max-width: var(--site-max); margin: var(--space-6) auto 0; }
-    .grain-tabs .tab { cursor: pointer; }
+    /* GRAIN section tabs now live in the frame's topbar (portfolio-frame), shown per section — see
+       portfolio-frame.{html,css}. Nothing page-local needed here anymore. */
 
     /* Themes tab — one card per flavor with a live "Use this theme" button (theme.js, data-set-theme) */
     .themes { display: grid; gap: var(--space-4); margin-top: var(--space-5);
@@ -205,17 +204,12 @@
 <body data-screen="grain">
   <!-- the GRAIN section now lives in the unified BREAD shell (portfolio frame + site-wide
        assistant/console + theme toggles). Its old .site__bar chrome is retired. -->
-  <div class="app-shell" data-rail-collapsed="false" data-surface="screen">
+  <!-- data-section="grain" makes the frame's GRAIN section tabs (Catalog · Demo · Themes) show in the
+       topbar here AND on /loop (the Demo), persisting across the section via the topbar transition. -->
+  <div class="app-shell" data-section="grain" data-rail-collapsed="false" data-surface="screen">
     <portfolio-frame />
     <main class="app-shell__main">
   <div class="site" data-peek-root>
-
-  <!-- GRAIN section sub-views: Catalog opens the peek overlay · Demo → /loop · Themes → the panel below -->
-  <nav class="tab-bar grain-tabs" aria-label="GRAIN">
-    <a class="tab" data-peek="open" tabindex="0" role="button">Catalog</a>
-    <a class="tab" href="/loop">Demo</a>
-    <a class="tab" href="#themes">Themes</a>
-  </nav>
 
     <!-- 1 · HERO — the pitch, with the signature settling grain → clean -->
     <section class="site__section hero" aria-label="What GRAIN is">

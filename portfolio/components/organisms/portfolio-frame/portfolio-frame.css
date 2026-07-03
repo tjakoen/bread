@@ -8,3 +8,11 @@
 /* current nav item (rail): a crisp ink left-accent, not a faint paper box */
 .side-rail .nav-item[aria-current="page"] { background: transparent; border-color: transparent; box-shadow: inset 2px 0 0 var(--color-accent); }
 .side-rail__brand { color: var(--color-fg); }
+
+/* section tabs (in the topbar): each group shows only inside its section. The page marks the
+   section on .app-shell (data-section); off-section pages hide the group entirely. Specificity
+   beats .tab-bar's display:flex (and this file also sorts last). */
+.app-shell .app-shell__tabs { display: none; }
+.app-shell[data-section="grain"] .app-shell__tabs[data-tabs-for="grain"] { display: flex; }
+/* the Catalog tab is a link that ALSO opens the peek (data-peek) — keep the pointer cursor */
+.app-shell__tabs .tab[data-peek] { cursor: pointer; }
