@@ -1,5 +1,8 @@
 # Portfolio site — plan
 
+> The **cross-layer what-next** (including the convergence-first framing for `/grain` and `/batch`,
+> Track D) lives in [`../ROADMAP.md`](../ROADMAP.md); this file stays canonical for the portfolio.
+
 > Status: **planned, not built.** A personal portfolio — a **custom BATCH + GRAIN** site that
 > **uses MILL** (my markdown CMS) to manage its markdown content: the notes/blog *and* the rendered
 > BATCH/GRAIN docs — deployed **free and zero-ops** to GitHub Pages via GitHub Actions.
@@ -225,6 +228,73 @@ better than assumed:**
     same `<nav>`** — so it degrades to normal navigation when the model/WebGPU/JS is absent. Only new
     code: the client-side NL→link mapping (lives in the RAG island) + the docking CSS. Guardrail: not
     a support-widget bubble (anti-features).
+
+## Portfolio shell — the unified app-shell frame (decision 2026-07-04)
+
+**Decision: the whole portfolio adopts ONE persistent app-shell** (the `/loop` layout) as its
+frame — not editorial pages beside a workspace, but *one workspace everywhere*. This commits fully
+to the workspace archetype (memory: `workspace-archetype-decision`, `portfolio-productivity-app-concept`)
+and absorbs pieces 8–10 below.
+
+- **Layout (loop's two nav surfaces):** left **`side-rail` = primary nav** (sections), top
+  **`tab-bar` = the current section's leaf pages**, right sidebar = **chat (assistant)**, bottom =
+  **terminal (console)**. Chat + terminal **persist across every page** (view-transition
+  persistence) — the home for the site-wide AI to be plugged in later. Any "Watch the AI act"
+  narrates into that *one* shared chat + terminal (no per-page terminal).
+- **Nav map:** `TJ's Desk` (home) · `Notes` (blog) · `Calendar` (social feed) · `Mail` (contact) ·
+  `BREAD Stack` → { `BATCH` [docs · architecture] · `GRAIN` [catalog · whitepaper · **loop** ·
+  **themes**] · `MILL` }. Rail carries a **grouped/expandable** variant for the BREAD nesting; the
+  leaf pages are the tabs. `/loop` stays a **full-page functional demo**, mounted as the GRAIN loop
+  tab. Nav is **plain hypermedia** (real `<a>`, always-there `<nav>` fallback — static-safe, SEO).
+- **Right sidebar = one `sidebar-panel` primitive** (header / body / footer, optional mode-tabs),
+  unifying today's `app-shell__aside` (assistant) and `.catalog-peek`. Default mode = **Chat**; on
+  GRAIN it gains **Catalog ⇄ Chat** tabs, and in Catalog mode the footer (where the chat input sits)
+  shows "Hover an element to see its entry / View full catalog". Toggle lives in the **topbar** next
+  to "Desk Online", consistent on every page.
+- **Theming (tokens only, `grain/styles`) — BUILT 2026-07-04:** `base → [data-theme] → [data-color-scheme]`
+  (orthogonal axes; the axis refactor + `theme.js` + the accent wiring landed this pass). Three themes
+  ship: **Sourdough** (default, hueless), **Baguette** (clean, soft-blue accent), **Brioche** (warm,
+  honey-gold accent) — plus the **one-signature-hue accent** (`--color-accent`, full reach: links /
+  focus / `::selection` / primary button; success+danger stay monochrome; DESIGN-SYSTEM §2). A **Themes
+  tab** under GRAIN lists them with live preview + "Use this theme"; a **topbar light/dark toggle** sets
+  `data-color-scheme` (defaults to `prefers-color-scheme`, persisted). Pure token flips — **the live
+  proof of "re-skin by token override, never edit components"**; `grade-as-signal` survives every
+  theme+dark (conformance tests). Client-side view preferences (static-safe), not the door.
+  - **Deferred (planned, memory `grain-drivable-demos` + `grain-demo-page-structure`):** the catalog /
+    design-system section also **shows the colors as swatches** and offers a **token playground with
+    live sliders** (+ CSS export) — the human moves the same sliders the AI does (a shared surface,
+    no special API). Built later, on top of the theming tokens above.
+- **Accent color — full support, ONE signature hue** *(decided 2026-07-04; being wired in a parallel
+  thread — do not edit grain CSS/components/DESIGN-SYSTEM here until it lands):* GRAIN gains a single
+  optional accent slot (`--color-accent` + derived `-contrast`/`-hover`/`-soft`) with **full reach**
+  — links, focus rings, `::selection`, and the **primary button fill** (the one brand knob a product
+  sets). The palette otherwise stays **closed**: only *one* accent, and success/danger remain
+  monochrome (weight/treatment, never their own hues). **Sourdough (default/main) keeps
+  `--color-accent = var(--ink)` → hueless**; accented themes (Baguette blue, Brioche honey) opt in.
+  It needs a **one-time wiring** (points those spots at the token, fixing a hardcoded-`--ink`
+  focus-ring smell); after that every accented theme is a pure token override. The **"one signature
+  hue" doctrine** gets documented in `DESIGN-SYSTEM.md` + the `variables.css` token comment so no one
+  adds a second hue or colors error states. **3 default themes planned:** Sourdough (default, warm
+  e-ink, hueless), a clean/Notion theme (suggested **Baguette**), and a third (suggested **Brioche**;
+  alts Pumpernickel/Rye). Names for #2/#3 still open.
+- **Separation of concerns:** shell **primitives** (rail incl. grouped variant, `tab-bar`,
+  `sidebar-panel`, `console`, `topbar`) live in **GRAIN**, persona-neutral ("the AI", never "the
+  desk"); the **portfolio frame** (composition with the BREAD nav + "TJ's Desk" branding) and any
+  **custom theme/components** live in **`portfolio/`** — new `portfolio/components/` (register in
+  `componentRoots`/`styleRoots`) + `portfolio/styles/` (a token-override sheet, new `assetDirs`
+  prefix). Consumer path documented in [grain README §6](../grain/README.md).
+- **AI is UI-now, model-later:** build the shell + chat/terminal UI now; on the static deploy the
+  chat rests gracefully (site fully usable as hypermedia). The in-browser LLM (Path B, pieces 4–5
+  above) drops into this same chat surface later — nothing built now is thrown away.
+- **Supersedes / reframes:** piece 10's *corner-companion* → the persistent right-sidebar chat
+  (no docking); Calendar = *social feed* (was talks/roles timeline); the `/grain` `.surface-term`
+  + `.catalog-peek` retire into the shared `console` + `sidebar-panel`.
+
+**Build order:** (0) capture — this section + `GRAIN-PAGE.md` + ROADMAP Track D; (1) GRAIN theming
+tokens + `theme.js` + grade conformance; (2) GRAIN shell primitives (`sidebar-panel`, `console`,
+grouped `side-rail`, `topbar`) with conformance tests; (3) portfolio frame + BREAD nav; (4) migrate
+pages (`/`, `/grain` w/ tabs incl. Themes, `/batch`, `/notes`, `/loop`-tab), retire the standalone
+peek/terminal, re-point e2e; (5) wire chat to the door (dev/live), browser LLM as its own follow-on.
 
 ## Open questions / next steps
 
