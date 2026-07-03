@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-themes="sourdough baguette brioche">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,6 +10,10 @@
   <link rel="stylesheet" href="/styles/global.css">
   <link rel="stylesheet" href="/styles/grain.css">
   <link rel="stylesheet" href="/components.css">
+  <!-- the unified shell's scripts: rail/console toggles · theme+scheme toggles · the AI door -->
+  <script src="/scripts/shell.js" defer></script>
+  <script src="/scripts/theme.js" defer></script>
+  <script type="module" src="/scripts/ai-dispatch.js"></script>
   <style>
     /* portfolio-home LAYOUT only (tokens only — this composes GRAIN, it isn't the design system) */
     .home__lede { color: var(--color-muted); font-size: var(--text-lg); max-width: 54ch; line-height: var(--leading-relaxed); }
@@ -33,53 +37,59 @@
     .home__foot em { font-style: normal; text-decoration: underline; }
   </style>
 </head>
-<body data-screen="portfolio">
-  <main class="container">
-    <p class="eyebrow">Portfolio · <span class="name">Tjakoen Stolk</span></p>
-    <h1 class="masthead">Building AI-first software.</h1>
-    <hr class="rule">
-    <p class="home__lede">Interfaces where a person <em>and</em> an AI operate the same controls — built with my own
-      no-build hypermedia stack and served as plain static files. <em>This whole site is the proof</em>: it runs on the
-      frameworks below, and its assistant runs entirely in your browser.</p>
+<body data-screen="home">
+  <!-- TJ's Desk — the home, in the unified BREAD shell (the portfolio frame wraps every page's main) -->
+  <div class="app-shell" data-rail-collapsed="false" data-surface="screen">
+    <portfolio-frame />
+    <main class="app-shell__main">
+      <div class="board">
+        <p class="eyebrow">Portfolio · <span class="name">Tjakoen Stolk</span></p>
+        <h1 class="masthead">Building AI-first software.</h1>
+        <hr class="rule">
+        <p class="home__lede">Interfaces where a person <em>and</em> an AI operate the same controls — built with my own
+          no-build hypermedia stack and served as plain static files. <em>This whole site is the proof</em>: it runs on the
+          frameworks below, and its assistant runs entirely in your browser.</p>
 
-    <div class="section-head"><span>Work</span></div>
-    <div class="work">
-      <a class="work__card" href="/grain">
-        <div class="work__head"><span class="work__name name">GRAIN</span><span class="work__kind">Design system</span></div>
-        <p class="work__desc">An AI-interaction design system: one shared vocabulary for humans and AI, with the AI's
-          presence shown as a visible signal (grain = AI). Built on BATCH.</p>
-        <span class="work__go">See the system →</span>
-      </a>
+        <div class="section-head"><span>Work</span></div>
+        <div class="work">
+          <a class="work__card" href="/grain">
+            <div class="work__head"><span class="work__name name">GRAIN</span><span class="work__kind">Design system</span></div>
+            <p class="work__desc">An AI-interaction design system: one shared vocabulary for humans and AI, with the AI's
+              presence shown as a visible signal (grain = AI). Built on BATCH.</p>
+            <span class="work__go">See the system →</span>
+          </a>
 
-      <a class="work__card" href="/batch">
-        <div class="work__head"><span class="work__name name">BATCH</span><span class="work__kind">Substrate</span></div>
-        <p class="work__desc">A no-build, server-rendered hypermedia stack on Bun, with near-zero client JavaScript.
-          The substrate everything here stands on.</p>
-        <span class="work__go">See the substrate →</span>
-      </a>
+          <a class="work__card" href="/batch">
+            <div class="work__head"><span class="work__name name">BATCH</span><span class="work__kind">Substrate</span></div>
+            <p class="work__desc">A no-build, server-rendered hypermedia stack on Bun, with near-zero client JavaScript.
+              The substrate everything here stands on.</p>
+            <span class="work__go">See the substrate →</span>
+          </a>
 
-      <a class="work__card" href="/mill">
-        <div class="work__head"><span class="work__name name">MILL</span><span class="work__kind">Content engine</span></div>
-        <p class="work__desc">A Markdown-to-pages CMS: write markdown, get GRAIN pages. A layer above BATCH and GRAIN.
-          Planned.</p>
-        <span class="work__go">See the plan →</span>
-      </a>
+          <a class="work__card" href="/mill">
+            <div class="work__head"><span class="work__name name">MILL</span><span class="work__kind">Content engine</span></div>
+            <p class="work__desc">A Markdown-to-pages CMS: write markdown, get GRAIN pages. A layer above BATCH and GRAIN.
+              Planned.</p>
+            <span class="work__go">See the plan →</span>
+          </a>
 
-      <a class="work__card" href="/dashboard">
-        <div class="work__head"><span class="work__name name">Department of Time</span><span class="work__kind">Product</span></div>
-        <p class="work__desc">A personal AI assistant — a desk that writes back — built on BATCH + GRAIN. The reference
-          product for the whole stack.</p>
-        <span class="work__go">Open the workspace →</span>
-      </a>
-    </div>
+          <a class="work__card" href="/dashboard">
+            <div class="work__head"><span class="work__name name">Department of Time</span><span class="work__kind">Product</span></div>
+            <p class="work__desc">A personal AI assistant — a desk that writes back — built on BATCH + GRAIN. The reference
+              product for the whole stack.</p>
+            <span class="work__go">Open the workspace →</span>
+          </a>
+        </div>
 
-    <p class="home__note">An in-browser AI demo is on the way: ask a question and “the desk” answers — grain text
-      streaming in, settling to clean — with a tiny model running client-side, no backend, no key.</p>
+        <p class="home__note">An in-browser AI demo is on the way: ask a question and “the desk” answers — grain text
+          streaming in, settling to clean — with a tiny model running client-side, no backend, no key.</p>
 
-    <div class="home__foot">
-      <p>Built with <b class="name">BATCH</b> + <b class="name">GRAIN</b>, served static on GitHub Pages.
-        <em>The site practises what it preaches.</em></p>
-    </div>
-  </main>
+        <div class="home__foot">
+          <p>Built with <b class="name">BATCH</b> + <b class="name">GRAIN</b>, served static on GitHub Pages.
+            <em>The site practises what it preaches.</em></p>
+        </div>
+      </div>
+    </main>
+  </div>
 </body>
 </html>
