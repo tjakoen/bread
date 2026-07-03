@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" data-themes="sourdough baguette brioche">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TJ's Desk</title>
+  <link rel="stylesheet" href="/styles/variables.css">
+  <link rel="stylesheet" href="/styles/global.css">
+  <link rel="stylesheet" href="/styles/grain.css">
+  <link rel="stylesheet" href="/components.css">
+  <!-- shell.js runs the rail/console toggles; theme.js the theme+scheme toggles; ai-dispatch the AI door -->
+  <script src="/scripts/shell.js" defer></script>
+  <script src="/scripts/theme.js" defer></script>
+  <script type="module" src="/scripts/ai-dispatch.js"></script>
+</head>
+<body data-screen="desk">
+  <!-- the unified workspace shell: the portfolio frame (BREAD rail + topbar toggles + assistant +
+       console) wraps every page's <main>. data-themes on <html> lets the topbar theme-cycle rotate. -->
+  <div class="app-shell" data-rail-collapsed="false" data-surface="screen">
+    <portfolio-frame />
+    <main class="app-shell__main">
+      <div class="board">
+        <p class="eyebrow">TJ's Desk</p>
+        <h1 class="masthead">One frame, every page.</h1>
+        <hr class="rule">
+        <p class="muted">The unified BREAD shell: the left rail is the site nav (Desk · Notes · Calendar ·
+          Mail · the BREAD Stack), the assistant and terminal live on every page (the site-wide AI's home),
+          and the topbar cycles theme + light/dark for the whole site. This is the Phase-3 proof; the real
+          Desk home, the section tabs, and the migrated pages land in Phase 4.</p>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

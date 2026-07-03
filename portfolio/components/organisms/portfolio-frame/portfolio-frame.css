@@ -1,0 +1,10 @@
+/* organisms/portfolio-frame — product-specific chrome for the PORTFOLIO (the reusable shell CSS is
+   grain: app-shell / side-rail / sidebar-panel / console / topbar). Only the portfolio's choices
+   live here: the flat e-ink tone, the current-nav accent, and the brand. Sorts last in the bundle
+   ("portfolio" > "grain"/"project"), so these overrides win. */
+
+/* flat e-ink tone: one paper surface separated by hairlines (DESIGN-SYSTEM §6) — no tinted strips */
+.app-shell__topbar, .app-shell__aside { background: var(--color-bg); }
+/* current nav item (rail): a crisp ink left-accent, not a faint paper box */
+.side-rail .nav-item[aria-current="page"] { background: transparent; border-color: transparent; box-shadow: inset 2px 0 0 var(--color-accent); }
+.side-rail__brand { color: var(--color-fg); }
