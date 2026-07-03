@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-themes="sourdough baguette brioche">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,7 +10,9 @@
   <link rel="stylesheet" href="/styles/global.css">
   <link rel="stylesheet" href="/styles/grain.css">
   <link rel="stylesheet" href="/components.css"><!-- includes GRAIN's AI module (the "AI is acting" spotlight), reused by the surface demo -->
-  <!-- demo-only island: the Catalog peek sidebar (hover a component → catalog scrolls to it). ⌘K is global. -->
+  <!-- shell.js runs the rail/console toggles (this page now lives in the BREAD shell) -->
+  <script src="/scripts/shell.js" defer></script>
+  <!-- the Catalog peek overlay: hover a component → catalog scrolls to it (opened by the Catalog tab). ⌘K is global. -->
   <script src="/scripts/catalog-peek.js" defer></script>
   <!-- reusable demo-box island (ES module): runs the declarative scripted demos below -->
   <script type="module" src="/scripts/demo-box.js"></script>
@@ -180,30 +182,40 @@
       .catalog-peek[data-open="false"] { width: 0; }
     }
     @media (prefers-reduced-motion: reduce) { .catalog-peek { transition: none; } }
+
+    /* --- in the BREAD shell, the page is the main pane; the Catalog peek is a body-level FIXED
+       OVERLAY (not a .page flex column) opened by the Catalog tab. --- */
+    .catalog-peek { position: fixed; top: 0; right: 0; bottom: 0; height: auto; flex-basis: auto; z-index: 60; }
+    .catalog-peek[data-open="false"] { width: 0; }
+
+    /* GRAIN section tabs — a centered sub-nav strip at the top of the section */
+    .grain-tabs { max-width: var(--site-max); margin: var(--space-6) auto 0; }
+    .grain-tabs .tab { cursor: pointer; }
+
+    /* Themes tab — one card per flavor with a live "Use this theme" button (theme.js, data-set-theme) */
+    .themes { display: grid; gap: var(--space-4); margin-top: var(--space-5);
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+    .theme-card { border: 1px solid var(--color-line); border-radius: var(--radius-md); padding: var(--space-5);
+      display: flex; flex-direction: column; gap: var(--space-3); }
+    .theme-card__name { font-size: var(--text-lg); margin: 0; }
+    .theme-card__desc { color: var(--color-muted); font-size: var(--text-sm); margin: 0; flex: 1; }
+    .theme-card .btn { align-self: flex-start; }
   </style>
 </head>
-<body class="page" data-screen="grain">
-
-  <!-- content column: shrinks when the catalog sidebar opens, so content SHIFTS aside -->
-  <div class="page__main">
-
-  <!-- persistent chrome — outside the peek root, so the bar's own controls don't trigger peek -->
-  <header class="site__bar">
-    <div class="site__brand">
-      <span class="site__wordmark">GRAIN</span>
-      <span class="site__tagline">an AI-interaction design system</span>
-    </div>
-    <div class="site__bar-actions">
-      <span class="site__flag">demo</span>
-      <b-kbd keys="⌘K"></b-kbd>
-      <!-- the peek toggle carries a behaviour hook (data-peek), so it's hand-authored -->
-      <button class="icon-btn" data-variant="ghost" data-peek="toggle" aria-label="Inspect components in the catalog">
-        <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/sprite.svg#knowledge"></use></svg>
-      </button>
-    </div>
-  </header>
-
+<body data-screen="grain">
+  <!-- the GRAIN section now lives in the unified BREAD shell (portfolio frame + site-wide
+       assistant/console + theme toggles). Its old .site__bar chrome is retired. -->
+  <div class="app-shell" data-rail-collapsed="false" data-surface="screen">
+    <portfolio-frame />
+    <main class="app-shell__main">
   <div class="site" data-peek-root>
+
+  <!-- GRAIN section sub-views: Catalog opens the peek overlay · Demo → /loop · Themes → the panel below -->
+  <nav class="tab-bar grain-tabs" aria-label="GRAIN">
+    <a class="tab" data-peek="open" tabindex="0" role="button">Catalog</a>
+    <a class="tab" href="/loop">Demo</a>
+    <a class="tab" href="#themes">Themes</a>
+  </nav>
 
     <!-- 1 · HERO — the pitch, with the signature settling grain → clean -->
     <section class="site__section hero" aria-label="What GRAIN is">
@@ -228,8 +240,8 @@
         <button class="btn" type="button" data-peek="open">Browse the components</button>
         <b-button as="a" href="#how" label="How it works" variant="soft"></b-button>
       </div>
-      <p class="site__why">Every surface on this page is one of GRAIN's own components. Open
-        <b>Inspect</b> (top-right) and hover anything — the sidebar catalog reveals its entry.</p>
+      <p class="site__why">Every surface on this page is one of GRAIN's own components. Open the
+        <b>Catalog</b> tab and hover anything — the peek reveals its entry.</p>
     </section>
 
     <!-- 2 · GRADE-AS-SIGNAL — grain = AI / in-transit, clean = human / committed -->
@@ -306,7 +318,9 @@
           </nav>
 
           <!-- the assistant thread: your message settles clean; the AI's reply streams in and STAYS grain -->
-          <div class="chat-log" data-chat-log data-surface="chat-log">
+          <!-- the surface's OWN chat (chat-log:grain) — distinct from the shell assistant's chat-log,
+               and visible in the main pane during a takeover (the shell assistant slides away). -->
+          <div class="chat-log" data-chat-log data-surface="chat-log:grain">
             <div class="chat-message" data-role="ai" data-grade="grain"><span class="chat-message__who">GRAIN</span><span class="chat-message__body">Ask me to plan something — or watch me act.</span></div>
           </div>
 
@@ -321,21 +335,16 @@
             <label class="field">
               <span class="field__label">Ask</span>
               <input class="field__input" type="text" placeholder="Ask GRAIN to do something…"
-                     data-action="chat.send" data-target="chat-log" data-surface="grain-ask" aria-label="Ask GRAIN">
+                     data-action="chat.send" data-target="chat-log:grain" data-surface="grain-ask" aria-label="Ask GRAIN">
             </label>
-            <button class="btn" data-action="chat.send" data-target="chat-log" data-from="grain-ask">Send</button>
+            <button class="btn" data-action="chat.send" data-target="chat-log:grain" data-from="grain-ask">Send</button>
             <b-kbd keys="⌘K"></b-kbd>
           </div>
         </div>
       </div>
 
-      <!-- the terminal: rises while the AI acts (like /loop's console takeover) so a run is always
-           legible — the reasoner narrates each step here (data-surface="console"). Shown only during
-           a run via :has(.ai-backdrop.is-on) and lifted above the spotlight veil. -->
-      <section class="surface-term" aria-label="What the AI is doing" aria-live="polite">
-        <div class="surface-term__bar"><b-icon sym="/assets/sprite.svg#spark" size="sm"></b-icon> the AI is acting…</div>
-        <div class="console__feed" data-surface="console"></div>
-      </section>
+      <!-- narration now goes to the SHELL console (portfolio-frame's data-surface="console"), which
+           rises on takeover — the standalone .surface-term is retired. -->
     </section>
 
     <!-- 5 · HOW IT WORKS — one vocabulary → one door → RenderOps over SSE -->
@@ -360,9 +369,35 @@
 
       <ul class="list how__points">
         <li class="list__item"><b>One vocabulary.</b> Verbs and surfaces live in a single registry — referenced, never re-typed as strings.</li>
-        <li class="list__item"><b>Self-describing.</b> The page publishes what's operable at <a href="/ai/manifest">/ai/manifest</a> — the AI reads it, it isn't told.</li>
+        <li class="list__item"><b>A manifest the AI reads.</b> Each screen publishes a drift-proof, machine-readable map of what's operable at <a href="/ai/manifest">/ai/manifest</a> — harvested from the components, so the AI is <em>shown</em> the page, not told about it.</li>
+        <li class="list__item"><b>Self-documenting.</b> Every component auto-appears in a live <a href="/catalog">component catalog</a> — the design system browses itself.</li>
+        <li class="list__item"><b>Auditable by design.</b> Every interaction — human or AI — is one source-tagged Intent through one server-side door, so a full human + AI interaction log is a server-side drop-in.</li>
         <li class="list__item"><b>No build step.</b> Server-rendered hypermedia on BATCH — Bun, TypeScript, CSS, htmx. Ship the source.</li>
       </ul>
+    </section>
+
+    <!-- 6 · THEMES — every theme is a pure token override; switch the whole site -->
+    <section class="site__section" id="themes" aria-label="Themes">
+      <div class="section-head"><span>Themes</span></div>
+      <p class="site__why">Every theme is a <b>pure token override</b> — one signature accent hue, no component
+        edits (the topbar ◆ toggle cycles these site-wide too). Pick one:</p>
+      <div class="themes">
+        <div class="theme-card">
+          <h3 class="theme-card__name">Sourdough</h3>
+          <p class="theme-card__desc">Warm monochrome e-ink — the default, hueless.</p>
+          <button class="btn" data-variant="soft" data-set-theme="sourdough">Use Sourdough</button>
+        </div>
+        <div class="theme-card">
+          <h3 class="theme-card__name">Baguette</h3>
+          <p class="theme-card__desc">Clean and crisp — near-white light, near-black dark, a soft-blue accent.</p>
+          <button class="btn" data-variant="soft" data-set-theme="baguette">Use Baguette</button>
+        </div>
+        <div class="theme-card">
+          <h3 class="theme-card__name">Brioche</h3>
+          <p class="theme-card__desc">Warm cream and honey-gold — the cozy one.</p>
+          <button class="btn" data-variant="soft" data-set-theme="brioche">Use Brioche</button>
+        </div>
+      </div>
     </section>
 
     <!-- footer -->
@@ -374,13 +409,13 @@
       </div>
       <p>Built on <b class="name">BATCH</b> — no build step. <em>This site is itself built with GRAIN</em>, on the
         default theme; a product re-skins it by overriding tokens. The "watch the AI act" demo above runs
-        through the real door; a re-skin toggle is still to come.</p>
+        through the real door, and the <b>Themes</b> tab re-skins the whole site live.</p>
     </footer>
-  </div>
+      </div><!-- /.site -->
+    </main>
+  </div><!-- /.app-shell -->
 
-  </div><!-- /.page__main -->
-
-  <!-- the Catalog peek: embeds /catalog (unchanged) in an iframe; the island scrolls it on hover -->
+  <!-- the Catalog peek OVERLAY (body-level, fixed): embeds /catalog; the island scrolls it on hover -->
   <aside class="catalog-peek" data-open="false" aria-label="Component catalog">
     <header class="catalog-peek__head">
       <span class="catalog-peek__title">
