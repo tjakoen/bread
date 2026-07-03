@@ -211,6 +211,15 @@ philosophy sections that should fill the page out — native-first, no-build, at
 design-system tokens, charts (enumerated in `grain-demo-page-structure`); the page is intentionally
 sparse until then.
 
+> **Native-first is now a named GRAIN capability** (2026-07-04) — `grain/docs/GRAIN.md` "What GRAIN
+> gives you" carries *"Built on the modern web platform — native, not framework JS"* as the SSOT, and
+> it's threaded through PHILOSOPHY, both READMEs, ARCHITECTURE §11.3, and CONVENTIONS §1 as a positive
+> rule (*prefer the platform primitive over reinventing it in JS*). **Landing-page section still to
+> build** (spec below, §"Built on the platform" beat) — the page itself doesn't yet render this
+> selling point; it's a teaser owed per the CLAUDE.md alignment table (concept doc → its showcase).
+> This page *is itself the proof* (View Transitions animate its own nav, ⌘K is a real `<dialog>`), so
+> the section can point at the very page it's on.
+
 ## Sections (single scrolling page)
 
 1. **Hero — the pitch.** "One interface. A person *and* an AI operate it through the same controls."
@@ -229,6 +238,16 @@ sparse until then.
    the self-describing manifest; no build step (BATCH). A small diagram. **Teaser only** —
    deep-links to the rendered concept docs (`docs/GRAIN.md` + `docs/AI-INTERFACE.md`) at
    `/grain/docs`; keep this section a summary, never a fork of those docs.
+5b. **Built on the platform, not a framework** *(section to build — the native-first selling point)*.
+   The pitch: *the platform got good enough — we ride it instead of shipping framework JS.* A short,
+   scannable list of the native primitives doing the work, each ideally *demonstrated by this very
+   page*: **View Transitions** (the animation you just saw navigating here — no router), **`<dialog>`**
+   (⌘K, right there in the top bar), **`<details>`** (disclosures), **native form validation**, plain
+   `<a>` + CSS tabs/nav, and **`:has()`** / **`color-mix()`** / **`@starting-style`** for behavior and
+   theming. Close with the receipt: *this animated, accessible, AI-operable UI ships ~one JS file (the
+   `/intent` dispatcher) — run `bun run audit` to see it.* Keep it a **teaser** that deep-links to
+   GRAIN.md "What GRAIN gives you" + CONVENTIONS §1; don't fork the inventory. Anti-framework flex,
+   made concrete — pairs naturally with the "Re-skin it" section (both are "no rebuild" proofs).
 6. **Re-skin it.** Same components, different tokens — a live theme toggle (default e-ink ↔ an
    alternate palette) proving re-skin-by-token-override. "Never edit components."
 7. **Footer.** Built on BATCH; links (`/catalog` = component reference, `/grain/docs` = rendered

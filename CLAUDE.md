@@ -102,13 +102,26 @@ This is the contract for not drifting. After any change, sync everything in its 
 | **The `/loop` demo or its surfaces** | `grain/ai/reasoner.ts` (the scripted demo) ↔ `project/pages/loop.html` surfaces → **e2e** (`project/e2e/`) |
 | **The client dispatcher or a UI interaction** | `grain/scripts/ai-dispatch.js` → **e2e** (only tier that covers it) |
 | **The static export / prerender** | keep it a *projection* of the running server (fetch, don't re-render) → `batch/export` (`bun run export`, framework-generic) → respect the exportable boundary (no operable `/intent`+SSE surfaces) → ARCHITECTURE §18 |
+| **A module served to the browser** (`/modules`, or the client-side runtime) | it MUST be **client-safe** (ARCHITECTURE §19.2): no server-only imports (guard-enforced), **no secrets/tokens**, no server-required behavior — static-style only → say so wherever the mode is offered; the mechanism (`batch/http/modules.ts`) is `batch`, the client-door wiring is `grain/ai/*`, the mode switch is the composition root |
 | **Layering / cross-layer deps** | re-verify import purity; if you reach across, add a port instead → CONVENTIONS §1/§10 |
 | **Anything user-visible in behavior** | the matching doc (`ARCHITECTURE` / `GRAIN` / `AI-INTERFACE` / `DESIGN-SYSTEM` / `CONVENTIONS`) |
 | **A concept doc** (`ARCHITECTURE`/`CONVENTIONS`/`GRAIN`/`AI-INTERFACE`) | the portfolio showcase that *renders* it — re-check the pitch/teaser sections still summarize it truly: `grain/docs/GRAIN.md`+`AI-INTERFACE.md` → `/grain` (`portfolio/GRAIN-PAGE.md`, `/grain/docs`); `ARCHITECTURE`+`CONVENTIONS` → `/batch` (`portfolio/BATCH-PAGE.md`, `/batch/docs`). Docs are the single source; pages are trailheads, never forks |
+| **A roadmap step** (land, drop, or re-sequence) | tick it in [`ROADMAP.md`](./ROADMAP.md) → sync the canonical layer plan for that track (Track A → `grain/CLAUDE.md` / `project/PROJECT-PLAN.md`; Track B → `batch`; Track C → `mill/PLAN.md`; Track D → `portfolio/PLAN.md`) |
+| **A platform capability / feature** (add, drop, or re-tier) | update that layer's **tiered capabilities list** — the single source: `grain/docs/GRAIN.md` §"What GRAIN gives you" / `batch/docs/ARCHITECTURE.md` §"What BATCH gives you" / `mill/PLAN.md` §"What MILL gives you" → re-sync its teasers (the layer README + the `/grain`·`/batch` landing pages) as *projections*, never forks → [AUDIT.md](AUDIT.md) check 11 (nothing buried). Heroes = the reasons the layer exists; useful-but-quiet features go under *Also*, never omitted |
 | **A notable decision or non-obvious fact** | write a **memory** (see below) so the next session inherits it |
 
 **Definition of done:** code + the right test tier(s) (unit / integration / e2e per CONVENTIONS §6)
 + docs synced (this table) + `tsc` and `bun test` green + a memory if a decision was made.
+
+**When you fix something, fix its cause — not just the instance.** Anything flagged — a failing
+check, a bug, a surface that didn't behave as expected, an AI (or a person) that tripped — is first a
+signal about the *docs or the architecture*, not a one-off. Before you move on, ask *why it was
+possible* and close it at the source: sharpen the contract, design the mistake out, or fix the doc
+that misled — so the next person or AI can't repeat it. An operator tripping on the system measures
+the system's clarity, not just the operator's; if you (an AI) got it wrong building here, suspect the
+docs/design first. The bar it's all held to: **this stack must be easy for a human and *even more*
+legible and operable for an AI** — that's the point of the whole thing (→ [PHILOSOPHY.md](portfolio/PHILOSOPHY.md),
+the two lead bets; the worked-through lessons: [grain/CLAUDE.md](grain/CLAUDE.md) §5, [batch/CLAUDE.md](batch/CLAUDE.md)).
 
 **Before committing / after a big change:** run the alignment audit — [AUDIT.md](AUDIT.md) (a repeatable
 runbook: green gate, layering purity, tokens-only, persona-neutral GRAIN, naming, docs-synced).
@@ -123,6 +136,9 @@ files — durable, repo-worthy rules belong in `batch/docs/CONVENTIONS.md` or th
 
 ## Working notes
 
+- **Pre-flight: read [`ROADMAP.md`](./ROADMAP.md) before starting substantive work** — the
+  canonical execution plan (per-layer tracks, the M★ live-model milestone, the honest-pitch bar);
+  it says what's in flight so parallel sessions don't drift.
 - Commit/push only when asked; branch off `main` if you must (this is a private monorepo —
   the user often merges to `main` directly).
 - **This monorepo is temporary scaffolding** — each layer becomes its own repo once proven.

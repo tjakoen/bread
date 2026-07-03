@@ -33,12 +33,29 @@ keep them in control, don't automate them away. → the argued, cited version:
 
 Each is a conviction, not a preference. We hold them until the code proves one wrong.
 
+- **Built for a human, more so for an AI.** Every surface must be easy for a person *and even more*
+  legible and operable for an AI — because the AI has no eyes, only the vocabulary, the manifest, and
+  the grade. If a person can use a surface but the AI stumbles on it, the surface isn't done. This is
+  the harder half of the symmetry bar (never a privilege for the AI — see *equal footing* above), and
+  it's the half we optimize for. → [AI-INTERFACE.md](../grain/docs/AI-INTERFACE.md)
+- **A mistake is a design signal, not just a bug.** When something breaks, a check flags, or an AI (or
+  a person) trips on the system, we fix the *cause* — the contract, the doc, the architecture — not
+  only the instance, so it can't recur. An operator tripping is a measurement of the system's clarity,
+  not just the operator's; if the AI got it wrong, suspect the contract first. → the layer meta-lessons
+  that live this out: [grain/CLAUDE.md](../grain/CLAUDE.md) (lesson 5), [batch/CLAUDE.md](../batch/CLAUDE.md).
 - **No build step.** The server *is* the build step — it composes final HTML on every request.
   Edit, refresh, done. A `dist/` only ever appears as a *projection* of the running server, never a
   second renderer. → [ARCHITECTURE §0.5](../batch/docs/ARCHITECTURE.md), [§18](../batch/docs/ARCHITECTURE.md)
 - **Native-first.** Standards → runtime-native → library, in that order. Modern HTML/CSS/JS are
   strong enough that a framework is a cost, not a given. No Tailwind, no SCSS, no client framework.
-  → [ARCHITECTURE §0](../batch/docs/ARCHITECTURE.md), [CONVENTIONS §2](../batch/docs/CONVENTIONS.md)
+  In practice the browser's own primitives do the work the framework used to: the native **View
+  Transitions API** animates page navigation, **`<dialog>`** and **`<details>`** are the modals and
+  disclosures, **native form validation** replaces JS validators, and **`:has()`** / **`color-mix()`**
+  drive behavior and theming — so the only client JS the product ships is the one interaction
+  dispatcher. Native-first is not just *avoiding* framework JS; it's *preferring the platform's own
+  primitive* over reinventing it. → [ARCHITECTURE §0](../batch/docs/ARCHITECTURE.md),
+  [§11.3](../batch/docs/ARCHITECTURE.md), [CONVENTIONS §2](../batch/docs/CONVENTIONS.md),
+  [GRAIN.md](../grain/docs/GRAIN.md) ("What GRAIN gives you")
 - **Hypermedia, server-rendered.** Fragments over the wire, htmx for reads/nav; avoids a client
   framework, a build, and client/server state-sync bugs. → [ARCHITECTURE §0.5](../batch/docs/ARCHITECTURE.md)
 - **Fast because there's less.** No client framework, no hydration, static-serveable output → fast

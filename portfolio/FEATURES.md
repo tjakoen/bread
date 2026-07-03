@@ -205,6 +205,13 @@ The portfolio's subject *is* these three layers, so let the site be its own case
 - **A "re-skin live" toy.** Expose a few semantic tokens (accent, surface, radius) as controls;
   overriding them re-themes the whole page with zero component edits — the token discipline made
   tangible in ~5 seconds. Powerful because it's the anti-framework flex: no rebuild, no recompile.
+- **"Built on the platform" — shown, not claimed.** A short exhibit that names the native primitives
+  doing the work — and demonstrates each *on the page itself*: the **View Transition** you saw
+  navigating here, the **`<dialog>`** ⌘K palette, **`<details>`** disclosures, **`:has()`** /
+  **`color-mix()`** theming. The receipt lands the flex: *this animated, accessible, AI-operable site
+  ships ~one JS file* (`bun run audit`). The anti-framework case made concrete — pairs with re-skin
+  (both are "no rebuild" proofs). SSOT: `grain/docs/GRAIN.md` "What GRAIN gives you"; spec in
+  `GRAIN-PAGE.md` §5b.
 - **The one-vocabulary explainer.** A small interactive diagram: a human click and an AI action
   both resolve to an `Intent` → one door → `RenderOp`s → DOM. Hover/click each node to see the
   real type from `contract.ts`. Turns the architecture into something you *operate*, not read.

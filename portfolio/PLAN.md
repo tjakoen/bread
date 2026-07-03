@@ -32,10 +32,19 @@ prerender crawl that boots the app, walks its routes, and writes static files.
   extraction philosophy, and any BATCH site — this portfolio (with its `/grain` showcase and
   future `/batch` section), and others later — gets free Pages hosting from the same tool. The
   portfolio repo only needs the workflow YAML.
-- **Content is markdown-in-the-repo; MILL renders it into GRAIN pages; export freezes them.**
-  All personalized site data — the Notes stream + long-form posts (see [FEATURES.md](FEATURES.md)),
-  and the rendered `docs/*.md` — lives as **`.md` files (+ images) in the public repo**, so the site
-  is maintained by *editing content, not HTML*. The renderer is **MILL**, promoted from "a content
+- **Content is markdown; MILL renders it into GRAIN pages; export freezes them.** Two *different*
+  markdown sources, resolved differently (this is the split-safe model):
+  - **Portfolio-owned content** — the Notes stream + long-form posts (see [FEATURES.md](FEATURES.md)) —
+    lives as **`.md` files (+ images) in the portfolio's own repo**, so the site is maintained by
+    *editing content, not HTML*.
+  - **Layer docs** — grain's `docs/GRAIN.md` + `AI-INTERFACE.md` (→ `/grain/docs`) and batch's
+    `docs/ARCHITECTURE.md` + `CONVENTIONS.md` (→ `/batch/docs`) — are **NOT copied into the portfolio
+    repo.** They ride along inside the installed grain/batch packages and MILL resolves them straight
+    from there (`import.meta.resolve('@tjakoen/grain/docs/…')` — today that resolves to the sibling
+    `grain/docs/` folder in the monorepo; post-split it resolves into the git-dep). So the docs are
+    **always synced to `#main`** via `bun update`, with zero drift and no duplicated files. The one
+    enabling task lives in each layer's `package.json` `exports` map (`./docs/*`), staged now. See
+    [`../SPLIT-PLAN.md`](../SPLIT-PLAN.md) § "Layer docs travel inside the package". The renderer is **MILL**, promoted from "a content
   route inside the BATCH app" to its **own top-level project** (memory: portfolio-cms-separate-project).
   - **Definition — MILL = "Markdown In, Living Layouts"** *(canonical plan: [`mill/PLAN.md`](../mill/PLAN.md); this is the consumer view)*: a **standalone, reusable, open-source CMS**.
     Feed it `.md` + images and it renders **GRAIN** pages on the theme. It is the **fourth top-level
@@ -105,10 +114,12 @@ prerender crawl that boots the app, walks its routes, and writes static files.
   showcase page), **component reference** (`/catalog` — grain only, auto-generated specimens), and
   **concepts / how-to-build** (rendered `docs/*.md`). grain publishes `docs/GRAIN.md` +
   `docs/AI-INTERFACE.md` at `/grain/docs`; batch publishes `docs/ARCHITECTURE.md` + `docs/CONVENTIONS.md` at
-  `/batch/docs`. The vehicle is the **markdown content collection (piece 3)** — no new pipeline, no
-  new prose. The showcase's concept sections are *teasers* that deep-link into these. Consequence,
-  free: the same mds are the human docs pages, the AI demo's `knowledge.json` (RAG), and the repo
-  docs kept synced by CLAUDE.md's alignment table — one source, three consumers. See
+  `/batch/docs`. **These docs are the layer's own files, resolved from the installed grain/batch
+  package (never copied into this repo)** — see the "Layer docs" bullet above. The vehicle is the
+  **markdown content collection (piece 3)** — no new pipeline, no new prose. The showcase's concept
+  sections are *teasers* that deep-link into these. Consequence, free: each source `.md` is at once
+  the human docs page, the AI demo's `knowledge.json` (RAG), and the layer's own repo doc (content
+  kept aligned with code by CLAUDE.md's alignment table) — one source, three consumers. See
   `GRAIN-PAGE.md` and `BATCH-PAGE.md`.
 
 ## Architecture at a glance
