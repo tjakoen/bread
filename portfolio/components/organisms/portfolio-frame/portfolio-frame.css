@@ -9,18 +9,20 @@
 .side-rail .nav-item[aria-current="page"] { background: transparent; border-color: transparent; box-shadow: inset 2px 0 0 var(--color-accent); }
 .side-rail__brand { color: var(--color-fg); }
 
-/* section tabs (in the topbar): each group shows only inside its section. The page marks the
-   section on .app-shell (data-section); off-section pages hide the group entirely. Specificity
-   beats .tab-bar's display:flex (and this file also sorts last). */
-.app-shell .app-shell__tabs { display: none; }
-.app-shell[data-section="grain"] .app-shell__tabs[data-tabs-for="grain"] { display: flex; }
-/* the Catalog tab is a link that ALSO opens the peek (data-peek) — keep the pointer cursor */
-.app-shell__tabs .tab[data-peek] { cursor: pointer; }
+/* THE EDITOR: the tab bar is SITE navigation (the sections as open editor tabs) and the
+   sidebar's Chat⇄Catalog modes are available sitewide — no per-section gating (owner,
+   2026-07-05; supersedes the data-section-scoped tabs). */
 
-/* panel mode tabs (sidebar-panel): only the GRAIN section carries a second pane (Catalog) —
-   hide the Chat⇄Catalog switch everywhere else. */
-.app-shell .assistant__modes { display: none; }
-.app-shell[data-section="grain"] .assistant__modes { display: flex; }
+/* presence show/hide is the grain AI module's (ai.css keys the three .presence__* states off
+   <body data-ai-online>); only the wording here is the portfolio's. */
+
+/* status-bar byline + contact keep the muted register; links sharpen on hover */
+.status-bar__byline, .status-bar__contact { color: inherit; text-decoration: none; }
+.status-bar__byline:hover, .status-bar__contact:hover { color: var(--color-fg); }
+
+/* balance the title bar: mirror the leading clusters so the search stays centered */
+.window-bar__end { width: 11rem; }
+@media (max-width: 1100px) { .window-bar__end { width: 0; } }
 
 /* Catalog pane: the embedded /catalog fills the pane; the footer sits where the chat composer
    sits (the hover hint + the full-page way out). Scroll stays contained to the pane. */

@@ -1,8 +1,30 @@
-<!-- organisms/portfolio-frame — the PORTFOLIO's workspace chrome: the BREAD rail (site nav), the
-     topbar (TJ's Desk brand + theme-cycle + light/dark toggles + ⌘K + presence), the assistant
-     (the site-wide AI, chat form), and the AI console. It COMPOSES the grain shell primitives
-     (side-rail / topbar / sidebar-panel / console); static markup — shell.js marks the current
-     nav item with aria-current from the URL. Compose inside .app-shell, as a sibling of <main>. -->
+<!-- organisms/portfolio-frame — the PORTFOLIO's workspace chrome, THE EDITOR edition: the whole
+     site presents as one editor window. Composes the grain shell primitives (app-window /
+     side-rail / tab-bar / sidebar-panel / console / status-bar); static markup — shell.js marks
+     the current nav, theme.js drives the theming controls, site.js (portfolio) wires the window
+     dots, the breadcrumb search text, presence degradation and the status-bar data.
+     Compose inside `.app-shell.app-window` (body carries .app-window-backdrop), as a sibling of
+     <main>. The window bar and status bar land in the shell's "window"/"status" grid rows. -->
+
+<!-- ═══ the TITLE BAR: functional dots · view controls · the ⌘K search (center) ═══ -->
+<header class="app-shell__window window-bar">
+  <span class="window-bar__dots">
+    <button type="button" data-window-close title="Close the window">×</button>
+    <button type="button" data-window-clear title="Clear cached data (theme, drafts, prefs)">⌫</button>
+    <button type="button" data-window-back title="Back">‹</button>
+  </span>
+  <span class="window-bar__ctl">
+    <button type="button" data-cycle-theme title="Cycle theme">◆ <span data-theme-name>sourdough</span></button>
+    <button type="button" data-toggle-scheme title="Light / dark">◐</button>
+    <button type="button" data-shell="aside-toggle" title="Toggle the assistant panel">◫</button>
+    <button type="button" data-shell="console-hide" title="Toggle the terminal">▭</button>
+  </span>
+  <button class="window-bar__search" type="button" data-cmdk-open title="Search the site (⌘K)">
+    <b-kbd keys="⌘K"></b-kbd><span data-breadcrumb>tjakoen.github.io</span>
+  </button>
+  <span class="window-bar__end"></span>
+</header>
+
 <aside class="app-shell__rail side-rail">
   <div class="side-rail__brand"><b-icon sym="/assets/sprite.svg#spark"></b-icon><span>TJ's Desk</span></div>
   <a class="nav-item" href="/"><b-icon sym="/assets/sprite.svg#loop"></b-icon><span class="nav-item__label">Desk</span></a>
@@ -24,32 +46,25 @@
   <a class="nav-item" href="/about"><b-icon sym="/assets/sprite.svg#settings"></b-icon><span class="nav-item__label">About</span></a>
 </aside>
 
+<!-- ═══ the TAB BAR: the site's sections as open editor tabs, the same on every page ═══ -->
 <header class="app-shell__topbar">
   <button class="icon-btn" data-variant="ghost" data-shell="rail-toggle" aria-label="Toggle navigation">
     <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/sprite.svg#menu"></use></svg>
   </button>
-  <!-- section tabs live in the FRAME (SSR), like /loop's old Overview/The loop tabs — so they
-       PERSIST across a section's pages via the topbar's view-transition-name (only <main> cross-fades).
-       Each group shows only in its section (.app-shell[data-section="…"] → portfolio-frame.css); real
-       nav links, so navigation works with no JS (the peek/behaviour layers on where it exists). -->
-  <nav class="app-shell__tabs tab-bar" data-tabs-for="grain" aria-label="GRAIN views">
-    <a class="tab" href="/grain" data-peek="open"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#knowledge" size="sm"></b-icon></span>Catalog<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
-    <a class="tab" href="/loop"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#loop" size="sm"></b-icon></span>Demo<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
-    <a class="tab" href="/grain#themes"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#spark" size="sm"></b-icon></span>Themes<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
+  <nav class="app-shell__tabs tab-bar" aria-label="Site sections">
+    <a class="tab" href="/"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#spark" size="sm"></b-icon></span>Welcome<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
+    <a class="tab" href="/notes"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#knowledge" size="sm"></b-icon></span>Notes<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
+    <a class="tab" href="/grain"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#rules" size="sm"></b-icon></span>GRAIN<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
+    <a class="tab" href="/batch"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#tasks" size="sm"></b-icon></span>BATCH<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
+    <a class="tab" href="/mill"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#traces" size="sm"></b-icon></span>MILL<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
+    <a class="tab" href="/dashboard"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#loop" size="sm"></b-icon></span>Workspace<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
   </nav>
-  <div class="topbar-ctl">
-    <!-- theming controls: theme.js acts on these declaratively; the flavor list is on <html data-themes> -->
-    <button class="icon-btn" data-variant="ghost" data-cycle-theme aria-label="Cycle theme"><span aria-hidden="true">◆</span></button>
-    <button class="icon-btn" data-variant="ghost" data-toggle-scheme aria-label="Toggle light or dark"><span aria-hidden="true">◐</span></button>
-    <b-kbd keys="⌘K"></b-kbd>
-    <span class="presence"><b-icon sym="/assets/sprite.svg#spark" size="sm"></b-icon> Desk online</span>
-  </div>
 </header>
 
 <aside class="app-shell__aside">
-  <!-- the sidebar-panel with MODES: Chat (default, site-wide) ⇄ Catalog (GRAIN section only —
-       portfolio-frame.css hides the tabs elsewhere). shell.js flips data-mode/hidden/aria-selected;
-       SSR ships the initial state, so with no JS the chat shows and the catalog stays hidden. -->
+  <!-- the sidebar-panel with MODES, SITEWIDE: Chat (default) ⇄ Catalog. shell.js flips
+       data-mode/hidden/aria-selected; SSR ships the initial state, so with no JS the chat
+       shows and the catalog stays hidden. -->
   <div class="assistant" data-mode="chat">
     <div class="assistant__head">
       <span>Assistant</span>
@@ -77,9 +92,8 @@
         </button>
       </div>
     </div>
-    <!-- Catalog pane — the peek, now a sidebar-panel mode (was a fixed overlay): embeds /catalog
-         lazily; on /grain, hovering a component reveals its entry (grain/scripts/catalog-peek.js).
-         The footer sits where the chat's composer sits: the hover hint + the full-page way out. -->
+    <!-- Catalog pane — the peek as a sidebar-panel mode: embeds /catalog lazily; on /grain,
+         hovering a component reveals its entry (grain/scripts/catalog-peek.js). -->
     <div class="assistant__pane catalog-pane" data-pane="catalog" hidden>
       <iframe class="catalog-pane__frame" title="Component catalog"></iframe>
       <div class="catalog-pane__foot">
@@ -104,5 +118,20 @@
     <div class="console__feed" data-surface="console"></div>
   </div>
 </section>
+
+<!-- ═══ the STATUS BAR: honest meta, left; the byline, right ═══ -->
+<footer class="app-shell__status status-bar">
+  <span class="presence">
+    <span class="presence__wait">✶ desk waking…</span>
+    <span class="presence__on">✶ desk online</span>
+    <span class="presence__off">✶ desk offline</span>
+  </span>
+  <span data-status-optional data-build-info title="Type + test state of the build serving this page">dev · live</span>
+  <span data-status-optional data-build-ref title="Built from">main · tjakoen.github.io</span>
+  <span data-status-optional data-github-stars="tjakoen/tjakoen.github.io" hidden>★ <span data-stars-count></span></span>
+  <span class="status-bar__spacer"></span>
+  <a class="status-bar__byline" data-status-optional href="/notes/ten-times-zero" title="How this site is built">🤖 I direct, Claude types.</a>
+  <a class="status-bar__contact" href="/about">Contact</a>
+</footer>
 
 <div class="app-shell__scrim"></div>

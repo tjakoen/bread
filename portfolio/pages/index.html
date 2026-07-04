@@ -3,69 +3,80 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tjakoen Stolk — building AI-first software</title>
-  <meta name="description" content="Portfolio of Tjakoen Stolk — AI-first interfaces, built with my own no-build hypermedia stack and served as plain static files.">
-  <!-- default theme (LINKED): tokens → base/skin → grade mechanism. All component styles —
-       GRAIN's (lede/card) + the portfolio's own (work-card/page-foot) — come bundled in
-       /components.css; pages carry no <style> of their own. -->
+  <title>Welcome — TJ's Desk</title>
+  <meta name="description" content="Portfolio of Tjakoen Stolk — AI-first interfaces, built with my own no-build hypermedia stack (BATCH · GRAIN · MILL) and served as plain static files.">
+  <!-- default theme (LINKED): tokens → base/skin → grade mechanism. All component styles come
+       bundled in /components.css; pages carry no <style> of their own. -->
   <link rel="stylesheet" href="/styles/variables.css">
   <link rel="stylesheet" href="/styles/global.css">
   <link rel="stylesheet" href="/styles/grain.css">
   <link rel="stylesheet" href="/components.css">
-  <!-- the unified shell's scripts: rail/console toggles + the AI door (theme.js is injected globally) -->
   <script src="/scripts/shell.js" defer></script>
   <script type="module" src="/scripts/ai-dispatch.js"></script>
 </head>
-<body data-screen="home">
-  <!-- TJ's Desk — the home, in the unified BREAD shell (the portfolio frame wraps every page's main) -->
-  <div class="app-shell" data-rail-collapsed="false" data-surface="screen">
+<body data-screen="welcome" class="app-window-backdrop">
+  <!-- THE EDITOR: the whole site lives inside one app window; / is its Welcome page -->
+  <div class="app-shell app-window" data-rail-collapsed="false" data-surface="screen">
     <portfolio-frame />
     <main class="app-shell__main">
-      <div class="board">
-        <p class="eyebrow">Portfolio · <span class="name">Tjakoen Stolk</span></p>
-        <h1 class="masthead">Building AI-first software.</h1>
-        <hr class="rule">
-        <p class="lede">Interfaces where a person <em>and</em> an AI operate the same controls — built with my own
-          no-build hypermedia stack and served as plain static files. <em>This whole site is the proof</em>: it runs on the
-          frameworks below, and its assistant runs entirely in your browser.</p>
+      <div class="welcome">
+        <h1 class="welcome__title">TJ's Desk</h1>
+        <p class="welcome__sub">Software engineering, taught and shipped — I direct, Claude types.</p>
 
-        <div class="section-head"><span>Work</span></div>
-        <div class="card-grid" style="--card-min: 16rem">
-          <a class="card work-card" href="/grain">
-            <div class="work-card__head"><span class="work-card__name name">GRAIN</span><span class="work-card__kind">Design system</span></div>
-            <p class="card__body">An AI-interaction design system: one shared vocabulary for humans and AI, with the AI's
-              presence shown as a visible signal (grain = AI). Built on BATCH.</p>
-            <span class="work-card__go">See the system →</span>
-          </a>
+        <div class="welcome__cols">
+          <div>
+            <h2>Start</h2>
+            <nav class="start" data-surface="welcome-start" aria-label="Start">
+              <a class="start__item" href="/grain" data-shell="focus-chat"><b-icon sym="/assets/sprite.svg#spark" size="sm"></b-icon>Ask the desk about TJ…</a>
+              <a class="start__item" href="/notes"><b-icon sym="/assets/sprite.svg#knowledge" size="sm"></b-icon>Read the notes…</a>
+              <a class="start__item" href="/grain"><b-icon sym="/assets/sprite.svg#tasks" size="sm"></b-icon>See the BREAD stack…</a>
+              <a class="start__item" href="/dashboard"><b-icon sym="/assets/sprite.svg#loop" size="sm"></b-icon>Open the workspace…</a>
+              <a class="start__item" href="/about"><b-icon sym="/assets/sprite.svg#send" size="sm"></b-icon>Get in touch…</a>
+            </nav>
 
-          <a class="card work-card" href="/batch">
-            <div class="work-card__head"><span class="work-card__name name">BATCH</span><span class="work-card__kind">Substrate</span></div>
-            <p class="card__body">A no-build, server-rendered hypermedia stack on Bun, with near-zero client JavaScript.
-              The substrate everything here stands on.</p>
-            <span class="work-card__go">See the substrate →</span>
-          </a>
+            <h2>Recent</h2>
+            <div class="recent" data-surface="welcome-recent">
+              <welcome-recent each="recentNotes"></welcome-recent>
+              <a class="recent__item" href="/notes"><span class="recent__name">More…</span></a>
+            </div>
+          </div>
 
-          <a class="card work-card" href="/mill">
-            <div class="work-card__head"><span class="work-card__name name">MILL</span><span class="work-card__kind">Content engine</span></div>
-            <p class="card__body">A Markdown-to-pages CMS: write markdown, get GRAIN pages. A layer above BATCH and GRAIN.
-              Planned.</p>
-            <span class="work-card__go">See the plan →</span>
-          </a>
-
-          <a class="card work-card" href="/dashboard">
-            <div class="work-card__head"><span class="work-card__name name">Department of Time</span><span class="work-card__kind">Product</span></div>
-            <p class="card__body">A personal AI assistant — a desk that writes back — built on BATCH + GRAIN. The reference
-              product for the whole stack.</p>
-            <span class="work-card__go">Open the workspace →</span>
-          </a>
+          <div>
+            <h2>Walkthroughs</h2>
+            <div class="walks" data-surface="welcome-walks">
+              <a class="walk" href="/grain">
+                <span class="walk__head"><b-icon sym="/assets/sprite.svg#spark" size="sm"></b-icon>Watch the AI act
+                  <span class="walk__badge">live</span></span>
+                <p class="walk__body">One vocabulary, two operators: a person and an AI drive the same
+                  controls — the AI's hand stays visible as grain.</p>
+              </a>
+              <a class="walk" href="/batch">
+                <span class="walk__head"><b-icon sym="/assets/sprite.svg#tasks" size="sm"></b-icon>Get started with BREAD
+                  <span class="walk__badge">3 layers</span></span>
+                <p class="walk__body">BATCH the substrate, GRAIN the design system, MILL the content
+                  engine — the no-build stack this site runs on.</p>
+              </a>
+              <a class="walk" href="/notes/ten-times-zero">
+                <span class="walk__head"><b-icon sym="/assets/sprite.svg#knowledge" size="sm"></b-icon>Ten times zero
+                  <span class="walk__badge">flagship</span></span>
+                <p class="walk__body">From imposter to professional — the story behind the byline, and
+                  why the counter starts at zero.</p>
+              </a>
+              <a class="walk" href="/notes/how-i-use-ai-in-teaching">
+                <span class="walk__head"><b-icon sym="/assets/sprite.svg#traces" size="sm"></b-icon>How I teach with AI
+                  <span class="walk__badge">teaching</span></span>
+                <p class="walk__body">~150 students, an explain-or-fail policy, and why the AI types
+                  while the humans think.</p>
+              </a>
+            </div>
+          </div>
         </div>
 
-        <p class="lede" data-size="sm" style="margin-top: var(--space-8)">An in-browser AI demo is on the way: ask a question and “the desk” answers — grain text
-          streaming in, settling to clean — with a tiny model running client-side, no backend, no key.</p>
-
-        <div class="page-foot">
-          <p>Built with <b class="name">BATCH</b> + <b class="name">GRAIN</b>, served static on GitHub Pages.
-            <em>The site practises what it preaches.</em></p>
+        <div class="welcome__foot">
+          <a class="welcome__cta" href="/grain" data-shell="focus-chat">✶ Try the desk — it answers about TJ</a>
+          <label class="welcome__startup">
+            <input type="checkbox" data-startup-checkbox checked> Show welcome page on startup
+          </label>
         </div>
       </div>
     </main>

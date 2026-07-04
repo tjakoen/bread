@@ -46,6 +46,11 @@ post *is* "open a note."
 
 ### The desk, visually — "a lamp on paper"
 
+> **Site chrome superseded (2026-07-05): THE EDITOR** — the whole site now lives inside one editor
+> window (title bar with functional dots + ⌘K search, tabs as site nav, honest status bar; canonical:
+> `PLAN.md` §THE EDITOR). The lamp below survives as the AI's presence/attention primitive inside
+> that window; the desk-scene reading of this section is historical.
+
 Take "the desk" literally: not a chatbot avatar — an actual little workspace where you watch the AI
 write by hand. GRAIN is already notepad-y and already has a `spotlight` op, so fuse them: **the desk
 is a warm paper surface, and the AI's attention is a desk lamp.** Four states, and the whole design

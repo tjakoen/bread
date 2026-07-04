@@ -370,6 +370,53 @@ progressive enhancement hard rule (everything is real links, zero-JS navigable);
 origin). The desk-SCENE below is superseded — its PoC receipts (VT morph pair, lamp origin) stay
 valid mechanisms available to this design (e.g. tab-content morphs).
 
+### THE EDITOR — owner revisions (2026-07-05) + build state
+
+**Shipped (2026-07-05):** grain `app-window` + `status-bar` primitives (app-shell grew the
+`window`/`status` rows); portfolio-frame carries the full window on every page (content pages
+too, via the MILL chrome); tabs = SITE nav (Welcome · Notes · GRAIN · BATCH · MILL · Workspace,
+subpage-aware `aria-current`); `/` = the Welcome page (Recent fed LIVE from MILL frontmatter via
+`<welcome-recent each>`; "Ask the desk" focuses the composer via `data-shell="focus-chat"`;
+startup checkbox functional — unchecked, `/` reopens the last-open page, workspace fallback);
+honest status baked at export (real `git` ref + tsc/test counts into `[data-build-info]` /
+`[data-build-ref]`); PoC pages deleted. Owner revisions folded in, superseding the section above
+where they differ:
+
+- **Title bar owns the controls** (VS Code): left = functional window dots (**red × close ·
+  ochre ⌫ clear-cache · moss ‹ back**, hover-revealed, tooltips — the one sanctioned traffic-light
+  exception, DESIGN-SYSTEM §2) + theme cycle (with flavor name) + scheme toggle + aside/terminal
+  view toggles; **center = the ⌘K search field** whose placeholder is the open page's breadcrumb
+  (`site.js`). The status bar does NOT carry the theme controls (revised from the plan above).
+- **Status bar** = honest presence (`✶ desk waking…/online/offline`, driven by the dispatcher's
+  outcome-stamped `<body data-ai-online>`) + build info + repo ref, then right: the made-with-AI
+  byline + Contact. **Offline degradation:** door fails → `desk offline`, the composer disables
+  with "The desk is offline" (site.js); repo ★ count fetched client-side, hidden if unreachable.
+- **Catalog⇄Chat sidebar modes are SITEWIDE** (the /grain-only gating removed).
+
+**Backlog (owner ideas 2026-07-05 — captured, not built):**
+1. **/grain demo = the whole interface** (not a demo-box island): default prompt "See what TJ has
+   been up to" → the AI travels the real pages (lamp), reads the latest notes, then **writes a
+   summary into its notepad**. Simulated through the client door first; the live model slots
+   behind the same `Reasoner` seam and must SKIP writing what's already there (idempotent runs).
+   When the desk is offline, /grain shows a **backup Demo tab** with the scripted demo-box run.
+2. **The AI's NOTEPAD in the rail**: a markdown⇄rendered toggle pane (client-side render — reuse
+   MILL's framework-agnostic core through the client-module server; no native browser md), content
+   persisted to localStorage. Doubles as the "add to my notes" target.
+3. **Notes-aware chat**: on `/notes/*` the composer placeholder becomes "Summarize this page"; a
+   summarize run spotlights the whole page, scrolls as it reads, replies in chat; every AI reply
+   offers **"add to my notes"** → the AI writes a condensed version into its notepad. Needs new
+   verbs in `contract.ts` (e.g. `page.summarize`, `note.append`) — walk the full alignment row.
+4. **Thinking vs talking split** (doctrine, already mostly true): reasoning narrates to the
+   TERMINAL (console surface); the CHAT is only for talking to the person (the mini thinking box
+   stays as the bridge).
+5. **Page-view counter** in the status bar (👁): needs a mechanism a static host can serve
+   (GoatCounter-style or GitHub-Pages-compatible endpoint) — unresolved, don't fake it.
+6. **Scroll-away content footer** on every content page: hairline + Contact / Résumé / license
+   line ("Made by Tjakoen Stolk · Apache-2.0"); terms/privacy links only once those pages exist
+   (the export's dead-link guard stays green).
+7. Walkthrough meters were dropped (a meter that measures nothing is decoration); they return
+   only with real semantics.
+
 ## SUPERSEDED — The desk hero — THE DESK SCENE (owner, 2026-07-04, same-day pivot)
 
 The main page (`/`) is a **literal desk, drawn flat, viewed top-down** — the owner's vision,
