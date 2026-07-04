@@ -139,8 +139,9 @@ standalone CMS play. Publishing it stays fine; competing with Eleventy is a non-
 1. **Minimal proof-of-value only** (mill/PLAN.md pieces 1–4): parser → node→tag map → layout wrap →
    `/notes` + `/notes/:slug` live on BATCH. Defer mermaid→SVG, RSS, filtering, docs rendering.
    *Pieces 1–2 landed 2026-07-03: the framework-agnostic core engine (hand-rolled parser + total
-   node→handler adapter port) + the BATCH+GRAIN reference adapter, unit-tested. Pieces 3–4 (live
-   route + `/notes` wiring) still owe server wiring.*
+   node→handler adapter port) + the BATCH+GRAIN reference adapter, unit-tested. Pieces 3–4 landed
+   2026-07-04: the live content route (`mill/serve.ts`) + portfolio wiring (`/notes`, `/grain/docs`,
+   `/batch/docs`), docs package-resolved via workspaces — Track C item 1 done.*
 2. **The missing piece that actually serves the thesis — AI-facing outputs**: the same `.md`
    emits human pages *and* `knowledge.json` (RAG corpus) *and* SEO/AEO surface (meta/OG, JSON-LD,
    llms.txt) *and* `data-surface` addresses on rendered content so the assistant can spotlight and

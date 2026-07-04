@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" data-themes="sourdough baguette brioche">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welcome — TJ's Desk (PoC)</title>
+  <link rel="stylesheet" href="/styles/variables.css">
+  <link rel="stylesheet" href="/styles/global.css">
+  <link rel="stylesheet" href="/styles/grain.css">
+  <link rel="stylesheet" href="/components.css">
+  <script src="/scripts/shell.js" defer></script>
+  <script type="module" src="/scripts/ai-dispatch.js"></script>
+  <style>
+    /* ── PoC ONLY: the VS Code–style Welcome page as the portfolio home. Final version moves
+       these into portfolio/components/** (welcome-start / welcome-recent / walkthrough-card). ── */
+
+    /* ═══ THE WINDOW (PoC of the site-wide frame): the whole app boxed in an editor window
+       on a backdrop — title bar up top, STATUS BAR at the bottom (theme/scheme/⌘K/presence
+       move DOWN there; they are status, not content). Final version = grain shell primitives
+       (app-window + status-bar regions in the app-shell grid), not page CSS. ═══ */
+    body { background: color-mix(in srgb, var(--ink) 12%, var(--paper)); padding: clamp(0.5rem, 2vh, 1.5rem); height: 100dvh; box-sizing: border-box; }
+    .app-window { display: flex; flex-direction: column; height: 100%;
+      border: 1px solid var(--ink); border-radius: var(--radius-md); overflow: hidden;
+      box-shadow: 4px 4px 0 color-mix(in srgb, var(--ink) 30%, transparent); }  /* print-style, no blur */
+    .app-window .app-shell { flex: 1 1 auto; min-height: 0; height: auto; }
+
+    .window-bar { display: flex; align-items: center; gap: 1rem;
+      padding: 0.45rem 0.9rem; background: var(--panel); border-bottom: 1px solid var(--color-line);
+      font-family: var(--font-mono); font-size: var(--text-xs); color: var(--ink-muted); }
+    .window-bar__dots { display: flex; gap: 0.4rem; }
+    .window-bar__dots i { width: 0.7rem; height: 0.7rem; border-radius: 50%;
+      border: 1px solid var(--ink-muted); }
+    .window-bar__dots i:first-child { background: var(--ink-muted); }   /* one filled, two hollow — austere */
+    .window-bar__title { flex: 1; text-align: center; letter-spacing: 0.06em; }
+
+    .status-bar { display: flex; align-items: center; gap: 1.2rem;
+      padding: 0.3rem 0.9rem; background: var(--panel); border-top: 1px solid var(--color-line);
+      font-family: var(--font-mono); font-size: var(--text-xs); color: var(--ink-muted); }
+    .status-bar__spacer { flex: 1; }
+    .status-bar button { all: unset; cursor: pointer; }
+    .status-bar button:hover { color: var(--ink); }
+    .status-bar .presence { display: inline-flex; align-items: center; gap: 0.35rem; }
+
+    /* PoC: the old topbar controls move to the status bar — hide the topbar's copy */
+    .topbar-ctl { display: none; }
+    .welcome { max-width: 72rem; margin: 0 auto; padding: clamp(2rem, 8vh, 6rem) var(--page-pad) 3rem; }
+    .welcome__title { font-family: var(--font-accent); font-size: clamp(2.2rem, 5vw, 3.4rem); margin: 0; }
+    .welcome__sub { color: var(--ink-muted); font-size: var(--text-lg); margin: 0.4rem 0 3rem; }
+
+    .welcome__cols { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(2rem, 6vw, 6rem); }
+    @media (max-width: 56rem) { .welcome__cols { grid-template-columns: 1fr; } }
+    .welcome h2 { font-size: var(--text-xl); font-weight: var(--font-weight-regular); margin: 0 0 1rem; }
+
+    /* Start — icon + link rows (the VS Code "Start" list) */
+    .start { display: flex; flex-direction: column; gap: 0.65rem; margin-bottom: 2.5rem; }
+    .start__item { display: flex; align-items: center; gap: 0.7rem; width: fit-content;
+      color: var(--color-accent, var(--ink)); text-decoration: none; font-size: var(--text-base); }
+    .start__item:hover { text-decoration: underline; }
+    .start__item .icon { color: var(--ink-muted); }
+
+    /* Recent — name + muted path (the notes feed = the recent files) */
+    .recent { display: flex; flex-direction: column; gap: 0.55rem; }
+    .recent__item { display: flex; gap: 1rem; align-items: baseline; width: fit-content;
+      text-decoration: none; font-size: var(--text-base); }
+    .recent__name { color: var(--color-accent, var(--ink)); }
+    .recent__item:hover .recent__name { text-decoration: underline; }
+    .recent__path { color: var(--ink-faint); font-size: var(--text-sm); font-family: var(--font-mono); }
+
+    /* Walkthroughs — bordered cards with a corner star, description, progress meter */
+    .walks { display: flex; flex-direction: column; gap: 0.9rem; }
+    .walk { position: relative; display: block; text-decoration: none; color: var(--ink);
+      background: var(--panel); border: 1px solid var(--color-line); padding: 1rem 1.1rem 1.2rem; }
+    .walk:hover { border-color: var(--ink); }
+    .walk__head { display: flex; align-items: center; gap: 0.6rem; font-weight: var(--font-weight-medium); }
+    .walk__badge { font-size: var(--text-xs); font-family: var(--font-mono); letter-spacing: 0.05em;
+      border: 1px solid var(--color-line); padding: 0.1rem 0.45rem; color: var(--ink-muted); }
+    .walk__body { color: var(--ink-muted); font-size: var(--text-sm); margin: 0.45rem 0 0.8rem; }
+    .walk__meter { height: 3px; background: var(--color-line); }
+    .walk__meter i { display: block; height: 100%; background: var(--color-accent, var(--ink)); }
+
+    /* bottom: the pill CTA + the startup checkbox — both honest (wired at build-out) */
+    .welcome__foot { display: flex; flex-direction: column; align-items: center; gap: 1.6rem; margin-top: 4.5rem; }
+    .welcome__cta { display: inline-flex; align-items: center; gap: 0.6rem; font-size: var(--text-base);
+      border: 1px solid var(--ink); border-radius: 999px; padding: 0.7rem 1.6rem;
+      color: var(--ink); text-decoration: none; background: var(--panel); }
+    .welcome__cta:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+    .welcome__startup { display: flex; align-items: center; gap: 0.5rem;
+      color: var(--ink-muted); font-size: var(--text-sm); }
+  </style>
+</head>
+<body data-screen="welcome">
+  <div class="app-window">
+  <div class="window-bar">
+    <span class="window-bar__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="window-bar__title">TJ's Desk — welcome</span>
+    <span style="width:3.1rem"></span>
+  </div>
+  <div class="app-shell" data-rail-collapsed="false" data-surface="screen">
+    <portfolio-frame />
+    <main class="app-shell__main">
+      <div class="welcome">
+        <h1 class="welcome__title">TJ's Desk</h1>
+        <p class="welcome__sub">Software engineering, taught and shipped — I direct, Claude types.</p>
+
+        <div class="welcome__cols">
+          <div>
+            <h2>Start</h2>
+            <nav class="start" data-surface="welcome-start" aria-label="Start">
+              <a class="start__item" href="/grain"><b-icon sym="/assets/sprite.svg#spark" size="sm"></b-icon>Ask the desk about TJ…</a>
+              <a class="start__item" href="/notes"><b-icon sym="/assets/sprite.svg#knowledge" size="sm"></b-icon>Read the notes…</a>
+              <a class="start__item" href="/grain"><b-icon sym="/assets/sprite.svg#tasks" size="sm"></b-icon>See the BREAD stack…</a>
+              <a class="start__item" href="/dashboard"><b-icon sym="/assets/sprite.svg#loop" size="sm"></b-icon>Open the workspace…</a>
+              <a class="start__item" href="mailto:hello@example.com"><b-icon sym="/assets/sprite.svg#send" size="sm"></b-icon>Get in touch…</a>
+            </nav>
+
+            <h2>Recent</h2>
+            <div class="recent" data-surface="welcome-recent">
+              <a class="recent__item" href="/notes/ten-times-zero"><span class="recent__name">Ten times zero</span><span class="recent__path">notes/</span></a>
+              <a class="recent__item" href="/notes/whitepaper-one-vocabulary"><span class="recent__name">One vocabulary, two operators</span><span class="recent__path">notes/whitepaper</span></a>
+              <a class="recent__item" href="/notes/the-browser-grew-up"><span class="recent__name">The browser grew up</span><span class="recent__path">notes/</span></a>
+              <a class="recent__item" href="/grain/docs"><span class="recent__name">GRAIN — the AI interface</span><span class="recent__path">grain/docs/</span></a>
+              <a class="recent__item" href="/notes"><span class="recent__name">More…</span></a>
+            </div>
+          </div>
+
+          <div>
+            <h2>Walkthroughs</h2>
+            <div class="walks" data-surface="welcome-walks">
+              <a class="walk" href="/grain">
+                <span class="walk__head"><b-icon sym="/assets/sprite.svg#spark" size="sm"></b-icon>Watch the AI act</span>
+                <p class="walk__body">One vocabulary, two operators: a person and an AI drive the same
+                  controls — the AI's hand stays visible as grain.</p>
+                <span class="walk__meter"><i style="width: 72%"></i></span>
+              </a>
+              <a class="walk" href="/batch">
+                <span class="walk__head"><b-icon sym="/assets/sprite.svg#tasks" size="sm"></b-icon>Get started with BREAD
+                  <span class="walk__badge">3 layers</span></span>
+                <p class="walk__body">BATCH the substrate, GRAIN the design system, MILL the content
+                  engine — the no-build stack this site runs on.</p>
+                <span class="walk__meter"><i style="width: 85%"></i></span>
+              </a>
+              <a class="walk" href="/notes/ten-times-zero">
+                <span class="walk__head"><b-icon sym="/assets/sprite.svg#knowledge" size="sm"></b-icon>Ten times zero
+                  <span class="walk__badge">flagship</span></span>
+                <p class="walk__body">From imposter to professional — the story behind the byline, and
+                  why the counter starts at zero.</p>
+                <span class="walk__meter"><i style="width: 40%"></i></span>
+              </a>
+              <a class="walk" href="/notes">
+                <span class="walk__head"><b-icon sym="/assets/sprite.svg#traces" size="sm"></b-icon>How I teach with AI
+                  <span class="walk__badge">updated</span></span>
+                <p class="walk__body">~150 students, an explain-or-fail policy, and why the AI types
+                  while the humans think.</p>
+                <span class="walk__meter"><i style="width: 55%"></i></span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="welcome__foot">
+          <a class="welcome__cta" href="/grain">✶ Try the desk — it answers about TJ</a>
+          <label class="welcome__startup">
+            <input type="checkbox" checked> Show welcome page on startup
+          </label>
+        </div>
+      </div>
+    </main>
+  </div>
+  <div class="status-bar">
+    <span class="presence">✶ desk online</span>
+    <span>0 ⊘ · 0 ⚠</span>
+    <span>main</span>
+    <span class="status-bar__spacer"></span>
+    <button type="button" data-cycle-theme aria-label="Cycle theme">◆ sourdough</button>
+    <button type="button" data-toggle-scheme aria-label="Toggle light or dark">◐ scheme</button>
+    <span>⌘K</span>
+  </div>
+  </div>
+</body>
+</html>
