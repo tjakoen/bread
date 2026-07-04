@@ -5,31 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>BATCH — a no-build hypermedia substrate</title>
   <meta name="description" content="BATCH: server-rendered hypermedia on Bun with no build step and near-zero client JavaScript. The substrate GRAIN and the product stand on.">
-  <!-- default theme (LINKED): tokens → base/skin → grade mechanism -->
+  <!-- default theme (LINKED): tokens → base/skin → grade mechanism; component styles
+       (GRAIN lede/card + portfolio docs-list/page-foot) come bundled in /components.css -->
   <link rel="stylesheet" href="/styles/variables.css">
   <link rel="stylesheet" href="/styles/global.css">
   <link rel="stylesheet" href="/styles/grain.css">
   <link rel="stylesheet" href="/components.css">
   <script src="/scripts/shell.js" defer></script>
   <script type="module" src="/scripts/ai-dispatch.js"></script>
-  <style>
-    /* landing LAYOUT only (tokens only — this composes GRAIN, it isn't the design system) */
-    .lede { color: var(--color-muted); font-size: var(--text-lg); max-width: 56ch; line-height: var(--leading-relaxed); }
-    .lede em { font-style: normal; text-decoration: underline; }
-    .facts { display: grid; gap: var(--space-4); margin-top: var(--space-5);
-      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
-    .fact { border: 1px solid var(--color-line); border-radius: var(--radius-md); padding: var(--space-4); }
-    .fact h3 { font-size: var(--text-base); margin: 0 0 var(--space-2); }
-    .fact p { color: var(--color-muted); font-size: var(--text-sm); margin: 0; line-height: var(--leading-normal); }
-    .docs { margin-top: var(--space-4); }
-    .docs__item { display: flex; align-items: baseline; gap: var(--space-3); padding: var(--space-2) 0;
-      border-top: 1px solid var(--color-line); }
-    .docs__name { font-size: var(--text-base); min-width: 12rem; }
-    .docs__what { color: var(--color-muted); font-size: var(--text-sm); }
-    .foot { margin-top: var(--space-8); padding-top: var(--space-5); border-top: 1px solid var(--color-line);
-      color: var(--color-muted); font-size: var(--text-sm); }
-    .foot a { color: var(--color-fg); }
-  </style>
 </head>
 <body data-screen="batch">
   <div class="app-shell" data-rail-collapsed="false" data-surface="screen">
@@ -45,23 +28,23 @@
       small runtime don't need a bundler.</p>
 
     <div class="section-head"><span>What it is</span></div>
-    <div class="facts">
-      <div class="fact"><h3>No build step</h3><p>Nothing between source and server: no bundler, no transpiler. Ship the source, the runtime reads it.</p></div>
-      <div class="fact"><h3>Native-first</h3><p>Server-rendered hypermedia, with near-zero client JavaScript. The audit numbers are the proof, not a promise.</p></div>
-      <div class="fact"><h3>Zero runtime deps</h3><p>Third-party runtime dependencies stay at zero (today, only Bun). Platform builtins and dev tools don't count.</p></div>
-      <div class="fact"><h3>Addressable and operable</h3><p>Every surface has a semantic address: the base a person <em>and</em> an AI can both drive. That part is GRAIN, above.</p></div>
-      <div class="fact"><h3>Static export = projection</h3><p>Export crawls the running server and freezes it to static files — never a second renderer, so the export can't drift from the app.</p></div>
-      <div class="fact"><h3>Audit engine built in</h3><p>A framework-generic perf + SEO/AEO harness benches any app, not just this one. The numbers are the proof.</p></div>
+    <div class="card-grid">
+      <div class="card" data-pad="sm"><h3 class="card__title">No build step</h3><p class="card__body">Nothing between source and server: no bundler, no transpiler. Ship the source, the runtime reads it.</p></div>
+      <div class="card" data-pad="sm"><h3 class="card__title">Native-first</h3><p class="card__body">Server-rendered hypermedia, with near-zero client JavaScript. The audit numbers are the proof, not a promise.</p></div>
+      <div class="card" data-pad="sm"><h3 class="card__title">Zero runtime deps</h3><p class="card__body">Third-party runtime dependencies stay at zero (today, only Bun). Platform builtins and dev tools don't count.</p></div>
+      <div class="card" data-pad="sm"><h3 class="card__title">Addressable and operable</h3><p class="card__body">Every surface has a semantic address: the base a person <em>and</em> an AI can both drive. That part is GRAIN, above.</p></div>
+      <div class="card" data-pad="sm"><h3 class="card__title">Static export = projection</h3><p class="card__body">Export crawls the running server and freezes it to static files — never a second renderer, so the export can't drift from the app.</p></div>
+      <div class="card" data-pad="sm"><h3 class="card__title">Audit engine built in</h3><p class="card__body">A framework-generic perf + SEO/AEO harness benches any app, not just this one. The numbers are the proof.</p></div>
     </div>
 
     <div class="section-head"><span>The reference</span></div>
     <p class="lede">The canonical docs live beside the code. They'll render here through MILL once it lands:</p>
-    <div class="docs">
-      <div class="docs__item"><span class="docs__name">ARCHITECTURE</span><span class="docs__what">the substrate's reasoning, and the single source of truth for the stack.</span></div>
-      <div class="docs__item"><span class="docs__name">CONVENTIONS</span><span class="docs__what">the build standard: layering, components, tokens, the action vocabulary, the testing bar.</span></div>
+    <div class="docs-list">
+      <div class="docs-list__item"><span class="docs-list__name">ARCHITECTURE</span><span class="docs-list__what">the substrate's reasoning, and the single source of truth for the stack.</span></div>
+      <div class="docs-list__item"><span class="docs-list__name">CONVENTIONS</span><span class="docs-list__what">the build standard: layering, components, tokens, the action vocabulary, the testing bar.</span></div>
     </div>
 
-    <div class="foot">
+    <div class="page-foot">
       Part of <a href="/">tjakoen.github.io</a>, built with itself. <span class="name">GRAIN</span>, the design
       system, is <a href="/grain">here</a>.
       <p>🤖 Built with Claude. I don't prompt and pray, I prompt and prove.</p>
