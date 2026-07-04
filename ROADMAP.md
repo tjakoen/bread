@@ -121,6 +121,15 @@ contract, not a scaffold.** So M★ closes Track A rather than opening it.
      server-required behavior) wherever the mode is offered. This must be communicated well, not buried.
      (Partly done: the mode switch lives in `project/tools/export.ts` (`CLIENT_DOOR_PAGES`) + the
      boundary is stated in `client-door.ts`; still owed: the user-facing comms on the /grain page.)
+   - e. **Client-side caching** (owner, 2026-07-04): GRAIN renders client-side (the client door) and
+     ships as a static export, so the browser cache IS the perf story there — server memoization
+     doesn't reach it. Three pieces: (1) HTTP cache semantics on everything the client re-fetches —
+     ETag/revalidate on `/components.css`, `/styles/*`, `/scripts/*` in dev; long-lived/immutable on
+     the export's frozen module graph (`/modules/*` is `no-cache` today — right for dev, wrong for
+     the static host); (2) a **manifest snapshot cache** in the client door — cache per screen,
+     invalidate on applied `RenderOp`s (the index-vs-snapshot model, not a refetch per run);
+     (3) view preferences stay `localStorage` (theme.js — already GRAIN's client cache). The header
+     mechanism is BATCH (`static.ts`/`modules.ts`/export); the manifest policy is GRAIN (`ai/*`).
 
 ## Track C — MILL: a content plugin for GRAIN, deliberately small
 
