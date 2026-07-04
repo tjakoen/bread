@@ -44,9 +44,9 @@ codebase and proposes the emoji + honest badge set for you.
 
 ## Commit convention
 
-End commit messages with:
-`Co-Authored-By: Claude <noreply@anthropic.com>` (I keep the trailer; it's the receipt behind the
-"built with Claude" claim).
+No AI attribution trailers on commits (`Co-Authored-By: Claude` etc. — enforced globally via
+`attribution` settings). The receipt behind the "built with Claude" claim is the README badge +
+footer and the flagship note, not commit metadata.
 
 ## Docs / structure
 

@@ -116,11 +116,13 @@ contract, not a scaffold.** So M★ closes Track A rather than opening it.
      entry and freezes it (transpile-at-export); `transformPage` lets the caller stamp the static
      copy's transport marker. `/grain`'s "Watch the AI act" + chat run fully on the static build —
      verified end-to-end (Playwright vs a static file server), server-door path regression-checked.
-   - d. **The opt-in + the safety comms**: composition-root mode switch (server-door | client-door);
+   - d. ~~**The opt-in + the safety comms**: composition-root mode switch (server-door | client-door);
      surface the **client-safe boundary** (ARCHITECTURE §19.2 — static-only, no secrets/tokens, no
-     server-required behavior) wherever the mode is offered. This must be communicated well, not buried.
-     (Partly done: the mode switch lives in `project/tools/export.ts` (`CLIENT_DOOR_PAGES`) + the
-     boundary is stated in `client-door.ts`; still owed: the user-facing comms on the /grain page.)
+     server-required behavior) wherever the mode is offered. This must be communicated well, not buried.~~
+     **Done (2026-07-04):** the mode switch lives in `project/tools/export.ts` (`CLIENT_DOOR_PAGES`),
+     the boundary is stated in `client-door.ts`, and the /grain "How it works" section carries the
+     user-facing comms ("Two door transports, one contract" — client-safe by contract, no secrets,
+     server-needing behavior absent on the static copy).
    - e. **Client-side caching** (owner, 2026-07-04): GRAIN renders client-side (the client door) and
      ships as a static export, so the browser cache IS the perf story there — server memoization
      doesn't reach it. Three pieces: (1) HTTP cache semantics on everything the client re-fetches —
