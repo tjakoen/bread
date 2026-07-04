@@ -261,7 +261,10 @@ and absorbs pieces 8–10 below.
   unifying today's `app-shell__aside` (assistant) and `.catalog-peek`. Default mode = **Chat**; on
   GRAIN it gains **Catalog ⇄ Chat** tabs, and in Catalog mode the footer (where the chat input sits)
   shows "Hover an element to see its entry / View full catalog". Toggle lives in the **topbar** next
-  to "Desk Online", consistent on every page.
+  to "Desk Online", consistent on every page. **BUILT 2026-07-04:** grain grew the generic
+  mode-tabs/panes mechanic (`sidebar-panel.md`, `shell.js` `data-shell-mode`); the frame's aside
+  carries the Chat + Catalog panes (tabs GRAIN-section only); `.catalog-peek` (the fixed overlay)
+  is retired — Catalog mode widens the aside grid column, so content shifts, never overlaid.
 - **Theming (tokens only, `grain/styles`) — BUILT 2026-07-04:** `base → [data-theme] → [data-color-scheme]`
   (orthogonal axes; the axis refactor + `theme.js` + the accent wiring landed this pass). Three themes
   ship: **Sourdough** (default, hueless), **Baguette** (clean, soft-blue accent), **Brioche** (warm,

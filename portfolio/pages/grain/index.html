@@ -12,7 +12,8 @@
   <link rel="stylesheet" href="/components.css"><!-- includes GRAIN's AI module (the "AI is acting" spotlight), reused by the surface demo -->
   <!-- shell.js runs the rail/console toggles (this page now lives in the BREAD shell) -->
   <script src="/scripts/shell.js" defer></script>
-  <!-- the Catalog peek overlay: hover a component → catalog scrolls to it (opened by the Catalog tab). ⌘K is global. -->
+  <!-- the Catalog pane behaviours (sidebar-panel Catalog mode): hover a component → its catalog
+       entry is revealed in the pane (opened by the Catalog tab / hero CTA). ⌘K is global. -->
   <script src="/scripts/catalog-peek.js" defer></script>
   <!-- reusable demo-box island (ES module): runs the declarative scripted demos below -->
   <script type="module" src="/scripts/demo-box.js"></script>
@@ -144,52 +145,11 @@
     .site__foot-links { display: flex; flex-wrap: wrap; gap: var(--space-5); margin-bottom: var(--space-4); }
     .site__foot em { font-style: normal; text-decoration: underline; }
 
-    /* page shell: content column + catalog sidebar sit SIDE BY SIDE, so opening the
-       sidebar SHIFTS the content aside (never overlays it). */
-    .page { display: flex; align-items: stretch; min-height: 100vh; }
-    .page__main { flex: 1 1 auto; min-width: 0; }   /* min-width:0 lets it shrink when the sidebar opens */
-
-    /* the Catalog peek sidebar (demo affordance): a real layout member that grows from
-       0 → its width when open, pushing .page__main narrower rather than covering it. */
-    .catalog-peek { flex: 0 0 0; width: 0; overflow: hidden;
-      position: sticky; top: 0; align-self: flex-start; height: 100vh;
-      display: flex; flex-direction: column; background: var(--color-surface);
-      overscroll-behavior: contain;   /* scrolling the sidebar never chains to the page behind */
-      transition: flex-basis 0.3s ease, width 0.3s ease; }
-    /* border only when open, so the collapsed sidebar leaves no stray hairline (and is truly 0-width) */
-    .catalog-peek[data-open="true"] { flex: 0 0 min(92vw, 30rem); width: min(92vw, 30rem);
-      border-left: 1px solid var(--ink); }
-    .catalog-peek__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4);
-      padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-line);
-      font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-muted); }
-    .catalog-peek__title { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-    /* small sentence-case hint under the CATALOG title — only where the hover mechanic applies */
-    .catalog-peek__hint { display: none; text-transform: none; letter-spacing: normal;
-      font-size: var(--text-xs); line-height: var(--leading-normal); color: var(--color-muted); }
-    @media (hover: hover) and (pointer: fine) { .catalog-peek__hint { display: block; } }
-    .catalog-peek__head-actions { display: flex; align-items: center; gap: var(--space-3); flex: 0 0 auto; }
-    .catalog-peek__expand { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.06em;
-      color: var(--color-muted); text-decoration: none; border-bottom: 1px solid var(--color-line); }
-    .catalog-peek__expand:hover { color: var(--ink); border-color: var(--ink); }
-    .catalog-peek__close { background: transparent; border: 0; font-size: 1.3rem; line-height: 1; cursor: pointer; color: var(--ink); }
-    .catalog-peek__frame { flex: 1; width: min(92vw, 30rem); border: 0; background: var(--color-bg);
-      overscroll-behavior: contain; }
-
-    /* Mobile: no room to shift a 30rem column, so the sidebar reverts to an overlay drawer. */
-    @media (max-width: 48rem) {
-      .catalog-peek { position: fixed; top: 0; right: 0; bottom: 0; height: auto; z-index: 60;
-        flex-basis: auto; }
-      .catalog-peek[data-open="false"] { width: 0; }
-    }
-    @media (prefers-reduced-motion: reduce) { .catalog-peek { transition: none; } }
-
-    /* --- in the BREAD shell, the page is the main pane; the Catalog peek is a body-level FIXED
-       OVERLAY (not a .page flex column) opened by the Catalog tab. --- */
-    .catalog-peek { position: fixed; top: 0; right: 0; bottom: 0; height: auto; flex-basis: auto; z-index: 60; }
-    .catalog-peek[data-open="false"] { width: 0; }
-
-    /* GRAIN section tabs now live in the frame's topbar (portfolio-frame), shown per section — see
-       portfolio-frame.{html,css}. Nothing page-local needed here anymore. */
+    /* The Catalog peek is no longer page-local: it lives in the frame's sidebar-panel as the
+       Catalog pane (Chat ⇄ Catalog mode tabs — portfolio-frame.{html,css}; behaviours in
+       grain/scripts/catalog-peek.js). Opening it widens the aside GRID COLUMN, so the content
+       shifts aside — never an overlay. The GRAIN section tabs likewise live in the frame's
+       topbar. Nothing page-local needed here anymore. */
 
     /* Themes tab — one card per flavor with a live "Use this theme" button (theme.js, data-set-theme) */
     .themes { display: grid; gap: var(--space-4); margin-top: var(--space-5);
@@ -408,21 +368,5 @@
       </div><!-- /.site -->
     </main>
   </div><!-- /.app-shell -->
-
-  <!-- the Catalog peek OVERLAY (body-level, fixed): embeds /catalog; the island scrolls it on hover -->
-  <aside class="catalog-peek" data-open="false" aria-label="Component catalog">
-    <header class="catalog-peek__head">
-      <span class="catalog-peek__title">
-        <span class="catalog-peek__name">Catalog</span>
-        <span class="catalog-peek__hint">Hover an element on the page to see its entry.</span>
-      </span>
-      <span class="catalog-peek__head-actions">
-        <!-- expand the peek into the full-page catalog (top-window nav; the aside lives in the parent) -->
-        <a class="catalog-peek__expand" href="/catalog">Full page ↗</a>
-        <button class="catalog-peek__close" aria-label="Close catalog">×</button>
-      </span>
-    </header>
-    <iframe class="catalog-peek__frame" title="Component catalog"></iframe>
-  </aside>
 </body>
 </html>
