@@ -314,7 +314,63 @@ grouped `side-rail`, `topbar`) with conformance tests; (3) portfolio frame + BRE
 pages (`/`, `/grain` w/ tabs incl. Themes, `/batch`, `/notes`, `/loop`-tab), retire the standalone
 peek/terminal, re-point e2e; (5) wire chat to the door (dev/live), browser LLM as its own follow-on.
 
-## The desk hero — THE DESK SCENE (owner, 2026-07-04; supersedes the cards-only draft same day)
+## THE EDITOR — the whole site as one editor window (owner, 2026-07-04 — CURRENT; supersedes the
+## desk-scene and cards drafts below, kept for the record)
+
+**The concept:** the portfolio IS an editor. The owner is a developer; the workspace archetype is
+already built; lean all the way in. The **entire site lives inside one app window** — a consistent
+frame on every page — and the main page is the editor's **Welcome page** (the VS Code start screen,
+re-spoken in GRAIN). PoC approved by the owner (screenshots:
+`screenshots/welcome-poc-dark.png` / `-light.png`; live at `/welcome-poc`).
+
+**The frame (site-wide, one design language):**
+- **The window**: the app boxed in a bordered, radiused frame on a darker backdrop — title bar up
+  top (a three-dot cluster drawn austere: one filled + two hollow ink circles, never colored
+  traffic lights; a centered mono title "TJ's Desk — <page>"), print-style solid offset shadow.
+- **Tabs = page navigation** (the topbar tab-bar we restyled): the site's sections as open
+  editor tabs, consistent on every page.
+- **Rail** = the explorer (icon gutter already built) · **aside** = the assistant (already built)
+  · **console** = the terminal (already built).
+- **STATUS BAR** (new bottom row): the meta-controls move DOWN into it — they are status, not
+  content. Left: `✶ desk online` (presence — real: client door loaded), `0 ⊘ · 0 ⚠` (make it
+  HONEST: bake real tsc/test counts at export time), `main` (bake the built-from commit).
+  Right: theme cycle (shows current flavor name), scheme toggle, ⌘K hint.
+- Still GRAIN: tokens only, hairlines, mono status text, grade-as-signal untouched, the lamp
+  travels these surfaces like any others, one door unchanged. Re-themes across
+  Sourdough/Baguette/Brioche for free.
+
+**The Welcome page (`/`)** — the PoC layout, promoted: grain-face title + "I direct, Claude
+types" one-liner; **Start** (Ask the desk · Read the notes · See the BREAD stack · Open the
+workspace · Get in touch); **Recent** = the notes feed, LIVE from MILL frontmatter (titles, mono
+paths); **Walkthroughs** = showcase cards with badges + meters (give meters honest semantics);
+pill CTA + a FUNCTIONAL "Show welcome page on startup" checkbox (unchecked → `/` lands on the
+workspace next visit, localStorage).
+
+**Implementation order:**
+1. **Grain shell primitives** (generic, persona-neutral): `app-window` (frame + title-bar) +
+   `status-bar` as CSS-only components with `.md` docs; the app-shell grid grows the two rows.
+   ⚠ TOUCHES HOT FILES (`app-shell.css`, then `portfolio-frame.html`) — do this AFTER the current
+   sessions' uncommitted work lands; single-thread the shell overhaul, don't worktree it.
+2. **Portfolio-frame overhaul**: compose window bar + status bar; relocate topbar-ctl; tabs
+   become site navigation (decide: fixed section tabs vs "open pages" metaphor — start fixed).
+3. **Welcome page**: promote `/welcome-poc` to `/` with components in `portfolio/components/**`,
+   live Recent (MILL), wired Ask-the-desk (focus the assistant composer; scripted desk answers
+   via the `data-ai-door` seam), functional startup checkbox.
+4. **Honest status**: export bakes commit sha + tsc/test counts into the status bar (they're
+   real at freeze time — "the site practises what it preaches").
+5. **Cleanup**: delete `/desk-poc` + `/welcome-poc` after promotion; update FEATURES.md desk
+   section; product pages (`/dashboard`, `/loop`) adopt the same window frame via app-frame.
+6. Mobile: the window frame collapses (no backdrop padding, no title bar or a slim one); the
+   existing drawer behavior stays.
+
+**Still in force from the earlier drafts:** scripted client-door brain behind `data-ai-door`
+(v1), WebLLM/RAG later behind the same `Reasoner` seam; aside = the assistant everywhere;
+progressive enhancement hard rule (everything is real links, zero-JS navigable); the lamp +
+`[data-lamp-origin]` seam (the welcome page can still declare the presence glyph as the light's
+origin). The desk-SCENE below is superseded — its PoC receipts (VT morph pair, lamp origin) stay
+valid mechanisms available to this design (e.g. tab-content morphs).
+
+## SUPERSEDED — The desk hero — THE DESK SCENE (owner, 2026-07-04, same-day pivot)
 
 The main page (`/`) is a **literal desk, drawn flat, viewed top-down** — the owner's vision,
 reconciled with the anti-skeuomorphism guardrail: the guardrail forbids *photorealism/wooden-desk
