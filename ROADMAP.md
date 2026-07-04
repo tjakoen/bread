@@ -53,7 +53,8 @@ contract, not a scaffold.** So M★ closes Track A rather than opening it.
      client-side AI→DOM channel) deleted; `/grain` now loads the real `ai-dispatch.js` and its
      "Watch the AI act" (→ `demo.run`) and Ask/Send (→ `chat.send`) post real Intents through
      `/intent` and render back over SSE. The reasoner branches a `/grain` scenario on `intent.screen`.
-     Consequence: the demo is an operable surface, so it's inert on the static export (§18) — accepted.
+     Consequence: the demo is an operable surface, so on the static export it runs through the
+     CLIENT-side door (§19.3, B.6 — shipped 2026-07-04) instead of going inert.
    - ~~Make `demo.run`'s archive step actually write state through the service~~ **Done** — the
      triage step archives a seeded fixture (`ITM-demo-1`, excluded from the task list) via
      `tools.archiveItem` and renders the committed card; re-runnable (idempotent).
@@ -103,15 +104,23 @@ contract, not a scaffold.** So M★ closes Track A rather than opening it.
      **client-safe import guard** (refuses server-only imports with a loud throwing stub).~~ **Done +
      tested (2026-07-04);** proven end-to-end (a browser imports the real `contract.ts`, no build).
      First payoff owed: retire the islands' re-declared verb literals by importing the real `contract.ts`.
-   - b. **GRAIN client-door wiring** (pending, needs Track A's interaction layer stable): run
-     `createInteractionLayer` in-browser against a generic **loopback `OpChannel`** (batch) → the
-     dispatcher's `applyOp`; no `POST /intent`, no SSE. Same door, same ops. (Blocked on the concurrent
-     A.2 grain work committing to a branch to base on — do not build on the uncommitted shared tree.)
-   - c. **Export integration**: §18 export freezes the transpiled client modules into `dist/` so an
-     operable-static showcase ships as plain files.
+   - b. ~~**GRAIN client-door wiring**: run `createInteractionLayer` in-browser against a **loopback
+     `OpChannel`** → the dispatcher's `applyOp`; no `POST /intent`, no SSE. Same door, same ops.~~
+     **Done (2026-07-04):** `grain/ai/client-door.ts` (unit-tested) + the dispatcher's transport seam
+     (`<body data-ai-transport="client">` → dynamic-import the door, both `/intent` call sites routed
+     through one `sendIntent`, the `ready` gate satisfied by construction). The module server now
+     serves an all-`.js` browser-facing graph (`.js` URL → `.ts` source; relative specifiers
+     rewritten) so frozen files carry a JS MIME type on any static host.
+   - c. ~~**Export integration**: §18 export freezes the transpiled client modules into `dist/`.~~
+     **Done (2026-07-04):** `exportSite({ moduleEntries })` walks the relative import graph from each
+     entry and freezes it (transpile-at-export); `transformPage` lets the caller stamp the static
+     copy's transport marker. `/grain`'s "Watch the AI act" + chat run fully on the static build —
+     verified end-to-end (Playwright vs a static file server), server-door path regression-checked.
    - d. **The opt-in + the safety comms**: composition-root mode switch (server-door | client-door);
      surface the **client-safe boundary** (ARCHITECTURE §19.2 — static-only, no secrets/tokens, no
      server-required behavior) wherever the mode is offered. This must be communicated well, not buried.
+     (Partly done: the mode switch lives in `project/tools/export.ts` (`CLIENT_DOOR_PAGES`) + the
+     boundary is stated in `client-door.ts`; still owed: the user-facing comms on the /grain page.)
 
 ## Track C — MILL: a content plugin for GRAIN, deliberately small
 

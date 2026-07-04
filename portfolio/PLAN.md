@@ -311,6 +311,73 @@ grouped `side-rail`, `topbar`) with conformance tests; (3) portfolio frame + BRE
 pages (`/`, `/grain` w/ tabs incl. Themes, `/batch`, `/notes`, `/loop`-tab), retire the standalone
 peek/terminal, re-point e2e; (5) wire chat to the door (dev/live), browser LLM as its own follow-on.
 
+## The desk hero — THE DESK SCENE (owner, 2026-07-04; supersedes the cards-only draft same day)
+
+The main page (`/`) is a **literal desk, drawn flat, viewed top-down** — the owner's vision,
+reconciled with the anti-skeuomorphism guardrail: the guardrail forbids *photorealism/wooden-desk
+PNGs*, not literalness. The scene is **token-drawn** (a "technical drawing / stationery flat-lay"):
+uniform 1px ink hairlines (one stroke weight everywhere), the token palette only, typography as the
+texture, print-style **solid offset shadows** (1–2px, zero blur), objects on a grid with one or two
+deliberate rotations. If it starts reading as clip-art or MS Paint, stop and re-draw.
+
+**The objects (each = a real `<a>` underneath + a `data-surface` the lamp can visit;
+progressive-enhancement hard rule — the scene is fully navigable with zero JS/AI):**
+
+- **The PAPER** — the ask line: ruled sheet, prompt + caret, suggested-question chips. The desk's
+  own surface; the lamp pools here at rest.
+- **The TABLET** (top-down, so a tablet — not a monitor/laptop) — lies flat, its screen shows a
+  scaled mini-workspace **drawn with the real shell classes**; tapping it **morphs the screen into
+  the actual workspace** via a cross-document View Transition (`view-transition-name: workspace` on
+  the tablet screen ↔ `/dashboard`'s `.app-shell__main`). Non-supporting browsers fall back to
+  plain navigation. This is the site's flagship native-first moment.
+- **The PHYSICAL LAMP** — the assistant's body. Dark at rest; ask something and it clicks on: the
+  iris opens **from the drawn lamp's head** (`[data-lamp-origin]` — grain's spotlight primitive
+  reads it) and the light pool (the `.ai-lamp`) travels to the object that holds the answer. On
+  other pages the lamp docks as the corner companion; ⌘K summons it — three faces of one thing.
+- **The STICKY NOTE** (→ `/notes`) — carries the REAL latest note title, server-rendered.
+- **The DESK CALENDAR** (→ `/calendar` later; card-only v1) — real month, real talk/role entries,
+  server-rendered.
+- **The ENVELOPE** (contacts) — mail · GitHub · LinkedIn · vCard.
+- **The BREAD CARD** (the work) — BATCH · GRAIN · MILL; "this site is the proof".
+
+**Decisions folded in (owner, same day):** the assistant panel starts docked/collapsed on `/` (the
+desk IS the assistant there); **v1 brain = scripted scenarios through the client-side door** (chips
+make scripted honest; the WebLLM/RAG tier slots behind the same `Reasoner` seam later);
+calendar/contacts are on-page objects v1, full routes later. **Server-rendered real content on the
+objects is fine** — pages compose server-side and the export freezes them (projection); authoring =
+commit → Action re-exports.
+
+**Narrow screens:** the scene reflows to stacked object-cards (same surfaces, same links — the
+earlier cards wireframe IS the mobile layout). Wireframes: `screenshots/desk-scene-wireframe.png`
+(the scene) + `screenshots/desk-wireframe.png` (the narrow/cards reflow).
+
+**PoC — proven in-tree (2026-07-04), keep until the real page replaces it:**
+`portfolio/pages/desk-poc/` + receipts: (a) cross-document VT names verified on both sides
+(tablet screen ↔ dashboard main pane, `startViewTransition` present); (b) the lamp iris wakes AT
+`[data-lamp-origin]` (transition-suppressed initial placement — never glides in from center);
+(c) the flat object language (hairline + offset-shadow `.desk-object`). Screenshot:
+`screenshots/desk-poc.png`.
+
+**Implementation order (for the next session; respect the seams, don't rebuild them):**
+1. **The desk reasoner** — `portfolio/ai/desk-door.ts` (client-safe: relative imports only, no
+   secrets): exports `createClientDoor(applyOp)` wrapping grain's with a scripted desk scenario
+   (4–6 chip questions; answers travel to the right object, stream grain, settle, RELEASE — grain
+   lessons 6/7/9 apply). Page selects it via
+   `<body data-ai-transport="client" data-ai-door="/modules/portfolio/ai/desk-door.js">` —
+   the module server already serves `portfolio/**`; grain stays persona-neutral. Colocated test.
+2. **The scene** — rebuild `portfolio/pages/index.html` as the desk; object styling as
+   portfolio components (`portfolio/components/**` — site-specific, NOT grain). Server-render the
+   sticky note + calendar content from data. Keep the desk-poc page until parity, then delete it.
+3. **The morph** — `view-transition-name: workspace` pair (PoC already stamped `/dashboard`'s
+   main pane); consider `::view-transition-old/new(workspace)` timing polish.
+4. **Docking** — assistant panel collapsed on `/` (page-scoped for v1; proper frame/app-shell
+   docking is a follow-up with the companion work).
+5. **Export** — add `"/modules/portfolio/ai/desk-door.js"` to `MODULE_ENTRIES` in
+   `project/tools/export.ts`; verify the desk works on the frozen static build (chips + morph
+   fall back gracefully).
+6. Screenshots + `bun test` + `tsc` + the lamp-travel e2e still green; sync FEATURES.md's desk
+   section to say "scene" (it currently says "restyle of live machinery" — still true).
+
 ## Open questions / next steps
 
 - **Content first or scaffold first?** Decide whether to draft the portfolio content (sections,

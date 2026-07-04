@@ -33,9 +33,9 @@
        Each group shows only in its section (.app-shell[data-section="…"] → portfolio-frame.css); real
        nav links, so navigation works with no JS (the peek/behaviour layers on where it exists). -->
   <nav class="app-shell__tabs tab-bar" data-tabs-for="grain" aria-label="GRAIN views">
-    <a class="tab" href="/grain" data-peek="open">Catalog</a>
-    <a class="tab" href="/loop">Demo</a>
-    <a class="tab" href="/grain#themes">Themes</a>
+    <a class="tab" href="/grain" data-peek="open"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#knowledge" size="sm"></b-icon></span>Catalog<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
+    <a class="tab" href="/loop"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#loop" size="sm"></b-icon></span>Demo<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
+    <a class="tab" href="/grain#themes"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#spark" size="sm"></b-icon></span>Themes<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
   </nav>
   <div class="topbar-ctl">
     <!-- theming controls: theme.js acts on these declaratively; the flavor list is on <html data-themes> -->
@@ -60,7 +60,7 @@
       </div>
     </div>
     <div class="assistant__composer">
-      <input type="text" placeholder="Ask the desk…" aria-label="Ask the desk"
+      <input class="field__input" type="text" placeholder="Ask the desk…" aria-label="Ask the desk"
              data-action="chat.send" data-target="chat-log" data-surface="chat-input">
       <button class="icon-btn" data-variant="ghost" data-action="chat.send" data-target="chat-log" data-from="chat-input" aria-label="Send">
         <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/sprite.svg#send"></use></svg>
