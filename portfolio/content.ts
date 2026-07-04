@@ -18,12 +18,15 @@ import {
   type MillCollection, type MillRequestHandler, type PageChrome,
 } from "../mill/serve.ts";
 import { escapeHtml } from "../mill/core/engine.ts";
+import { parseFrontmatter } from "../mill/core/frontmatter.ts";
 
 // ---- link resolution --------------------------------------------------------
 // Docs cross-link each other as relative .md paths (./AI-INTERFACE.md,
-// ../../batch/docs/ARCHITECTURE.md). Rewrite the ones we render; leave the rest
-// (README/PHILOSOPHY/plan files have no rendered page — the export's dead-link
-// warning keeps us honest about those).
+// ../../batch/docs/ARCHITECTURE.md). Rewrite the ones we render; the rest
+// (README/PHILOSOPHY/plan files) have no rendered page and ship as-authored —
+// KNOWN GAP: the export's dead-link warning only sees root-absolute hrefs
+// (batch/export/rewrite.ts extractRefs), so these relative leftovers are NOT
+// caught by it; they 404 on the site until those docs get rendered pages.
 const mdSlug = (file: string) => file.replace(/\.md$/, "").toLowerCase();
 
 function docsLink(currentPrefix: string) {
@@ -49,7 +52,7 @@ function notesLink(href: string): string {
 // ---- the BREAD-shell chrome ---------------------------------------------------
 // Mirrors the hand-written portfolio pages (pages/mill/index.html): same head, same
 // app-shell + portfolio-frame skeleton, so content pages ARE portfolio pages.
-function shellChrome(inject: string): PageChrome {
+function shellChrome(inject: string, injectHead = ""): PageChrome {
   return ({ title, description, body, collection }) => {
     const screen = collection.prefix.split("/")[1] ?? "notes";   // /notes → notes, /grain/docs → grain
     const section = collection.prefix === "/grain/docs" ? ` data-section="grain"` : "";
@@ -60,6 +63,7 @@ function shellChrome(inject: string): PageChrome {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${escapeHtml(title)}</title>
   ${description ? `<meta name="description" content="${escapeHtml(description)}">` : ""}
+  ${injectHead}
   <link rel="stylesheet" href="/styles/variables.css">
   <link rel="stylesheet" href="/styles/global.css">
   <link rel="stylesheet" href="/styles/grain.css">
@@ -67,8 +71,8 @@ function shellChrome(inject: string): PageChrome {
   <script src="/scripts/shell.js" defer></script>
   <script type="module" src="/scripts/ai-dispatch.js"></script>
 </head>
-<body data-screen="${escapeHtml(screen)}">
-  <div class="app-shell"${section} data-rail-collapsed="false" data-surface="screen">
+<body data-screen="${escapeHtml(screen)}" class="app-window-backdrop">
+  <div class="app-shell app-window"${section} data-rail-collapsed="false" data-surface="screen">
     <portfolio-frame />
     <main class="app-shell__main">
       <div class="board">${body}</div>
@@ -113,12 +117,37 @@ const collections: MillCollection[] = [
 export function createPortfolioContentRoutes(
   compose?: (html: string) => Promise<string>,
   inject = "",
+  injectHead = "",
 ): MillRequestHandler {
-  return createMillRoutes({ compose, chrome: shellChrome(inject), collections });
+  return createMillRoutes({ compose, chrome: shellChrome(inject, injectHead), collections });
 }
 
 /** Every content route (index + entries per collection) — content pages are exportable
  *  by definition (§18), so the sitemap and the export allowlist both feed from this. */
 export function listPortfolioContentRoutes(): Promise<string[]> {
   return listMillRoutes(collections);
+}
+
+/** The welcome page's "Recent" feed: the newest notes, straight from MILL frontmatter —
+ *  server-composed live data (the export freezes it, §18). Shape matches the
+ *  <welcome-recent> component's bindings. */
+export interface RecentNote { title: string; href: string; path: string; }
+export async function listRecentNotes(limit = 4): Promise<RecentNote[]> {
+  const notes = collections[0]!;                     // the "/notes" collection above
+  const entries: Array<{ slug: string; title: string; date: string }> = [];
+  for (const slug of await notes.source.list()) {
+    const raw = await notes.source.read(slug);
+    if (raw === null) continue;
+    const fm = parseFrontmatter(raw).data;
+    entries.push({
+      slug,
+      title: typeof fm.title === "string" ? fm.title : slug,
+      date: typeof fm.date === "string" ? fm.date : "",
+    });
+  }
+  entries.sort((a, b) => a.date === b.date ? a.slug.localeCompare(b.slug)
+    : a.date === "" ? 1 : b.date === "" ? -1 : b.date.localeCompare(a.date));
+  return entries.slice(0, limit).map((e) => ({
+    title: e.title, href: `/notes/${e.slug}`, path: `notes/${e.slug}.md`,
+  }));
 }
