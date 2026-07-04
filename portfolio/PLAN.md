@@ -393,7 +393,9 @@ where they differ:
   with "The desk is offline" (site.js); repo ★ count fetched client-side, hidden if unreachable.
 - **Catalog⇄Chat sidebar modes are SITEWIDE** (the /grain-only gating removed).
 
-**Backlog (owner ideas 2026-07-05 — captured, not built):**
+**Backlog (owner ideas 2026-07-05 — captured, not built). CANONICAL expansion + build order:
+[`DEMO-PLAN.md`](DEMO-PLAN.md) (handoff doc — includes the prompt→GRAIN generator and the
+theme builder; this list stays the one-line index):**
 1. **/grain demo = the whole interface** (not a demo-box island): default prompt "See what TJ has
    been up to" → the AI travels the real pages (lamp), reads the latest notes, then **writes a
    summary into its notepad**. Simulated through the client door first; the live model slots
