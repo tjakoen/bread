@@ -14,8 +14,8 @@
 // the injected renderPage composes that tag — and any escape-hatch <b-…> tags an author
 // wrote in the Markdown — at request time.
 import {
-  createMillRoutes, dirSource, packageDocsSource,
-  type MillRequestHandler, type PageChrome,
+  createMillRoutes, dirSource, listMillRoutes, packageDocsSource,
+  type MillCollection, type MillRequestHandler, type PageChrome,
 } from "../mill/serve.ts";
 import { escapeHtml } from "../mill/core/engine.ts";
 
@@ -79,6 +79,32 @@ ${inject}</body>
   };
 }
 
+// The three collections — module-level so the routes AND the route list derive from
+// one definition (a new note or doc automatically reaches the sitemap and the export).
+const collections: MillCollection[] = [
+  {
+    prefix: "/notes",
+    title: "Notes",
+    description: "Long-form notes — how this stack got built, how I teach, and what broke along the way.",
+    source: dirSource("portfolio/notes"),
+    adapter: { resolveLink: notesLink },
+  },
+  {
+    prefix: "/grain/docs",
+    title: "GRAIN docs",
+    description: "The GRAIN design system's own docs, rendered from the installed package — never copied.",
+    source: packageDocsSource("@tjakoen/grain/docs/GRAIN.md"),
+    adapter: { resolveLink: docsLink("/grain/docs") },
+  },
+  {
+    prefix: "/batch/docs",
+    title: "BATCH docs",
+    description: "The BATCH substrate's own docs, rendered from the installed package — never copied.",
+    source: packageDocsSource("@tjakoen/batch/docs/ARCHITECTURE.md"),
+    adapter: { resolveLink: docsLink("/batch/docs") },
+  },
+];
+
 /**
  * The portfolio's content routes, ready to mount at the composition root:
  *   const serveContent = createPortfolioContentRoutes(renderPage, GLOBAL_ASSETS);
@@ -88,31 +114,11 @@ export function createPortfolioContentRoutes(
   compose?: (html: string) => Promise<string>,
   inject = "",
 ): MillRequestHandler {
-  return createMillRoutes({
-    compose,
-    chrome: shellChrome(inject),
-    collections: [
-      {
-        prefix: "/notes",
-        title: "Notes",
-        description: "Long-form notes — how this stack got built, how I teach, and what broke along the way.",
-        source: dirSource("portfolio/notes"),
-        adapter: { resolveLink: notesLink },
-      },
-      {
-        prefix: "/grain/docs",
-        title: "GRAIN docs",
-        description: "The GRAIN design system's own docs, rendered from the installed package — never copied.",
-        source: packageDocsSource("@tjakoen/grain/docs/GRAIN.md"),
-        adapter: { resolveLink: docsLink("/grain/docs") },
-      },
-      {
-        prefix: "/batch/docs",
-        title: "BATCH docs",
-        description: "The BATCH substrate's own docs, rendered from the installed package — never copied.",
-        source: packageDocsSource("@tjakoen/batch/docs/ARCHITECTURE.md"),
-        adapter: { resolveLink: docsLink("/batch/docs") },
-      },
-    ],
-  });
+  return createMillRoutes({ compose, chrome: shellChrome(inject), collections });
+}
+
+/** Every content route (index + entries per collection) — content pages are exportable
+ *  by definition (§18), so the sitemap and the export allowlist both feed from this. */
+export function listPortfolioContentRoutes(): Promise<string[]> {
+  return listMillRoutes(collections);
 }
