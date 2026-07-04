@@ -59,33 +59,28 @@
 
 - Minimal top bar: **GRAIN** wordmark + tagline, a `demo` marker (clearly a demonstration),
   `⌘K` (`b-kbd` + the global palette island), and an **Inspect** toggle.
-- **Catalog-peek sidebar** (`grain/scripts/catalog-peek.js`): hover any component anywhere → the
-  embedded `/catalog` scrolls to its entry + highlights it. Maps rendered CSS class → catalog
-  slug. The showcase is the "usage" layer; the catalog is the "specimen" layer; hover bridges.
+- **Catalog pane** (`grain/scripts/catalog-peek.js`): hover any component anywhere → the
+  embedded `/catalog` reveals its entry. Maps rendered CSS class → catalog slug. The showcase is
+  the "usage" layer; the catalog is the "specimen" layer; hover bridges.
 
-### Catalog-peek sidebar — layout & behaviour (2026-07-02 refinement) — ✅ BUILT
+### Catalog pane — a sidebar-panel mode (2026-07-04 refinement) — ✅ BUILT
 
-Supersedes the v1 "slides in from the right as a fixed overlay" implementation. The sidebar is a
-real layout member, not a drawer on top. Shipped 2026-07-02: `.page`/`.page__main` flex shell in
-`portfolio/pages/grain/index.html`; `/catalog` responsive drawer in `batch/catalog/catalog.ts`;
-e2e asserts the content-shift; shots `grain-peek` + new `grain-peek-menu`.
+Supersedes both the v1 fixed overlay and the v2 `.page` flex-shell sidebar (and the interim
+Phase-4c body-level overlay). The catalog is now a **mode of the frame's shared `sidebar-panel`**
+(PLAN "Portfolio shell"): the panel head carries **Chat ⇄ Catalog** tabs (GRAIN section only —
+`portfolio-frame.css`), the Catalog pane embeds `/catalog` in an iframe, and its footer (where the
+chat composer sits) shows the hover hint + a "Full catalog ↗" link. The mode mechanic is grain's
+(`shell.js`, `data-shell-mode` / `.assistant__pane`); the island keeps only the catalog
+behaviours (`[data-peek]` hooks, lazy load, the hover bridge).
 
-- **Shifts content, never overlays.** Opening the sidebar *pushes* the `.site` content aside
-  (grid / margin shift), so nothing is covered. (v1 used `position: fixed` + `translateX` — replace.)
-- **Scroll is contained to the sidebar.** Scrolling while pointing at the catalog scrolls *only*
-  the catalog, never the page behind it (`overscroll-behavior: contain`; the iframe already keeps
-  wheel events local, this stops any chaining).
-- **The catalog's own menu is collapsed by default in sidebar context.** The embedded `/catalog`'s
-  `.cat-nav` (Pages + Components) starts collapsed so the narrow sidebar spends its width on the
-  specimen, not the menu.
-- **When open, treat the sidebar as "mobile" (space is small).** Uncollapsing the catalog's menu
-  makes it **take over the full sidebar** (a full-width nav-drawer over the main), then collapse
-  back on selection — the small-screen pattern, not a cramped two-column split.
-- **Where this lives:** points 3–4 are implemented as **`/catalog` becoming genuinely responsive
-  at the batch layer** — at narrow widths `.cat-nav` collapses to a toggle that opens full-width
-  over `.cat-main`. The narrow iframe inherits this automatically; real mobile catalog visitors get
-  it too. Not a demo-only hack — a real catalog improvement (native responsive, no build). Point 1
-  (content shift) + point 2 (scroll containment) live in the `/grain` page's own layout CSS.
+- **Shifts content, never overlays.** Catalog mode widens the aside **grid column**
+  (`--shell-aside` override in `portfolio-frame.css`), so the main pane narrows — nothing covered.
+- **Scroll is contained to the pane.** (`overscroll-behavior: contain` on the iframe.)
+- **The catalog's own menu is collapsed by default in pane context** — `/catalog` is genuinely
+  responsive at the batch layer (at narrow widths `.cat-nav` collapses to a toggle that opens
+  full-width over `.cat-main`); the narrow iframe inherits it automatically.
+- **On mobile the pane rides the sidebar-panel bottom sheet** — opening the catalog raises the
+  sheet; touch devices get the full scrollable catalog (the hover reveal is pointer-only).
 
 ### "One surface, both operators" — through the REAL door (2026-07-04) — ✅ BUILT (server v3)
 
@@ -161,11 +156,11 @@ hovering any element reveals it in the sidebar (MAP extended: `chat-message`, `t
 
 ### Entering & leaving the catalog (2026-07-03) — ✅ BUILT
 
-- **Hero "Browse the components" opens the sidebar** (a `data-peek="open"` hook, not a link →
-  hand-authored `.btn`, since `b-button` forwards only config props). The peek island now honours
-  `data-peek` values `open` / `close` / `toggle`.
-- **Sidebar → full page.** The peek header carries a **"Full page ↗"** link (`.catalog-peek__expand`
-  → `/catalog`) so the peek expands into the full catalog in one click.
+- **Hero "Browse the components" opens the Catalog pane** (a `data-peek="open"` hook, not a link →
+  hand-authored `.btn`, since `b-button` forwards only config props). The island honours
+  `data-peek` values `open` / `close` / `toggle`; leaving = the panel's **Chat** mode tab.
+- **Pane → full page.** The pane footer carries a **"Full catalog ↗"** link (`.catalog-pane__expand`
+  → `/catalog`) so the pane expands into the full catalog in one click.
 - **Catalog "← Back".** `/catalog` gained a `.cat-back` control (the component nav isn't an obvious
   exit); prefers real `history.back()`, falls back to `/`. **Hidden when embedded** in the peek
   iframe (`window.self !== window.top`) — the host supplies its own close/expand there. (batch layer.)

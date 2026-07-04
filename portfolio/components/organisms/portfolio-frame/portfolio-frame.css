@@ -16,3 +16,29 @@
 .app-shell[data-section="grain"] .app-shell__tabs[data-tabs-for="grain"] { display: flex; }
 /* the Catalog tab is a link that ALSO opens the peek (data-peek) — keep the pointer cursor */
 .app-shell__tabs .tab[data-peek] { cursor: pointer; }
+
+/* panel mode tabs (sidebar-panel): only the GRAIN section carries a second pane (Catalog) —
+   hide the Chat⇄Catalog switch everywhere else. */
+.app-shell .assistant__modes { display: none; }
+.app-shell[data-section="grain"] .assistant__modes { display: flex; }
+
+/* Catalog pane: the embedded /catalog fills the pane; the footer sits where the chat composer
+   sits (the hover hint + the full-page way out). Scroll stays contained to the pane. */
+.catalog-pane__frame { flex: 1; width: 100%; border: 0; background: var(--color-bg);
+  overscroll-behavior: contain; }
+.catalog-pane__foot { border-top: 1px solid var(--color-line); padding: var(--space-3) var(--space-4);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+  font-size: var(--text-xs); color: var(--color-muted); }
+.catalog-pane__expand { color: var(--color-muted); text-decoration: none;
+  border-bottom: 1px solid var(--color-line); white-space: nowrap; }
+.catalog-pane__expand:hover { color: var(--ink); border-color: var(--ink); }
+/* the hover-to-reveal hint only where a hovering pointer exists (on touch the pane shows the
+   full scrollable catalog instead — catalog-peek.js) */
+.catalog-pane__hint { display: none; }
+@media (hover: hover) and (pointer: fine) { .catalog-pane__hint { display: block; } }
+
+/* the catalog wants more width than the chat column: while the panel is in Catalog mode, widen
+   the aside — a grid-column change, so the content SHIFTS aside (never overlaid). :not(acting)
+   keeps the AI takeover's aside collapse (sidebar-panel.css) winning during a run — this file
+   sorts last in the bundle, so an unscoped rule here would override it. */
+.app-shell:not([data-acting="true"]):has(.assistant[data-mode="catalog"]) { --shell-aside: min(40vw, 30rem); }

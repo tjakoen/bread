@@ -47,24 +47,45 @@
 </header>
 
 <aside class="app-shell__aside">
-  <div class="assistant">
-    <div class="assistant__head"><span>Assistant</span></div>
-    <!-- the desk appends here over SSE (chat.send → your bubble + the streamed reply). Site-wide. -->
-    <div class="assistant__log" data-surface="chat-log">
-      <div class="chat-message" data-role="ai" data-grade="grain"><span class="chat-message__who">Desk</span><span class="chat-message__body">Ask me about TJ — or anything on this site.</span></div>
+  <!-- the sidebar-panel with MODES: Chat (default, site-wide) ⇄ Catalog (GRAIN section only —
+       portfolio-frame.css hides the tabs elsewhere). shell.js flips data-mode/hidden/aria-selected;
+       SSR ships the initial state, so with no JS the chat shows and the catalog stays hidden. -->
+  <div class="assistant" data-mode="chat">
+    <div class="assistant__head">
+      <span>Assistant</span>
+      <nav class="assistant__modes" aria-label="Panel mode">
+        <button type="button" data-shell-mode="chat" aria-selected="true">Chat</button>
+        <button type="button" data-shell-mode="catalog" aria-selected="false">Catalog</button>
+      </nav>
     </div>
-    <div class="chat-thinking" data-thinking>
-      <div class="chat-thinking__head">
-        <span class="chat-thinking__who">✶ Desk · thinking</span>
-        <button class="chat-thinking__toggle" data-shell="chat-toggle" type="button">↘ terminal</button>
+    <div class="assistant__pane" data-pane="chat">
+      <!-- the desk appends here over SSE (chat.send → your bubble + the streamed reply). Site-wide. -->
+      <div class="assistant__log" data-surface="chat-log">
+        <div class="chat-message" data-role="ai" data-grade="grain"><span class="chat-message__who">Desk</span><span class="chat-message__body">Ask me about TJ — or anything on this site.</span></div>
+      </div>
+      <div class="chat-thinking" data-thinking>
+        <div class="chat-thinking__head">
+          <span class="chat-thinking__who">✶ Desk · thinking</span>
+          <button class="chat-thinking__toggle" data-shell="chat-toggle" type="button">↘ terminal</button>
+        </div>
+      </div>
+      <div class="assistant__composer">
+        <input type="text" placeholder="Ask the desk…" aria-label="Ask the desk"
+               data-action="chat.send" data-target="chat-log" data-surface="chat-input">
+        <button class="icon-btn" data-variant="ghost" data-action="chat.send" data-target="chat-log" data-from="chat-input" aria-label="Send">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/sprite.svg#send"></use></svg>
+        </button>
       </div>
     </div>
-    <div class="assistant__composer">
-      <input type="text" placeholder="Ask the desk…" aria-label="Ask the desk"
-             data-action="chat.send" data-target="chat-log" data-surface="chat-input">
-      <button class="icon-btn" data-variant="ghost" data-action="chat.send" data-target="chat-log" data-from="chat-input" aria-label="Send">
-        <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/sprite.svg#send"></use></svg>
-      </button>
+    <!-- Catalog pane — the peek, now a sidebar-panel mode (was a fixed overlay): embeds /catalog
+         lazily; on /grain, hovering a component reveals its entry (grain/scripts/catalog-peek.js).
+         The footer sits where the chat's composer sits: the hover hint + the full-page way out. -->
+    <div class="assistant__pane catalog-pane" data-pane="catalog" hidden>
+      <iframe class="catalog-pane__frame" title="Component catalog"></iframe>
+      <div class="catalog-pane__foot">
+        <span class="catalog-pane__hint">Hover an element to see its entry.</span>
+        <a class="catalog-pane__expand" href="/catalog">Full catalog ↗</a>
+      </div>
     </div>
   </div>
 </aside>
