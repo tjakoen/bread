@@ -60,7 +60,8 @@
        shows and the catalog stays hidden. -->
   <div class="assistant" data-mode="chat">
     <div class="assistant__head">
-      <span>Assistant</span>
+      <span class="assistant__title assistant__title--chat">Assistant</span>
+      <span class="assistant__title assistant__title--catalog">GRAIN Inspector</span>
       <nav class="assistant__modes" aria-label="Panel mode">
         <button type="button" data-shell-mode="chat" aria-selected="true">Chat</button>
         <button type="button" data-shell-mode="catalog" aria-selected="false">Catalog</button>
@@ -77,6 +78,7 @@
           <span class="chat-thinking__who">✶ Desk · thinking…</span>
           <button class="chat-thinking__toggle" data-shell="open-terminal" type="button">open in terminal ↧</button>
         </div>
+        <div class="chat-thinking__preview" data-terminal-preview></div>
       </div>
       <div class="assistant__composer">
         <input class="field__input" type="text" placeholder="Ask the desk…" aria-label="Ask the desk"

@@ -61,24 +61,31 @@
     // ---- persistent chat + terminal across navigation (this is an MPA: each page is a fresh
     // document, so the desk's conversation and its narration would reset on every nav. Restore
     // both from localStorage on load, and save on change — capped so they can't grow unbounded).
-    const persist = (surface, key, cap) => {
-      const el = document.querySelector(`[data-surface="${surface}"]`);
-      if (!el) return null;
+    // A `replace` RenderOp swaps a surface NODE (outerHTML), so bind the observer to a STABLE
+    // ancestor and re-query the surface each time — otherwise persistence orphans after the first run.
+    const persist = (ancestorSel, surface, key, cap) => {
+      const root = document.querySelector(ancestorSel);
+      if (!root) return null;
+      const cur = () => root.querySelector(`[data-surface="${surface}"]`);
+      const el0 = cur();
+      if (!el0) return null;
       const saved = get(key);
-      if (saved != null) el.innerHTML = saved;
+      if (saved != null) el0.innerHTML = saved;
       let t = null;
       const save = () => {
         clearTimeout(t);
         t = setTimeout(() => {
+          const el = cur();
+          if (!el) return;
           while (el.children.length > cap) el.removeChild(el.firstElementChild);
           put(key, el.innerHTML);
         }, 400);                                   // debounce: type/stream ops mutate rapidly
       };
-      new MutationObserver(save).observe(el, { childList: true, subtree: true, characterData: true });
-      return el;
+      new MutationObserver(save).observe(root, { childList: true, subtree: true, characterData: true });
+      return el0;
     };
-    const chatLog = persist("chat-log", KEY.chat, 40);
-    persist("console", KEY.term, 60);
+    const chatLog = persist(".app-shell__aside", "chat-log", KEY.chat, 40);
+    persist(".app-shell__console", "console", KEY.term, 60);
 
     // ---- fresh cache: the desk greets in the chat (typed). Only when there's no stored
     // conversation yet; once greeted it's persisted, so return visits restore it instead.
