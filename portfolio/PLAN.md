@@ -419,7 +419,7 @@ theme builder; this list stays the one-line index):**
 7. Walkthrough meters were dropped (a meter that measures nothing is decoration); they return
    only with real semantics.
 
-### THE EDITOR v2 — EXPLORER + open tabs (owner, 2026-07-05 — SPEC'D, not built)
+### THE EDITOR v2 — EXPLORER + open tabs (owner, 2026-07-05 — BUILT same day, branch portfolio-terminal)
 
 **The concept:** complete the editor metaphor. One **global tab strip** of *open pages* (VS Code
 open-editors model) replaces the per-section tab groups; the left sidebar gains an **EXPLORER
@@ -478,6 +478,16 @@ strip replaces `data-tabs-for` groups; app-shell grid grows the explorer column)
 breadcrumbs + ⌘K Quick Open → ⑤ e2e (open/close/persist/zero-JS fallback). ⚠ Steps ②–③ touch
 `portfolio-frame.html` / `shell.js` / `site.js` — HOT files shared with the interactive-terminal
 thread; land those after it merges (tree component itself is worktree-safe).
+
+**Build receipt (2026-07-05):** all five steps landed (grain `file-tree` + `scripts/tabs.js` w/
+drift guards; frame rewired; linked crumbs + ⌘K URL-matching; e2e `editor-tabs.e2e.ts` +
+`terminal.e2e.ts`, stale suites re-aimed). Deviations from the spec above: the zero-JS strip
+shows only the pinned Welcome tab (the explorer does the navigating — simpler than freezing the
+old section groups); the startup redirect became SESSION-scoped (else the pinned Welcome tab
+bounced); docs entries are static in the tree (real-case filenames beat slug-derived lowercase),
+notes/ fills live from the corpus. Bonus root-cause fix: the mobile drawer's `position: fixed`
+was silently lost to side-rail's later `position: relative` (bundle order) — the rail had been
+falling into grid flow on mobile; app-shell now wins by specificity, with a comment.
 
 The main page (`/`) is a **literal desk, drawn flat, viewed top-down** — the owner's vision,
 reconciled with the anti-skeuomorphism guardrail: the guardrail forbids *photorealism/wooden-desk
