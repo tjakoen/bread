@@ -117,8 +117,24 @@ confirm **zero `[accepts]`/`[theming]` drift warnings**. Then AUDIT.md end-to-en
 4. **Product archive:** where do `PROJECT-PLAN.md`/`MVP.md` live — an archive dir in the repo, or
    git history only?
 
+## Bundled GRAIN refactors (do in the same fable pass — owner, 2026-07-05)
+These are design-system layering fixes that pair naturally with the consolidation (all cross-cutting,
+all "do it once, carefully"). Full detail in ROADMAP Track B.7 / B.8.
+
+- **Move the catalog BATCH → GRAIN** (ROADMAP B.7). It's a design-system feature (browses grain
+  components, renders their `.md`, HUMAN/AI grade toggle = grain vocabulary). Clean: `grain/ai/accepts.ts`
+  already `fs`-harvests components for the manifest — the catalog does the same harvest. Move
+  `batch/catalog/` → `grain/catalog/`; drop its `type Runtime` import (use `fs` like accepts.ts);
+  inject the Pages-nav routes as a plain `string[]` instead of batch's `sitemap`; rewire the
+  composition-root import. BATCH charter drops "the component catalog"; GRAIN's "self-documenting
+  catalog" becomes literally true. Resolves the grade-toggle leak by construction.
+- **Themes as reference files** (ROADMAP B.8). Split the inline flavor blocks out of
+  `grain/styles/variables.css` into `grain/styles/themes/{baguette,brioche}.css` + an annotated
+  `themes/_template.css`; keep the axis machinery + `:root` slots + dark block in variables.css.
+  Load via the style bundle. Update DESIGN-SYSTEM §2 to point at the template.
+
 ## Sequencing
 1. Current parallel thread lands (it's in `project/`-adjacent territory).
-2. New **fable** session runs THIS plan as one atomic branch: move → rewrite → drop → doc-sync →
-   verify → commit in logical chunks.
+2. New **fable** session runs THIS plan as one atomic branch: move → rewrite → drop → the bundled
+   grain refactors (catalog → grain, theme files) → doc-sync → verify → commit in logical chunks.
 3. Then the "delete project" is real (the folder is empty of anything live).

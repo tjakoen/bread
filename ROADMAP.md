@@ -132,13 +132,27 @@ contract, not a scaffold.** So M★ closes Track A rather than opening it.
      invalidate on applied `RenderOp`s (the index-vs-snapshot model, not a refetch per run);
      (3) view preferences stay `localStorage` (theme.js — already GRAIN's client cache). The header
      mechanism is BATCH (`static.ts`/`modules.ts`/export); the manifest policy is GRAIN (`ai/*`).
-7. **Layering leak — the catalog's grade toggle** (found 2026-07-05). `batch/catalog/catalog.ts`
-   carries a HUMAN/AI **grade** toggle, but *grade* is GRAIN vocabulary (grain = AI) and BATCH is
-   meant to be vocabulary-agnostic (it "knows nothing about RenderOps, the door, grade"). The
-   catalog *mechanism* rightly lives in BATCH (generic component-doc infra), but the grade UI is a
-   GRAIN concept one layer too low. Fix: lift the grade toggle into GRAIN (or inject it as a
-   catalog decorator from the composition root) so BATCH stays grade-agnostic. Cross-cutting —
-   defer until the portfolio consolidation lands (don't churn it mid-flight).
+7. **Move the CATALOG to GRAIN** (owner, 2026-07-05 — supersedes "lift the grade toggle"). The
+   catalog is a design-system feature, not substrate: it browses GRAIN's components, renders their
+   `.md` docs, and carries a HUMAN/AI **grade** toggle (grade = GRAIN vocabulary) — the grade-toggle
+   "leak" was the symptom; the whole feature belongs in grain. Feasible + clean: `grain/ai/accepts.ts`
+   ALREADY harvests components via `fs` (`readdirSync`/`readFileSync`) for the manifest — the catalog
+   does the identical harvest, so it's the same layer. The only BATCH couplings are shallow:
+   `batch/catalog/catalog.ts` imports `type Runtime` (drop → use `fs` directly like accepts.ts) and
+   the optional `sitemap` for the Pages nav (inject a plain `string[]` from the composition root).
+   Move `batch/catalog/` → `grain/catalog/`; rewire the composition-root import; BATCH's charter drops
+   "the component catalog" and GRAIN's "self-documenting catalog" capability becomes literally true
+   (mechanism + content both grain). Cross-cutting — do it in the **portfolio consolidation** fable
+   pass (portfolio/CONSOLIDATION.md), not mid-flight.
+
+8. **Themes as reference files** (owner, 2026-07-05). Today all flavors live inline in
+   `grain/styles/variables.css` (`:root` default + dark + `[data-theme="baguette"]`/`"brioche"`
+   blocks) — no clear per-theme template for someone authoring their own. Split: keep the axis
+   machinery + `:root` (the canonical list of overridable slots) + the dark block in variables.css;
+   move each flavor to `grain/styles/themes/{baguette,brioche}.css`; add an annotated
+   `themes/_template.css` ("copy me → override these accent slots × light/dark"). Load them via the
+   style bundle / links. Low-risk (CSS only) but touches the theme system — sequence with the other
+   grain moves. Update DESIGN-SYSTEM §2 (the theming axes) to point at the template as the reference.
 
 ## Track C — MILL: a content plugin for GRAIN, deliberately small
 
