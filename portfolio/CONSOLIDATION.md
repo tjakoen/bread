@@ -46,8 +46,8 @@ batch-stack/            (BREAD umbrella; batch/grain/mill split to their own rep
     package.json     (dev/check/test/export/shots/audit scripts)
 ```
 
-(Folder rename `portfolio/` → `tjakoen.github.io/` is optional and can wait for the repo split;
-keep `portfolio/` in the monorepo for now to minimize churn.)
+(Folder rename `portfolio/` → `tjakoen.github.io/` happens **in this pass** — settled decision 3
+below. The tree above reads `tjakoen.github.io/` at execution time.)
 
 ## File-by-file
 
@@ -82,9 +82,10 @@ Keep as `portfolio/demo/` (rename off "item"/"Dept of Time" is optional but nice
   `portfolio-frame`. (`app-frame` still has the window-bar/status parity edits — discard.)
 
 ### PRESERVE (deferred product vision — do NOT lose)
-- `project/PROJECT-PLAN.md`, `project/docs/MVP.md` → move to `portfolio/… /deferred-product/` or a
-  clearly-marked archive; the assistant product resumes "after portfolio." `LICENSE`, `README.md`,
-  `CLAUDE.md` for project → keep in git history (the split-plan already licenses project separately).
+- `project/` stays as a **docs-only folder** (settled decision 4): `PROJECT-PLAN.md`,
+  `docs/MVP.md`, `CLAUDE.md`, `README.md`, `LICENSE` remain in place — the assistant product
+  RESUMES after the portfolio, and the folder becomes its private repo at split time. Everything
+  else in `project/` moves out or drops per the sections above.
 
 ## Import-rewrite rules
 - Within moved files: `../batch/…`, `../grain/…`, `../mill/…` stay (still siblings).
@@ -108,14 +109,28 @@ Keep as `portfolio/demo/` (rename off "item"/"Dept of Time" is optional but nice
 and **drive the static build** (the /grain client-door demo must still run). Boot the server and
 confirm **zero `[accepts]`/`[theming]` drift warnings**. Then AUDIT.md end-to-end.
 
-## Open decisions for the owner (settle before executing)
-1. **/loop + /dashboard:** keep /loop as the GRAIN demo (recommended) and drop /dashboard? Or fold
-   the demo entirely into /grain and retire both?
-2. **Demo domain naming:** keep "items" or rename to something portfolio-native (e.g. the desk's
-   own surface)? Rename is cheap during the move, costly later.
-3. **Folder name:** keep `portfolio/` in the monorepo, or rename to `tjakoen.github.io/` now?
-4. **Product archive:** where do `PROJECT-PLAN.md`/`MVP.md` live — an archive dir in the repo, or
-   git history only?
+## Decisions — SETTLED (owner, 2026-07-05)
+1. **/loop stays, /dashboard drops.** /loop remains the canonical GRAIN demo. Drop
+   `project/pages/dashboard.html` **and `project/e2e/dashboard.e2e.ts`**; retire the Workspace
+   tab's Overview→/dashboard entry. Recoverable from git when the product resumes.
+2. **Demo domain renames "item" → "task"** during the move (VS Code-native: `tasks.json`,
+   "Run Task" — matches THE EDITOR shell). So: `task-repository.ts`, `domain/task.ts`,
+   `task-service.ts`, `TaskCard`, `components/molecules/task-card`, `organisms/task-list`, etc.
+   Scrub "Dept of Time" with it.
+3. **Folder renames `portfolio/` → `tjakoen.github.io/` NOW**, in this same pass. Every
+   `portfolio/…` path in this plan reads as `tjakoen.github.io/…` at execution time. Update the
+   root `package.json` `workspaces` entry accordingly.
+4. **`project/` stays as a docs-only folder** — the product RESUMES later, so keep
+   `PROJECT-PLAN.md`, `docs/MVP.md`, `CLAUDE.md`, `README.md`, `LICENSE` in place; everything
+   else (code, pages, components) moves out or drops. The folder itself is the "paused product"
+   archive and becomes the private repo at split time. Do NOT delete it.
+
+## Additions found in plan review (2026-07-05)
+- **Root `package.json`:** `dev`/`start`/`shots`/`audit`/`export` scripts all point at
+  `project/…` — rewrite to the new app folder or the site won't boot. Also the `workspaces`
+  array (`"project"` entry stays for the docs-only folder only if it keeps a `package.json`;
+  otherwise drop it, and add/rename the app folder's entry).
+- **`dashboard.e2e.ts`** drops with /dashboard (folded into decision 1 above).
 
 ## Bundled GRAIN refactors (do in the same fable pass — owner, 2026-07-05)
 These are design-system layering fixes that pair naturally with the consolidation (all cross-cutting,

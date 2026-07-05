@@ -154,6 +154,28 @@ contract, not a scaffold.** So M★ closes Track A rather than opening it.
    style bundle / links. Low-risk (CSS only) but touches the theme system — sequence with the other
    grain moves. Update DESIGN-SYSTEM §2 (the theming axes) to point at the template as the reference.
 
+9. **Export completeness — the API/DB-then-static story** (owner, 2026-07-05). The portfolio exports
+   cleanly today because it's content plus a client-door demo, but the substrate's promise is broader:
+   *any* BATCH app can choose static or server. Make that honest by closing three gaps, all foreshadowed
+   in ARCHITECTURE §18 (the four-bucket rule now written there):
+   - a. **Tier-2 prerender** (designed in §18, unbuilt): for a data-backed read (`hx-trigger="load"`
+     hitting `/ui/*`), fetch the fragment at export time, inline it, strip the trigger — so a page whose
+     data is *the same for everyone at build time* freezes complete instead of shipping a `Loading…`
+     shell that XHRs a backend that isn't there. This is what lets a DB-backed page be static (a
+     build-time **snapshot**, explicitly not live data).
+   - b. **Declarative export disposition**: today the boundary is a hand-maintained pair of sets in
+     `project/tools/export.ts` (`OPERABLE`, `CLIENT_DOOR_PAGES`). A route should declare its own bucket
+     (content | operable | snapshot | dynamic) so the export derives the allowlist instead of the caller
+     hardcoding it — same "projection, not a fork" discipline the crawler already follows.
+   - c. **Hybrid deploy as a first-class topology**: document (and smooth the ergonomics of) the real
+     end-state for an app with genuine per-request/per-user work — content + snapshots on a CDN, the
+     live routes on a running Bun server, one codebase. The honest ceiling: a page can be frozen only if
+     its bytes are identical for everyone at build time; anything else stays on the server.
+   Verified 2026-07-05 that Tier-1 export of the portfolio works end-to-end (23/23 routes, served at 200,
+   the new note renders); the missing piece for the *deploy* is the GitHub Actions workflow YAML
+   (checkout → setup-bun → `bun install` → `bun run export` with `PUBLIC_ORIGIN` set → upload + deploy
+   Pages), which no repo currently carries.
+
 ## Track C — MILL: a content plugin for GRAIN, deliberately small
 
 *Reframed (owner, 2026-07-03): MILL is the stack's content layer — "a plugin for GRAIN" — not a
