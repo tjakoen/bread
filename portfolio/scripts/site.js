@@ -8,7 +8,7 @@
   if (window.tjSite) return;   // idempotent
   window.tjSite = true;
 
-  const KEY = { startup: "tj.welcome-startup", lastPage: "tj.last-page" };
+  const KEY = { startup: "tj.welcome-startup", lastPage: "tj.last-page", chat: "tj.chat", term: "tj.terminal" };
   const store = (() => { try { return window.localStorage; } catch { return null; } })();
   const get = (k) => { try { return store && store.getItem(k); } catch { return null; } };
   const put = (k, v) => { try { if (store) store.setItem(k, v); } catch { /* private mode */ } };
@@ -57,5 +57,44 @@
     };
     new MutationObserver(applyPresence).observe(document.body, { attributes: true, attributeFilter: ["data-ai-online"] });
     applyPresence();
+
+    // ---- persistent chat + terminal across navigation (this is an MPA: each page is a fresh
+    // document, so the desk's conversation and its narration would reset on every nav. Restore
+    // both from localStorage on load, and save on change — capped so they can't grow unbounded).
+    const persist = (surface, key, cap) => {
+      const el = document.querySelector(`[data-surface="${surface}"]`);
+      if (!el) return null;
+      const saved = get(key);
+      if (saved != null) el.innerHTML = saved;
+      let t = null;
+      const save = () => {
+        clearTimeout(t);
+        t = setTimeout(() => {
+          while (el.children.length > cap) el.removeChild(el.firstElementChild);
+          put(key, el.innerHTML);
+        }, 400);                                   // debounce: type/stream ops mutate rapidly
+      };
+      new MutationObserver(save).observe(el, { childList: true, subtree: true, characterData: true });
+      return el;
+    };
+    const chatLog = persist("chat-log", KEY.chat, 40);
+    persist("console", KEY.term, 60);
+
+    // ---- fresh cache: the desk greets in the chat (typed). Only when there's no stored
+    // conversation yet; once greeted it's persisted, so return visits restore it instead.
+    if (chatLog && get(KEY.chat) == null) {
+      const msg = document.createElement("div");
+      msg.className = "chat-message"; msg.setAttribute("data-role", "ai"); msg.setAttribute("data-grade", "grain");
+      msg.innerHTML = `<span class="chat-message__who">Desk</span><span class="chat-message__body"></span>`;
+      chatLog.appendChild(msg);                    // a real .chat-message → the empty-state hides
+      const body = msg.querySelector(".chat-message__body");
+      const hello = "Hi — I'm the desk. Ask me about TJ, or anything on this site. I'll answer here and think out loud in the terminal.";
+      let i = 0;
+      const tick = () => {                         // lightweight typewriter (the "type" flourish)
+        body.textContent = hello.slice(0, ++i);
+        if (i < hello.length) setTimeout(tick, 18);
+      };
+      tick();
+    }
   });
 })();
