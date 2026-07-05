@@ -18,6 +18,7 @@
     <button type="button" data-toggle-scheme title="Light / dark">◐</button>
     <button type="button" data-shell="aside-toggle" title="Toggle the assistant panel">◫</button>
     <button type="button" data-shell="console-hide" title="Toggle the terminal">▭</button>
+    <button type="button" data-xray-toggle title="X-ray — see the page as the AI sees it">⊹</button>
   </span>
   <button class="window-bar__search" type="button" data-cmdk-open title="Search the site (⌘K)">
     <svg class="icon" aria-hidden="true"><use href="/assets/sprite.svg#search"></use></svg>Tjakoen.github.io
@@ -101,7 +102,9 @@
 </aside>
 
 <section class="app-shell__console">
-  <div class="console__box">
+  <!-- data-terminal="interactive": grain/scripts/terminal.js injects a command line here and the
+       terminal becomes a THIRD client of the one door (help/go/ask/context/xray…). -->
+  <div class="console__box" data-terminal="interactive">
     <div class="console__bar">
       <button class="console__expand" data-shell="console-toggle" type="button" aria-label="Show or hide the desk's work">
         <b-icon sym="/assets/sprite.svg#spark" size="sm"></b-icon>
