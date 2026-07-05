@@ -72,9 +72,10 @@ function shellChrome(inject: string, injectHead = ""): PageChrome {
   <link rel="stylesheet" href="/components.css">
   <script src="/scripts/shell.js" defer></script>
   <script type="module" src="/scripts/ai-dispatch.js"></script>
+  <script type="module" src="/scripts/tabs.js"></script>
   <script type="module" src="/scripts/terminal.js"></script>
   <script type="module" src="/scripts/xray.js"></script>
-  <script type="module" src="/portfolio-scripts/desk-commands.js"></script>
+  <script type="module" src="/site/desk-commands.js"></script>
 </head>
 <body data-screen="${escapeHtml(screen)}" class="app-window-backdrop">
   <div class="app-shell app-window"${section} data-rail-collapsed="false" data-surface="screen">

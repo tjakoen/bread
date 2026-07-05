@@ -20,13 +20,14 @@
   width: 2px; background: var(--color-accent);
 }
 
-/* THE EDITOR nav model (owner, 2026-07-05): the RAIL is the main menu; the TABS are the
-   selected section's SUBMENUS. Each section marks itself on .app-shell (data-section); a tab
-   group shows only inside its section, and the rail item for that section reads as current.
-   Sections without submenus simply show no tabs. */
-.app-shell .app-shell__tabs { display: none; }
-.app-shell[data-section="bread"]     .app-shell__tabs[data-tabs-for="bread"]     { display: flex; }
-.app-shell[data-section="workspace"] .app-shell__tabs[data-tabs-for="workspace"] { display: flex; }
+/* THE EDITOR v2 nav model (owner, 2026-07-05): the RAIL is the EXPLORER (grain file-tree of the
+   real sources + the fixed app links at the bottom); the TABS are the OPEN PAGES (one global
+   strip, grain/scripts/tabs.js). The old per-section tab groups (data-tabs-for) are gone. The
+   tree takes the rail's stretch between the brand and the spacer, and scrolls inside itself. */
+.side-rail .file-tree { flex: 0 1 auto; min-height: 0; margin: 0 calc(-1 * var(--space-2)); }
+/* full-bleed tree rows (the negative margin above) still start their text at the rail padding */
+.side-rail .file-tree__dir > summary,
+.side-rail .file-tree > .file-tree__dir > summary { padding-left: var(--space-3); }
 
 /* Chat⇄Catalog modes are available sitewide (no per-section gating). */
 
@@ -36,6 +37,10 @@
 /* status bar: the breadcrumb (moved here from the title bar) reads as quiet mono meta next to
    presence; the byline + contact keep the muted register and sharpen on hover. */
 .status-bar__crumb { font-family: var(--font-mono); color: var(--color-muted); }
+/* the breadcrumb's segments are LINKS (site.js builds them): quiet until hovered, like the rest
+   of the status bar; the current (last) segment stays plain text. */
+.status-bar__crumb a { color: inherit; text-decoration: none; }
+.status-bar__crumb a:hover { color: var(--color-fg); text-decoration: underline; }
 .status-bar__byline, .status-bar__contact { color: inherit; text-decoration: none; }
 .status-bar__byline:hover, .status-bar__contact:hover { color: var(--color-fg); }
 
