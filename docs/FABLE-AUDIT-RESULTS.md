@@ -15,7 +15,7 @@ Every finding below was **fixed in this session** unless marked deferred — com
   imports nothing from batch. Clean.
 - **3. One vocabulary / drift guards** — server boot produced **zero** `[accepts]`/`[theming]`
   warnings.
-- **4. Tokens only** — no hardcoded colors in `grain/`, `project/`, or `portfolio/` component
+- **4. Tokens only** — no hardcoded colors in `grain/`, `project/`, or `tjakoen.github.io/` component
   CSS.
 - **5. Persona-neutral GRAIN** — no "the desk" in batch/grain (known `desk.stop` exception
   stands).
@@ -36,7 +36,7 @@ Every finding below was **fixed in this session** unless marked deferred — com
 
 **Docs contradicting decisions**
 1. `grain/CLAUDE.md`, `batch/CLAUDE.md`, `batch/docs/CONVENTIONS.md`,
-   `portfolio/standards/CLAUDE.starter.md` — still ordered the `Co-Authored-By: Claude`
+   `tjakoen.github.io/standards/CLAUDE.starter.md` — still ordered the `Co-Authored-By: Claude`
    trailer; contradicts the 2026-07-04 no-attribution decision (enforced in settings, history
    scrubbed). **Fixed:** all four now state no AI trailers; the receipt is the README badge.
 
@@ -74,7 +74,7 @@ Every finding below was **fixed in this session** unless marked deferred — com
 15. `grain/scripts/ai-dispatch.js` — `/intent` fetch never checked `res.ok`: a door-level 500
     left the trigger stuck in `data-commit="pending"` until the 20s safety timeout. **Fixed:**
     non-ok throws → the catch clears the trigger.
-16. `portfolio/content.ts` — comment claimed the export dead-link warning covers relative
+16. `tjakoen.github.io/content.ts` — comment claimed the export dead-link warning covers relative
     `.md` leftovers; it only sees root-absolute hrefs. **Fixed:** comment states the truth
     (KNOWN GAP note).
 17. `mill/serve.ts` — `listMillRoutes` could list slugs the router 404s. **Fixed:**

@@ -4,7 +4,7 @@
 > deep dive: GRAIN code-vs-claims, BATCH, MILL, adversarial prior-art sweep) — findings in agent
 > memory `stack-audit-2026-07`. This file is the *what-next*; the layer plans
 > ([mill/PLAN.md](mill/PLAN.md), [project/PROJECT-PLAN.md](project/PROJECT-PLAN.md),
-> [portfolio/PLAN.md](portfolio/PLAN.md)) stay canonical for their layers, and
+> [tjakoen.github.io/PLAN.md](tjakoen.github.io/PLAN.md)) stay canonical for their layers, and
 > [SPLIT-PLAN.md](SPLIT-PLAN.md) stays the repo-split map. When a step lands, tick it here and
 > sync the layer doc.
 
@@ -22,7 +22,7 @@ validate the market; we say so out loud and lead with it. Our point on that road
 Symmetry and the single writer are no longer individually novel (Agent-Native ships both);
 **provenance-as-grade coupled to the door is the load-bearing differentiator.** Every pitch, page,
 and doc leads with the convergence story and lands on that differentiator. The whitepaper
-([portfolio/notes/whitepaper-one-vocabulary.md](portfolio/notes/whitepaper-one-vocabulary.md),
+([tjakoen.github.io/notes/whitepaper-one-vocabulary.md](tjakoen.github.io/notes/whitepaper-one-vocabulary.md),
 revised 2026-07-03) is the argued version.
 
 ## The one milestone that changes what this *is*
@@ -49,7 +49,7 @@ contract, not a scaffold.** So M★ closes Track A rather than opening it.
      `routes.test.ts`, and the `/home` page deleted; app-frame nav link, audit/screenshot entries,
      and the orphaned `toItemCardView`→`/ui/items` chain removed. Items now have exactly one write
      path (`/intent`). Legitimate direct-write CRUD returns as the `/kb/*` seam (step 3).
-   - ~~Rebuild the `/grain` showcase driver~~ **Done** — `portfolio/scripts/surface-demo.js` (the
+   - ~~Rebuild the `/grain` showcase driver~~ **Done** — `tjakoen.github.io/scripts/surface-demo.js` (the
      client-side AI→DOM channel) deleted; `/grain` now loads the real `ai-dispatch.js` and its
      "Watch the AI act" (→ `demo.run`) and Ask/Send (→ `chat.send`) post real Intents through
      `/intent` and render back over SSE. The reasoner branches a `/grain` scenario on `intent.screen`.
@@ -81,7 +81,7 @@ contract, not a scaffold.** So M★ closes Track A rather than opening it.
 
 1. ~~**`batch/export`**: crawl-and-freeze projection of the running server per ARCHITECTURE §18 —
    fetch, don't re-render.~~ **Done (2026-07-04, Tier 1).** Generic engine `batch/export/export.ts`
-   + caller `project/tools/export.ts` (`bun run export`); pages→`dist/<route>/index.html`, assets
+   + caller `tjakoen.github.io/tools/export.ts` (`bun run export`); pages→`dist/<route>/index.html`, assets
    verbatim, `PUBLIC_BASE_PATH`/`PUBLIC_ORIGIN` for subpath/root hosts, and the exportable boundary
    enforced by a dead-internal-link warning. Tier 2 (prerender of `hx-trigger="load"`) deferred.
    Unblocks MILL's hosting adapter and the portfolio deploy; the ~8 stale references are now true.
@@ -119,7 +119,7 @@ contract, not a scaffold.** So M★ closes Track A rather than opening it.
    - d. ~~**The opt-in + the safety comms**: composition-root mode switch (server-door | client-door);
      surface the **client-safe boundary** (ARCHITECTURE §19.2 — static-only, no secrets/tokens, no
      server-required behavior) wherever the mode is offered. This must be communicated well, not buried.~~
-     **Done (2026-07-04):** the mode switch lives in `project/tools/export.ts` (`CLIENT_DOOR_PAGES`),
+     **Done (2026-07-04):** the mode switch lives in `tjakoen.github.io/tools/export.ts` (`CLIENT_DOOR_PAGES`),
      the boundary is stated in `client-door.ts`, and the /grain "How it works" section carries the
      user-facing comms ("Two door transports, one contract" — client-safe by contract, no secrets,
      server-needing behavior absent on the static copy).
@@ -132,7 +132,12 @@ contract, not a scaffold.** So M★ closes Track A rather than opening it.
      invalidate on applied `RenderOp`s (the index-vs-snapshot model, not a refetch per run);
      (3) view preferences stay `localStorage` (theme.js — already GRAIN's client cache). The header
      mechanism is BATCH (`static.ts`/`modules.ts`/export); the manifest policy is GRAIN (`ai/*`).
-7. **Move the CATALOG to GRAIN** (owner, 2026-07-05 — supersedes "lift the grade toggle"). The
+7. **Move the CATALOG to GRAIN** — ✅ **DONE (2026-07-05, commit 46b7964).** Moved `batch/catalog/`
+   → `grain/catalog/`; dropped the batch `Runtime` dependency (reads `fs` directly like accepts.ts);
+   replaced the batch `sitemap` param with a plain `pages:()=>string[]` thunk (grain/catalog imports
+   nothing from batch); rewired the composition root; BATCH's charter dropped "the component catalog"
+   and GRAIN's "self-documenting catalog" is now literally true (mechanism + content both grain).
+   Original plan retained below for reference. The
    catalog is a design-system feature, not substrate: it browses GRAIN's components, renders their
    `.md` docs, and carries a HUMAN/AI **grade** toggle (grade = GRAIN vocabulary) — the grade-toggle
    "leak" was the symptom; the whole feature belongs in grain. Feasible + clean: `grain/ai/accepts.ts`
@@ -143,9 +148,12 @@ contract, not a scaffold.** So M★ closes Track A rather than opening it.
    Move `batch/catalog/` → `grain/catalog/`; rewire the composition-root import; BATCH's charter drops
    "the component catalog" and GRAIN's "self-documenting catalog" capability becomes literally true
    (mechanism + content both grain). Cross-cutting — do it in the **portfolio consolidation** fable
-   pass (portfolio/CONSOLIDATION.md), not mid-flight.
+   pass (tjakoen.github.io/CONSOLIDATION.md), not mid-flight.
 
-8. **Themes as reference files** (owner, 2026-07-05). Today all flavors live inline in
+8. **Themes as reference files** — ✅ **DONE (2026-07-05, commit eb58392).** Baguette + Brioche split
+   into `grain/styles/themes/{baguette,brioche}.css` + annotated `_template.css`; variables.css keeps
+   the axis machinery + `:root` + dark block and `@imports` the flavors; boot drift-guard scans
+   `themes/*.css` too; DESIGN-SYSTEM §2 points at the template. Original plan below. Today all flavors live inline in
    `grain/styles/variables.css` (`:root` default + dark + `[data-theme="baguette"]`/`"brioche"`
    blocks) — no clear per-theme template for someone authoring their own. Split: keep the axis
    machinery + `:root` (the canonical list of overridable slots) + the dark block in variables.css;
@@ -164,7 +172,7 @@ contract, not a scaffold.** So M★ closes Track A rather than opening it.
      shell that XHRs a backend that isn't there. This is what lets a DB-backed page be static (a
      build-time **snapshot**, explicitly not live data).
    - b. **Declarative export disposition**: today the boundary is a hand-maintained pair of sets in
-     `project/tools/export.ts` (`OPERABLE`, `CLIENT_DOOR_PAGES`). A route should declare its own bucket
+     `tjakoen.github.io/tools/export.ts` (`OPERABLE`, `CLIENT_DOOR_PAGES`). A route should declare its own bucket
      (content | operable | snapshot | dynamic) so the export derives the allowlist instead of the caller
      hardcoding it — same "projection, not a fork" discipline the crawler already follows.
    - c. **Hybrid deploy as a first-class topology**: document (and smooth the ergonomics of) the real
