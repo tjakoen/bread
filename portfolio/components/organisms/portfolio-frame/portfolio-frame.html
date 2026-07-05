@@ -8,21 +8,23 @@
 
 <!-- ═══ the TITLE BAR: window nav (back/refresh/forward) · view controls · the search field ═══ -->
 <header class="app-shell__window window-bar">
+  <!-- LEFT: only the OS-window circle buttons (back / refresh / forward) -->
   <span class="window-bar__nav">
     <button type="button" data-window-back title="Back"><svg class="icon" aria-hidden="true"><use href="/assets/sprite.svg#chevron-left"></use></svg></button>
     <button type="button" data-window-refresh title="Refresh"><svg class="icon" aria-hidden="true"><use href="/assets/sprite.svg#loop"></use></svg></button>
     <button type="button" data-window-forward title="Forward"><svg class="icon" aria-hidden="true"><use href="/assets/sprite.svg#chevron-right"></use></svg></button>
   </span>
+  <!-- CENTER: the search field -->
+  <button class="window-bar__search" type="button" data-cmdk-open title="Search the site (⌘K)">
+    <svg class="icon" aria-hidden="true"><use href="/assets/sprite.svg#search"></use></svg>Tjakoen.github.io
+  </button>
+  <!-- RIGHT: theme + view controls -->
   <span class="window-bar__ctl">
     <button type="button" data-cycle-theme title="Cycle theme">◆ <span data-theme-name>sourdough</span></button>
     <button type="button" data-toggle-scheme title="Light / dark">◐</button>
     <button type="button" data-shell="aside-toggle" title="Toggle the assistant panel">◫</button>
-    <button type="button" data-shell="console-hide" title="Toggle the terminal">▭</button>
+    <button type="button" data-shell="console-toggle" title="Expand or collapse the terminal">▭</button>
   </span>
-  <button class="window-bar__search" type="button" data-cmdk-open title="Search the site (⌘K)">
-    <svg class="icon" aria-hidden="true"><use href="/assets/sprite.svg#search"></use></svg>Tjakoen.github.io
-  </button>
-  <span class="window-bar__end"></span>
 </header>
 
 <!-- ═══ the RAIL = the main menu (site sections). data-section drives the active mark ═══ -->
@@ -76,7 +78,7 @@
       <div class="chat-thinking" data-thinking>
         <div class="chat-thinking__head">
           <span class="chat-thinking__who">✶ Desk · thinking…</span>
-          <button class="chat-thinking__toggle" data-shell="open-terminal" type="button">open in terminal ↧</button>
+          <button class="chat-thinking__toggle" data-shell="open-terminal" type="button" title="Open in terminal" aria-label="Open in terminal">↧</button>
         </div>
         <div class="chat-thinking__preview" data-terminal-preview></div>
       </div>

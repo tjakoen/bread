@@ -39,9 +39,6 @@
 .status-bar__byline, .status-bar__contact { color: inherit; text-decoration: none; }
 .status-bar__byline:hover, .status-bar__contact:hover { color: var(--color-fg); }
 
-/* the title bar's search field stays put; a small trailing spacer balances the leading clusters */
-.window-bar__end { width: 8rem; }
-@media (max-width: 1100px) { .window-bar__end { width: 0; } }
 
 /* assistant empty-state: centered prompt shown until the first message lands. The higher
    specificity (p.assistant__empty) beats sidebar-panel's `> :first-child { margin-top:auto }`

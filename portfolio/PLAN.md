@@ -419,7 +419,65 @@ theme builder; this list stays the one-line index):**
 7. Walkthrough meters were dropped (a meter that measures nothing is decoration); they return
    only with real semantics.
 
-## SUPERSEDED — The desk hero — THE DESK SCENE (owner, 2026-07-04, same-day pivot)
+### THE EDITOR v2 — EXPLORER + open tabs (owner, 2026-07-05 — SPEC'D, not built)
+
+**The concept:** complete the editor metaphor. One **global tab strip** of *open pages* (VS Code
+open-editors model) replaces the per-section tab groups; the left sidebar gains an **EXPLORER
+file tree**; the rail becomes the activity bar. Navigation stays pure hypermedia — tabs are a
+client-side *projection* of where you've been, never an SPA.
+
+**The tree shows REAL files (the honesty play).** No invented filenames: every tree item maps to
+the actual source that produces the page — notes are literally their `.md` files, landing pages
+their real page sources. "The site is its own source tree" — the strongest version of the pitch,
+and on doctrine with the honest status bar. Sketch:
+
+```
+portfolio/
+  welcome.html            ← /            (pinned tab)
+  notes/
+    ten-times-zero.md     ← /notes/ten-times-zero
+grain/
+  README.md               ← /grain
+  docs/ …                 ← /grain/docs/*
+batch/
+  README.md               ← /batch
+```
+
+- **Tree = a grain organism** (`file-tree`, persona-neutral); portfolio composes it with its
+  manifest. Folders are `<details>/<summary>` — native, zero-JS collapse; **directories ship
+  COLLAPSED by default** so a deep notes/ archive stays scannable.
+- **Bottom of the panel — the APP links** (fixed, not files; the things that aren't documents):
+  **Calendar · Mail · Catalog · Profile** (Profile = the renamed About; where the actual
+  portfolio/résumé lives — final name owner's call, "Profile" fits the editor metaphor).
+  They open as **app-style tabs** (icon + name, no extension — VS Code's Settings-tab idiom).
+  The aside's Inspector/Catalog *mode* stays (hover-inspect); the bottom Catalog link is the
+  full page.
+
+**Open tabs (progressive enhancement, hard rule):**
+- Every tree item and tab is a real `<a href>`; navigation = full page load. On load, shell JS
+  reads the localStorage tab list, appends the current path if new, renders the strip. Extends
+  the existing last-open-page mechanism (startup checkbox) — one system.
+- **First tab = Welcome, pinned, no ×.** Other tabs get **×** (the close affordance): remove
+  from the list; closing the ACTIVE tab navigates to the previous tab, Welcome fallback.
+  Tab close is a **shell concern** (like the view toggles), not an `Intent` — no new verbs v1;
+  a `tab.open` verb (so the lamp can open pages) is a later alignment-row job.
+- Zero-JS fallback: server-rendered strip shows the fixed section tabs (today's markup); tree
+  still navigates. **Overflow:** the strip scrolls horizontally; no preview-tabs /
+  close-others / middle-click v1. **Mobile:** tree = the existing drawer; strip scrolls.
+- **Dirty dot** (later, with the notepad): a page with unsaved notepad content shows ● in
+  place of × — the VS Code dirty indicator, honest.
+
+**Breadcrumbs become links:** every crumb segment (status bar + the ⌘K field's placeholder
+context) is a real `<a>` — folder segments go to their section landing. Same paths as the tree:
+one vocabulary. **⌘K doubles as Quick Open:** fuzzy-match over the tree's file paths.
+
+**Build order (Opus session):** ① grain `file-tree` organism (+ `.md`, tokens, collapsed
+`<details>` folders) → ② tab-strip shell logic (localStorage list, pinned Welcome, ×
+semantics, overflow) → ③ portfolio-frame rewire (explorer panel + bottom app links + global
+strip replaces `data-tabs-for` groups; app-shell grid grows the explorer column) → ④ linked
+breadcrumbs + ⌘K Quick Open → ⑤ e2e (open/close/persist/zero-JS fallback). ⚠ Steps ②–③ touch
+`portfolio-frame.html` / `shell.js` / `site.js` — HOT files shared with the interactive-terminal
+thread; land those after it merges (tree component itself is worktree-safe).
 
 The main page (`/`) is a **literal desk, drawn flat, viewed top-down** — the owner's vision,
 reconciled with the anti-skeuomorphism guardrail: the guardrail forbids *photorealism/wooden-desk
