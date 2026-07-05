@@ -132,6 +132,13 @@ contract, not a scaffold.** So M★ closes Track A rather than opening it.
      invalidate on applied `RenderOp`s (the index-vs-snapshot model, not a refetch per run);
      (3) view preferences stay `localStorage` (theme.js — already GRAIN's client cache). The header
      mechanism is BATCH (`static.ts`/`modules.ts`/export); the manifest policy is GRAIN (`ai/*`).
+7. **Layering leak — the catalog's grade toggle** (found 2026-07-05). `batch/catalog/catalog.ts`
+   carries a HUMAN/AI **grade** toggle, but *grade* is GRAIN vocabulary (grain = AI) and BATCH is
+   meant to be vocabulary-agnostic (it "knows nothing about RenderOps, the door, grade"). The
+   catalog *mechanism* rightly lives in BATCH (generic component-doc infra), but the grade UI is a
+   GRAIN concept one layer too low. Fix: lift the grade toggle into GRAIN (or inject it as a
+   catalog decorator from the composition root) so BATCH stays grade-agnostic. Cross-cutting —
+   defer until the portfolio consolidation lands (don't churn it mid-flight).
 
 ## Track C — MILL: a content plugin for GRAIN, deliberately small
 
