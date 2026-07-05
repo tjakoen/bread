@@ -11,13 +11,17 @@ dependency — each layer builds only on the layers below it:
 
 ```
 batch/   BATCH — the substrate (Bun · Addressable · TypeScript · CSS · htmx); no build step
-  └─ grain/   GRAIN — an AI-interaction design system + its default theme (the look)
-       ├─ project/     the product — a personal AI assistant ("Project") + its skin
-       ├─ MILL/        the markdown CMS (PLANNED; its OWN reusable project) — feed it .md + images, it renders GRAIN pages
-       └─ portfolio/   this personal site — a custom BATCH + GRAIN app; *uses MILL* to manage its content (notes/blog)
+  └─ grain/   GRAIN — an AI-interaction design system + its default theme (the look) + the catalog
+       ├─ MILL/               the markdown CMS (PLANNED; its OWN reusable project) — feed it .md + images, it renders GRAIN pages
+       ├─ tjakoen.github.io/  THE app + the composition root — this personal site (BATCH + GRAIN); *uses MILL* for its notes/blog
+       └─ project/            the product — a personal AI assistant ("Project"); **PAUSED** — now a docs-only archive (see below)
 ```
 
-`project/`, `MILL/`, and `portfolio/` are independent consumers of `grain` + `batch`. The portfolio is
+The **composition root folded into `tjakoen.github.io/` (2026-07-05)**: the portfolio is now THE app —
+it wires batch + grain + mill and runs the site + the `/loop` "watch the AI act" demo. `project/` is
+**paused**: its code (server, domain, pages) moved into the portfolio or was dropped; the folder now
+holds only the product's vision docs (`PROJECT-PLAN.md`, `docs/MVP.md`) until the assistant resumes as
+its own repo. `MILL/` and `tjakoen.github.io/` are consumers of `grain` + `batch`. The portfolio is
 its own custom app — **MILL doesn't *build* it**; the portfolio just *uses* MILL to manage its
 markdown content (the notes/blog), while its bespoke surfaces (hero desk, calendar, etc.) are its own
 work. Dependency purity: `grain` imports nothing from `batch` except the `OpChannel` port; **MILL
@@ -35,7 +39,7 @@ pushed over SSE. No privileged AI→DOM back channel.
 
 ## Start here (reading order)
 
-1. **[PHILOSOPHY.md](portfolio/PHILOSOPHY.md)** — the *why* (the beliefs the whole stack serves). **Read first.**
+1. **[PHILOSOPHY.md](tjakoen.github.io/PHILOSOPHY.md)** — the *why* (the beliefs the whole stack serves). **Read first.**
 2. **[CONVENTIONS.md](batch/docs/CONVENTIONS.md)** — the build standard (layering, components, tokens,
    the action vocabulary, the 3-tier testing bar, the extraction plan). **The rulebook.**
 3. **[ARCHITECTURE.md](batch/docs/ARCHITECTURE.md)** — the substrate's reasoning (single source of truth).
@@ -45,7 +49,7 @@ pushed over SSE. No privileged AI→DOM back channel.
 
 The SSOT for what's operable is **`grain/ai/contract.ts`** (`SurfaceKind`, `ActionName`,
 `ACTIONS`, `RenderOp`). The composition root — the only place the layers meet — is
-**`project/server.ts`**. The reference screen is **`/loop`** (`project/pages/loop.html`).
+**`tjakoen.github.io/server.ts`**. The reference screen is **`/loop`** (`tjakoen.github.io/pages/loop.html`).
 
 **Working mainly in one layer?** The future-repo folders carry their **own `CLAUDE.md`** —
 [`batch/CLAUDE.md`](batch/CLAUDE.md) and [`grain/CLAUDE.md`](grain/CLAUDE.md) — with that layer's
@@ -72,13 +76,13 @@ like: run `bun run shots` (Playwright drives chromium against a freshly-booted a
 captures the key screens **and states** — the desk mid-act with the spotlight, the ⌘K
 palette — to `screenshots/`, plus a self-contained `screenshots/gallery.html`). Then
 **publish `screenshots/gallery.html` as an Artifact** and give the user the link — that's
-the channel they can view remotely. Add/adjust shots in `project/tools/screenshots.ts`.
+the channel they can view remotely. Add/adjust shots in `tjakoen.github.io/tools/screenshots.ts`.
 Use this whenever the user asks to "see" something or you've changed anything visual.
 
 ## Non-negotiables (see CONVENTIONS for the full rules)
 
 - **Layering:** `batch` imports nothing inward; `grain` imports nothing from `batch` (only the
-  `OpChannel` port); only `project/server.ts` wires the three. New design work goes in `grain`
+  `OpChannel` port); only `tjakoen.github.io/server.ts` wires the three. New design work goes in `grain`
   by default; domain-only work in `project`.
 - **One vocabulary:** verbs/surfaces live in `grain/ai/contract.ts` — reference the registry in
   TS, never magic strings (HTML/browser-JS literals are the only exception, drift-guarded).
@@ -99,14 +103,14 @@ This is the contract for not drifting. After any change, sync everything in its 
 | **A `RenderOp` kind/field** | `contract.ts` (`RenderOpKind`/`RenderOp`) → dispatcher `applyOp`/`applyType` (`ai-dispatch.js`) → `grain/docs/AI-INTERFACE.md` → tests |
 | **A component** | follow CONVENTIONS §4 checklist (`.html`/`.css`/`.md`, tokens, AI-mode, `data-kind`/`data-accepts` if operable) → add a test for any behavior → it auto-appears in `/catalog` |
 | **A design token / the theme** | `grain/styles/variables.css` only (never per-component) |
-| **The `/loop` demo or its surfaces** | `grain/ai/reasoner.ts` (the scripted demo) ↔ `project/pages/loop.html` surfaces → **e2e** (`project/e2e/`) |
+| **The `/loop` demo or its surfaces** | `grain/ai/reasoner.ts` (the scripted demo) ↔ `tjakoen.github.io/pages/loop.html` surfaces → **e2e** (`tjakoen.github.io/e2e/`) |
 | **The client dispatcher or a UI interaction** | `grain/scripts/ai-dispatch.js` → **e2e** (only tier that covers it) |
 | **The static export / prerender** | keep it a *projection* of the running server (fetch, don't re-render) → `batch/export` (`bun run export`, framework-generic) → respect the exportable boundary (no operable `/intent`+SSE surfaces) → ARCHITECTURE §18 |
 | **A module served to the browser** (`/modules`, or the client-side runtime) | it MUST be **client-safe** (ARCHITECTURE §19.2): no server-only imports (guard-enforced), **no secrets/tokens**, no server-required behavior — static-style only → say so wherever the mode is offered; the mechanism (`batch/http/modules.ts`) is `batch`, the client-door wiring is `grain/ai/*`, the mode switch is the composition root |
 | **Layering / cross-layer deps** | re-verify import purity; if you reach across, add a port instead → CONVENTIONS §1/§10 |
 | **Anything user-visible in behavior** | the matching doc (`ARCHITECTURE` / `GRAIN` / `AI-INTERFACE` / `DESIGN-SYSTEM` / `CONVENTIONS`) |
-| **A concept doc** (`ARCHITECTURE`/`CONVENTIONS`/`GRAIN`/`AI-INTERFACE`) | the portfolio showcase that *renders* it — re-check the pitch/teaser sections still summarize it truly: `grain/docs/GRAIN.md`+`AI-INTERFACE.md` → `/grain` (`portfolio/GRAIN-PAGE.md`, `/grain/docs`); `ARCHITECTURE`+`CONVENTIONS` → `/batch` (`portfolio/BATCH-PAGE.md`, `/batch/docs`). Docs are the single source; pages are trailheads, never forks |
-| **A roadmap step** (land, drop, or re-sequence) | tick it in [`ROADMAP.md`](./ROADMAP.md) → sync the canonical layer plan for that track (Track A → `grain/CLAUDE.md` / `project/PROJECT-PLAN.md`; Track B → `batch`; Track C → `mill/PLAN.md`; Track D → `portfolio/PLAN.md`) |
+| **A concept doc** (`ARCHITECTURE`/`CONVENTIONS`/`GRAIN`/`AI-INTERFACE`) | the portfolio showcase that *renders* it — re-check the pitch/teaser sections still summarize it truly: `grain/docs/GRAIN.md`+`AI-INTERFACE.md` → `/grain` (`tjakoen.github.io/GRAIN-PAGE.md`, `/grain/docs`); `ARCHITECTURE`+`CONVENTIONS` → `/batch` (`tjakoen.github.io/BATCH-PAGE.md`, `/batch/docs`). Docs are the single source; pages are trailheads, never forks |
+| **A roadmap step** (land, drop, or re-sequence) | tick it in [`ROADMAP.md`](./ROADMAP.md) → sync the canonical layer plan for that track (Track A → `grain/CLAUDE.md` / `project/PROJECT-PLAN.md`; Track B → `batch`; Track C → `mill/PLAN.md`; Track D → `tjakoen.github.io/PLAN.md`) |
 | **A platform capability / feature** (add, drop, or re-tier) | update that layer's **tiered capabilities list** — the single source: `grain/docs/GRAIN.md` §"What GRAIN gives you" / `batch/docs/ARCHITECTURE.md` §"What BATCH gives you" / `mill/PLAN.md` §"What MILL gives you" → re-sync its teasers (the layer README + the `/grain`·`/batch` landing pages) as *projections*, never forks → [AUDIT.md](AUDIT.md) check 11 (nothing buried). Heroes = the reasons the layer exists; useful-but-quiet features go under *Also*, never omitted |
 | **A notable decision or non-obvious fact** | write a **memory** (see below) so the next session inherits it |
 
@@ -120,7 +124,7 @@ possible* and close it at the source: sharpen the contract, design the mistake o
 that misled — so the next person or AI can't repeat it. An operator tripping on the system measures
 the system's clarity, not just the operator's; if you (an AI) got it wrong building here, suspect the
 docs/design first. The bar it's all held to: **this stack must be easy for a human and *even more*
-legible and operable for an AI** — that's the point of the whole thing (→ [PHILOSOPHY.md](portfolio/PHILOSOPHY.md),
+legible and operable for an AI** — that's the point of the whole thing (→ [PHILOSOPHY.md](tjakoen.github.io/PHILOSOPHY.md),
 the two lead bets; the worked-through lessons: [grain/CLAUDE.md](grain/CLAUDE.md) §5, [batch/CLAUDE.md](batch/CLAUDE.md)).
 
 **Before committing / after a big change:** run the alignment audit — [AUDIT.md](AUDIT.md) (a repeatable
@@ -144,8 +148,8 @@ files — durable, repo-worthy rules belong in `batch/docs/CONVENTIONS.md` or th
 - **This monorepo is temporary scaffolding** — each layer becomes its own repo once proven.
   The map for that split (what goes where) is [`SPLIT-PLAN.md`](./SPLIT-PLAN.md).
 - **Personal cross-repo standards** (writing voice, the note/blog template, README badges, a starter
-  `CLAUDE.md`) live in [`portfolio/standards/`](./portfolio/standards/) — public + reusable in any
+  `CLAUDE.md`) live in [`tjakoen.github.io/standards/`](./tjakoen.github.io/standards/) — public + reusable in any
   repo. Writing anything under his byline? `VOICE.md` (how it reads) + `NOTE-STANDARD.md` (how a note
   is built) are the rulebook.
-- Run from the repo root (relative paths in `project/config.ts` assume it).
+- Run from the repo root (relative paths in `tjakoen.github.io/config.ts` assume it).
 - Bun lives at `~/.bun/bin` — `export PATH="$HOME/.bun/bin:$PATH"` if `bun` isn't found.

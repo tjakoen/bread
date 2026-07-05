@@ -4,7 +4,7 @@ A repeatable, whole-project audit that checks the repo still obeys **its own rul
 commit, after a big change, or whenever you (human or AI) want to confirm nothing has drifted from the
 canon: **[CLAUDE.md](CLAUDE.md)** (operating rules + the "change X → update Y" table),
 **[CONVENTIONS.md](batch/docs/CONVENTIONS.md)** (build standard), **[ARCHITECTURE.md](batch/docs/ARCHITECTURE.md)** (the
-substrate), **[PHILOSOPHY.md](portfolio/PHILOSOPHY.md)** (the why). Those docs *define* "aligned"; this file is the
+substrate), **[PHILOSOPHY.md](tjakoen.github.io/PHILOSOPHY.md)** (the why). Those docs *define* "aligned"; this file is the
 procedure for verifying it. It references them — it does not restate them (single source of truth).
 
 ## How to run it
@@ -27,7 +27,7 @@ bun run test:e2e     # Playwright e2e → green   (or: bun run test:all)
 grep -rn "import" batch --include=*.ts | grep -iE "grain|/project"   # batch imports NOTHING inward → expect none
 grep -rn "import" grain --include=*.ts | grep -i "batch"             # grain imports NOTHING from batch (only its OpChannel port) → expect none
 ```
-Only `project/server.ts` wires the layers. New design-system work lives in `grain/` by default; `mill/`/`portfolio/` sit above grain (`batch → grain → mill`), consume, never reverse.
+Only `tjakoen.github.io/server.ts` wires the layers. New design-system work lives in `grain/` by default; `mill/`/`tjakoen.github.io/` sit above grain (`batch → grain → mill`), consume, never reverse.
 
 ### 3. One vocabulary / no magic strings / SSOT — CONVENTIONS §3, AI-INTERFACE §1
 - **No magic strings.** Any string referenced twice is a vocabulary → defined once (TS `const`/registry, or a single named-const block in a browser module). Verbs/surfaces come from `grain/ai/contract.ts`, referenced in TS; theming attrs/values/control-names come from the const block in `grain/scripts/theme.js`. The manifest is harvested, never hand-typed.
@@ -43,10 +43,10 @@ grep -rnE "#[0-9a-fA-F]{3,6}|rgb\(|hsl\(" grain/components project/components --
 ```bash
 grep -rn "the desk" batch grain --include=*.ts --include=*.css --include=*.html --include=*.md   # expect none
 ```
-GRAIN is product-agnostic: "the desk" is the **product** persona and belongs only to `project/` + `portfolio/`. Sole allowed exception in grain: the `desk.stop` action name (rename deferred). `desktop` is a false positive.
+GRAIN is product-agnostic: "the desk" is the **product** persona and belongs only to `project/` + `tjakoen.github.io/`. Sole allowed exception in grain: the `desk.stop` action name (rename deferred). `desktop` is a false positive.
 
 ### 6. Naming — memories `project-name-temporary`, `batch-rename-open-question`, org rule
-- Product = **"Project"** (temporary) in docs; the old name lingers only in product UI (`project/pages/*`, `portfolio/pages`) pending a product-rename pass.
+- Product = **"Project"** (temporary) in docs; the old name lingers only in product UI (`tjakoen.github.io/pages/*`, `tjakoen.github.io/pages`) pending a product-rename pass.
 - GRAIN's default theme = **"Sourdough"** 🍞. BATCH = **B**un · **A**ddressable · **T**ypeScript · **C**SS · **H**tmx.
 - Company name is **"Career Team"** — never other spellings. `grep -rniE "career[ -]?team" . && eyeball casing`.
 

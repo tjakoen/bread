@@ -3,20 +3,20 @@
 A guide — for me and Claude — to where every doc lives while this stays a monorepo. Each doc sits
 **next to the layer it documents**, so the eventual repo split (see [`SPLIT-PLAN.md`](SPLIT-PLAN.md))
 is a straight move. There's no central `docs/` folder; the cross-cutting docs live at the root or in
-`portfolio/`:
+`tjakoen.github.io/`:
 
-- [`PHILOSOPHY.md`](portfolio/PHILOSOPHY.md) — the *why* beneath the whole stack (lives in `portfolio/`). **Read first.**
+- [`PHILOSOPHY.md`](tjakoen.github.io/PHILOSOPHY.md) — the *why* beneath the whole stack (lives in `tjakoen.github.io/`). **Read first.**
 - [`AUDIT.md`](AUDIT.md) — the whole-stack alignment runbook (layering purity, tokens, docs-synced); at the root.
 - [`ROADMAP.md`](ROADMAP.md) — the canonical execution plan (tracks per layer, the M★ live-model milestone, the honest-pitch bar); at the root.
-- [`portfolio/standards/`](portfolio/standards/) — the personal, public, cross-repo standards for anything written under his byline: [`VOICE.md`](portfolio/standards/VOICE.md) (how prose reads), [`NOTE-STANDARD.md`](portfolio/standards/NOTE-STANDARD.md) (how a note/blog post is built), [`README-STANDARD.md`](portfolio/standards/README-STANDARD.md) (repo READMEs), [`CLAUDE.starter.md`](portfolio/standards/CLAUDE.starter.md) (seed for a per-repo `CLAUDE.md`).
+- [`tjakoen.github.io/standards/`](tjakoen.github.io/standards/) — the personal, public, cross-repo standards for anything written under his byline: [`VOICE.md`](tjakoen.github.io/standards/VOICE.md) (how prose reads), [`NOTE-STANDARD.md`](tjakoen.github.io/standards/NOTE-STANDARD.md) (how a note/blog post is built), [`README-STANDARD.md`](tjakoen.github.io/standards/README-STANDARD.md) (repo READMEs), [`CLAUDE.starter.md`](tjakoen.github.io/standards/CLAUDE.starter.md) (seed for a per-repo `CLAUDE.md`).
 - this map (`DOCS.md`, at the root).
 
 For the whole-repo orientation + operating rules, start at [`CLAUDE.md`](CLAUDE.md). Each future-repo
 folder also carries its own AI-onboarding `CLAUDE.md`, seeded from
-[`portfolio/standards/CLAUDE.starter.md`](portfolio/standards/CLAUDE.starter.md), with that layer's
+[`tjakoen.github.io/standards/CLAUDE.starter.md`](tjakoen.github.io/standards/CLAUDE.starter.md), with that layer's
 non-negotiables and hard-won lessons; they travel with the folder on the split:
 [`batch`](batch/CLAUDE.md), [`grain`](grain/CLAUDE.md), [`project`](project/CLAUDE.md),
-[`portfolio`](portfolio/CLAUDE.md), [`mill`](mill/CLAUDE.md).
+[`portfolio`](tjakoen.github.io/CLAUDE.md), [`mill`](mill/CLAUDE.md).
 
 ## Where the layer docs live
 

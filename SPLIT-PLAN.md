@@ -28,7 +28,7 @@ BATCH (dough / substrate)  →  milled by MILL from  GRAIN (the design system)
   reaches links, focus, `::selection`, and the primary button fill — one brand knob, palette
   otherwise closed (success/danger stay monochrome). **Sourdough stays hueless** (`--color-accent =
   ink`). Needs a one-time component wiring; after that, accented themes are pure token overrides.
-  Detailed theming/accent plan: `portfolio/PLAN.md`.
+  Detailed theming/accent plan: `tjakoen.github.io/PLAN.md`.
 - *(`Bakery` was the runner-up umbrella name; `BREAD` won for the `___ stack` fit.)*
 
 **Positioning / tagline** (the umbrella's description doubles as the stack's pitch):
@@ -76,7 +76,7 @@ Docs and licenses are **already co-located** with their layer, so each is a stra
 | **batch** — no-build substrate | `batch/` | public submodule | `batch/docs/ARCHITECTURE.md` (SSOT), `batch/docs/CONVENTIONS.md` |
 | **grain** — AI-interaction design system | `grain/` | public submodule | `grain/docs/GRAIN.md`, `AI-INTERFACE.md`, `DESIGN-SYSTEM.md` |
 | **mill** — Markdown→GRAIN CMS | `mill/` | public submodule | `mill/PLAN.md`, `mill/README.md` |
-| **portfolio** → `tjakoen.github.io` | `portfolio/` | own public repo | its own `README` / `PLAN` |
+| **portfolio** → `tjakoen.github.io` | `tjakoen.github.io/` | own public repo | its own `README` / `PLAN` |
 | **project** *(name TBD)* — the assistant product | `project/` | own **private** repo | `project/PROJECT-PLAN.md`, `project/docs/MVP.md` |
 
 **MILL is framed as GRAIN's companion CMS** (grain keeps the single web landing page; MILL is a section
@@ -94,7 +94,7 @@ Bun runs TypeScript **directly** — no bundle step — so a cross-repo import r
 `.ts` source and is transpiled on the fly, exactly like a relative import today. **Splitting changes
 where the source lives, not how it runs.**
 
-- **Server-side code (TS):** each consumer gets its own composition root (today's `project/server.ts`
+- **Server-side code (TS):** each consumer gets its own composition root (today's `tjakoen.github.io/server.ts`
   role, one per consumer) that imports `@tjakoen/batch` / `@tjakoen/grain` (portfolio also `@tjakoen/mill`)
   and wires them. Consume via **Bun git dependencies** — `"@tjakoen/grain": "github:tjakoen/grain#main"`.
   No `npm publish`, works for private repos, and `bun.lockb` pins the resolved commit for reproducibility.
