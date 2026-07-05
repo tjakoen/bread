@@ -14,9 +14,13 @@
   const put = (k, v) => { try { if (store) store.setItem(k, v); } catch { /* private mode */ } };
 
   // ---- startup redirect (BEFORE paint): "/" honors the welcome checkbox — unchecked means
-  // the desk opens straight to where you last were (falling back to the workspace).
+  // the desk opens straight to where you last were (falling back to the workspace). STARTUP
+  // only: once this browsing session has booted, "/" opens normally — otherwise the pinned
+  // Welcome tab (and any in-site link home) would bounce right back.
   const path = location.pathname.replace(/\/+$/, "") || "/";
-  if (path === "/" && get(KEY.startup) === "off") {
+  const booted = (() => { try { return sessionStorage.getItem("tj.booted") === "1"; } catch { return true; } })();
+  try { sessionStorage.setItem("tj.booted", "1"); } catch { /* private mode */ }
+  if (path === "/" && !booted && get(KEY.startup) === "off") {
     const last = get(KEY.lastPage);
     location.replace(last && last !== "/" ? last : "/dashboard");
     return;                                          // stop — this page is being left
@@ -31,11 +35,55 @@
     document.querySelector("[data-window-refresh]")?.addEventListener("click", () => location.reload());
     document.querySelector("[data-window-forward]")?.addEventListener("click", () => history.forward());
 
-    // ---- the breadcrumb (now in the status bar, next to presence) = the open page's path
+    // ---- the breadcrumb (status bar, next to presence) = the open page's path, AS LINKS:
+    // every segment navigates to its level (the site name goes home); only the last — the page
+    // you're on — stays plain text. Same paths as the explorer tree: one vocabulary.
     const crumb = document.querySelector("[data-breadcrumb]");
     if (crumb) {
-      const segs = path === "/" ? ["welcome"] : path.split("/").filter(Boolean);
-      crumb.textContent = ["tjakoen.github.io", ...segs].join(" / ");
+      crumb.replaceChildren();
+      const seg = (text, href) => {
+        if (crumb.childNodes.length) crumb.appendChild(document.createTextNode(" / "));
+        if (!href) return void crumb.appendChild(document.createTextNode(text));
+        const a = document.createElement("a"); a.href = href; a.textContent = text;
+        crumb.appendChild(a);
+      };
+      const parts = path === "/" ? ["welcome"] : path.split("/").filter(Boolean);
+      seg("tjakoen.github.io", path === "/" ? null : "/");
+      parts.forEach((p, i) => seg(p, i < parts.length - 1 ? "/" + parts.slice(0, i + 1).join("/") : null));
+    }
+
+    // ---- the EXPLORER (the file-tree rail): mark the open file, unfold its ancestors (folders
+    // ship collapsed), and fill the collection folders (notes/) with their real .md entries from
+    // the ⌘K corpus — each added entry is a plain <a>, the tree stays hypermedia.
+    const tree = document.querySelector(".file-tree");
+    if (tree) {
+      const normed = (h) => (h || "").replace(/\/+$/, "") || "/";
+      const markCurrent = () => {
+        for (const a of tree.querySelectorAll("a.file-tree__file")) {
+          if (normed(a.getAttribute("href")) !== path) continue;
+          a.setAttribute("aria-current", "page");
+          for (let d = a.closest("details"); d; d = d.parentElement && d.parentElement.closest("details"))
+            d.setAttribute("open", "");
+        }
+      };
+      markCurrent();
+      const fills = [...tree.querySelectorAll("[data-tree-fill]")];
+      if (fills.length) fetch("/search.json").then((r) => r.json()).then(({ pages = [] }) => {
+        for (const box of fills) {
+          const prefix = normed(box.getAttribute("data-tree-fill"));
+          for (const p of pages) {
+            const url = normed(p.url);
+            if (!url.startsWith(prefix + "/") || box.querySelector(`a[href="${url}"]`)) continue;
+            const a = document.createElement("a");
+            a.className = "file-tree__file";
+            a.href = url;
+            a.textContent = url.slice(prefix.length + 1) + ".md";   // the REAL source file's name
+            box.appendChild(a);
+          }
+        }
+        markCurrent();
+        window.grain && window.grain.tabs && window.grain.tabs.refresh();   // labels may resolve now
+      }).catch(() => { /* corpus unreachable → the static tree still navigates */ });
     }
 
     // ---- the welcome checkbox (functional): checked = land on the welcome page

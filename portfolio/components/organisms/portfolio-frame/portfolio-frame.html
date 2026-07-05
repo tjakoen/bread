@@ -1,10 +1,13 @@
 <!-- organisms/portfolio-frame — the PORTFOLIO's workspace chrome, THE EDITOR edition: the whole
      site presents as one editor window. Composes the grain shell primitives (app-window /
-     side-rail / tab-bar / sidebar-panel / console / status-bar); static markup — shell.js marks
-     the current nav (by data-section), theme.js drives theming, site.js wires the window nav and
-     the status-bar breadcrumb, ai-dispatch stamps presence. The RAIL is the main menu (site
-     sections); the TABS are the selected section's submenus (shown per data-section on .app-shell).
-     Compose inside `.app-shell.app-window` (body carries .app-window-backdrop), sibling of <main>. -->
+     side-rail / file-tree / tab-bar / sidebar-panel / console / status-bar); static markup —
+     theme.js drives theming, site.js wires the window nav + the linked breadcrumb, ai-dispatch
+     stamps presence. THE EDITOR v2 nav model: the RAIL is the EXPLORER (a file tree of the REAL
+     sources behind each page — the site is its own source tree) with fixed APP links at the
+     bottom; the TABS are the OPEN PAGES (grain/scripts/tabs.js — a localStorage projection of
+     navigation, pinned Welcome first; site.js explorer block fills notes/ and marks the open
+     file). Compose inside `.app-shell.app-window` (body carries .app-window-backdrop),
+     sibling of <main>. -->
 
 <!-- ═══ the TITLE BAR: window nav (back/refresh/forward) · view controls · the search field ═══ -->
 <header class="app-shell__window window-bar">
@@ -23,36 +26,92 @@
     <button type="button" data-cycle-theme title="Cycle theme">◆ <span data-theme-name>sourdough</span></button>
     <button type="button" data-toggle-scheme title="Light / dark">◐</button>
     <button type="button" data-shell="aside-toggle" title="Toggle the assistant panel">◫</button>
-    <button type="button" data-shell="console-toggle" title="Expand or collapse the terminal">▭</button>
+<button type="button" data-shell="console-toggle" title="Expand or collapse the terminal">▭</button>
+    <button type="button" data-xray-toggle title="X-ray — see the page as the AI sees it">⊹</button>
   </span>
 </header>
 
-<!-- ═══ the RAIL = the main menu (site sections). data-section drives the active mark ═══ -->
-<aside class="app-shell__rail side-rail">
+<!-- ═══ the RAIL = the EXPLORER: the real source tree behind the pages (file-tree, folders ship
+     COLLAPSED — site.js opens the current file's ancestors), then the fixed APP links (the
+     non-documents). data-tab-source: the open-tabs strip labels its tabs from these links. ═══ -->
+<aside class="app-shell__rail side-rail" data-variant="explorer" data-tab-source>
   <div class="side-rail__brand"><b-icon sym="/assets/sprite.svg#spark"></b-icon><span>TJ's Desk</span></div>
-  <a class="nav-item" href="/" data-section="desk"><b-icon sym="/assets/sprite.svg#loop"></b-icon><span class="nav-item__label">Desk</span></a>
-  <a class="nav-item" href="/notes" data-section="notes"><b-icon sym="/assets/sprite.svg#knowledge"></b-icon><span class="nav-item__label">Notes</span></a>
-  <a class="nav-item" href="/calendar" data-section="calendar"><b-icon sym="/assets/sprite.svg#traces"></b-icon><span class="nav-item__label">Calendar</span></a>
-  <a class="nav-item" href="/mail" data-section="mail"><b-icon sym="/assets/sprite.svg#send"></b-icon><span class="nav-item__label">Mail</span></a>
-  <a class="nav-item" href="/bread" data-section="bread"><b-icon sym="/assets/sprite.svg#tasks"></b-icon><span class="nav-item__label">BREAD Stack</span></a>
+  <nav class="file-tree" aria-label="Explorer">
+    <details class="file-tree__dir">
+      <summary>portfolio/</summary>
+      <div class="file-tree__children">
+        <details class="file-tree__dir">
+          <summary>pages/</summary>
+          <div class="file-tree__children">
+            <a class="file-tree__file" href="/" data-tab-label="Welcome">index.html</a>
+            <a class="file-tree__file" href="/bread">bread/index.html</a>
+            <a class="file-tree__file" href="/grain">grain/index.html</a>
+            <a class="file-tree__file" href="/batch">batch/index.html</a>
+            <a class="file-tree__file" href="/mill">mill/index.html</a>
+          </div>
+        </details>
+        <details class="file-tree__dir">
+          <summary><a href="/notes">notes/</a></summary>
+          <!-- the real .md notes fill in from the ⌘K corpus (site.js); the folder link is the
+               zero-JS path to the full listing -->
+          <div class="file-tree__children" data-tree-fill="/notes"></div>
+        </details>
+      </div>
+    </details>
+    <details class="file-tree__dir">
+      <summary>grain/</summary>
+      <div class="file-tree__children">
+        <details class="file-tree__dir">
+          <summary><a href="/grain/docs">docs/</a></summary>
+          <div class="file-tree__children">
+            <a class="file-tree__file" href="/grain/docs/grain">GRAIN.md</a>
+            <a class="file-tree__file" href="/grain/docs/ai-interface">AI-INTERFACE.md</a>
+            <a class="file-tree__file" href="/grain/docs/design-system">DESIGN-SYSTEM.md</a>
+          </div>
+        </details>
+      </div>
+    </details>
+    <details class="file-tree__dir">
+      <summary>batch/</summary>
+      <div class="file-tree__children">
+        <details class="file-tree__dir">
+          <summary><a href="/batch/docs">docs/</a></summary>
+          <div class="file-tree__children">
+            <a class="file-tree__file" href="/batch/docs/architecture">ARCHITECTURE.md</a>
+            <a class="file-tree__file" href="/batch/docs/conventions">CONVENTIONS.md</a>
+          </div>
+        </details>
+      </div>
+    </details>
+    <details class="file-tree__dir">
+      <summary>project/</summary>
+      <div class="file-tree__children">
+        <details class="file-tree__dir">
+          <summary>pages/</summary>
+          <div class="file-tree__children">
+            <a class="file-tree__file" href="/dashboard">dashboard.html</a>
+            <a class="file-tree__file" href="/loop">loop.html</a>
+          </div>
+        </details>
+      </div>
+    </details>
+  </nav>
   <div class="side-rail__spacer"></div>
-  <a class="nav-item" href="/about" data-section="about"><b-icon sym="/assets/sprite.svg#settings"></b-icon><span class="nav-item__label">About</span></a>
+  <!-- the APP links: the things that aren't documents — they open as app-style tabs (no extension) -->
+  <a class="nav-item" href="/calendar" data-section="calendar" data-tab-label="Calendar"><b-icon sym="/assets/sprite.svg#traces"></b-icon><span class="nav-item__label">Calendar</span></a>
+  <a class="nav-item" href="/mail" data-section="mail" data-tab-label="Mail"><b-icon sym="/assets/sprite.svg#send"></b-icon><span class="nav-item__label">Mail</span></a>
+  <a class="nav-item" href="/catalog" data-section="catalog" data-tab-label="Catalog"><b-icon sym="/assets/sprite.svg#rules"></b-icon><span class="nav-item__label">Catalog</span></a>
+  <a class="nav-item" href="/about" data-section="about" data-tab-label="Profile"><b-icon sym="/assets/sprite.svg#settings"></b-icon><span class="nav-item__label">Profile</span></a>
 </aside>
 
-<!-- ═══ the TAB BAR = the selected section's submenus (per data-section; hidden if the section has none) ═══ -->
+<!-- ═══ the TAB BAR = the OPEN PAGES (tabs.js renders the stored list after the pinned Welcome;
+     zero-JS shows just the pinned tab and the explorer does the navigating) ═══ -->
 <header class="app-shell__topbar">
   <button class="icon-btn" data-variant="ghost" data-shell="rail-toggle" aria-label="Toggle navigation">
     <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/sprite.svg#menu"></use></svg>
   </button>
-  <nav class="app-shell__tabs tab-bar" data-tabs-for="bread" aria-label="BREAD Stack">
-    <a class="tab" href="/bread"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#spark" size="sm"></b-icon></span>Overview</a>
-    <a class="tab" href="/batch"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#tasks" size="sm"></b-icon></span>BATCH</a>
-    <a class="tab" href="/grain"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#rules" size="sm"></b-icon></span>GRAIN</a>
-    <a class="tab" href="/mill"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#traces" size="sm"></b-icon></span>MILL</a>
-  </nav>
-  <nav class="app-shell__tabs tab-bar" data-tabs-for="workspace" aria-label="Workspace">
-    <a class="tab" href="/dashboard"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#tasks" size="sm"></b-icon></span>Overview</a>
-    <a class="tab" href="/loop"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#loop" size="sm"></b-icon></span>The loop</a>
+  <nav class="app-shell__tabs tab-bar" data-open-tabs aria-label="Open pages">
+    <a class="tab" data-pinned href="/"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#spark" size="sm"></b-icon></span>Welcome</a>
   </nav>
 </header>
 
@@ -103,7 +162,9 @@
 </aside>
 
 <section class="app-shell__console">
-  <div class="console__box">
+  <!-- data-terminal="interactive": grain/scripts/terminal.js injects a command line here and the
+       terminal becomes a THIRD client of the one door (help/go/ask/context/xray…). -->
+  <div class="console__box" data-terminal="interactive">
     <div class="console__bar">
       <button class="console__expand" data-shell="console-toggle" type="button" aria-label="Show or hide the desk's work">
         <b-icon sym="/assets/sprite.svg#spark" size="sm"></b-icon>
