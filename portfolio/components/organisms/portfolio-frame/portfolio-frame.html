@@ -1,17 +1,17 @@
 <!-- organisms/portfolio-frame — the PORTFOLIO's workspace chrome, THE EDITOR edition: the whole
      site presents as one editor window. Composes the grain shell primitives (app-window /
      side-rail / tab-bar / sidebar-panel / console / status-bar); static markup — shell.js marks
-     the current nav, theme.js drives the theming controls, site.js (portfolio) wires the window
-     dots, the breadcrumb search text, presence degradation and the status-bar data.
-     Compose inside `.app-shell.app-window` (body carries .app-window-backdrop), as a sibling of
-     <main>. The window bar and status bar land in the shell's "window"/"status" grid rows. -->
+     the current nav (by data-section), theme.js drives theming, site.js wires the window nav and
+     the status-bar breadcrumb, ai-dispatch stamps presence. The RAIL is the main menu (site
+     sections); the TABS are the selected section's submenus (shown per data-section on .app-shell).
+     Compose inside `.app-shell.app-window` (body carries .app-window-backdrop), sibling of <main>. -->
 
-<!-- ═══ the TITLE BAR: functional dots · view controls · the ⌘K search (center) ═══ -->
+<!-- ═══ the TITLE BAR: window nav (back/refresh/forward) · view controls · the search field ═══ -->
 <header class="app-shell__window window-bar">
-  <span class="window-bar__dots">
-    <button type="button" data-window-close title="Close the window">×</button>
-    <button type="button" data-window-clear title="Clear cached data (theme, drafts, prefs)">⌫</button>
-    <button type="button" data-window-back title="Back">‹</button>
+  <span class="window-bar__nav">
+    <button type="button" data-window-back title="Back"><svg class="icon" aria-hidden="true"><use href="/assets/sprite.svg#chevron-left"></use></svg></button>
+    <button type="button" data-window-refresh title="Refresh"><svg class="icon" aria-hidden="true"><use href="/assets/sprite.svg#loop"></use></svg></button>
+    <button type="button" data-window-forward title="Forward"><svg class="icon" aria-hidden="true"><use href="/assets/sprite.svg#chevron-right"></use></svg></button>
   </span>
   <span class="window-bar__ctl">
     <button type="button" data-cycle-theme title="Cycle theme">◆ <span data-theme-name>sourdough</span></button>
@@ -20,44 +20,37 @@
     <button type="button" data-shell="console-hide" title="Toggle the terminal">▭</button>
   </span>
   <button class="window-bar__search" type="button" data-cmdk-open title="Search the site (⌘K)">
-    <b-kbd keys="⌘K"></b-kbd><span data-breadcrumb>tjakoen.github.io</span>
+    <svg class="icon" aria-hidden="true"><use href="/assets/sprite.svg#search"></use></svg>Tjakoen.github.io
   </button>
   <span class="window-bar__end"></span>
 </header>
 
+<!-- ═══ the RAIL = the main menu (site sections). data-section drives the active mark ═══ -->
 <aside class="app-shell__rail side-rail">
   <div class="side-rail__brand"><b-icon sym="/assets/sprite.svg#spark"></b-icon><span>TJ's Desk</span></div>
-  <a class="nav-item" href="/"><b-icon sym="/assets/sprite.svg#loop"></b-icon><span class="nav-item__label">Desk</span></a>
-  <a class="nav-item" href="/notes"><b-icon sym="/assets/sprite.svg#knowledge"></b-icon><span class="nav-item__label">Notes</span></a>
-  <a class="nav-item" href="/calendar"><b-icon sym="/assets/sprite.svg#traces"></b-icon><span class="nav-item__label">Calendar</span></a>
-  <a class="nav-item" href="/mail"><b-icon sym="/assets/sprite.svg#send"></b-icon><span class="nav-item__label">Mail</span></a>
-
-  <!-- BREAD Stack — a collapsible group (native <details>); its leaves are the sub-nav -->
-  <details class="side-rail__group">
-    <summary class="nav-item"><b-icon sym="/assets/sprite.svg#tasks"></b-icon><span class="nav-item__label">BREAD Stack</span><span class="nav-item__chev" aria-hidden="true">›</span></summary>
-    <div class="side-rail__sub">
-      <a class="nav-item" href="/batch"><span class="nav-item__label">BATCH</span></a>
-      <a class="nav-item" href="/grain"><span class="nav-item__label">GRAIN</span></a>
-      <a class="nav-item" href="/mill"><span class="nav-item__label">MILL</span></a>
-    </div>
-  </details>
-
+  <a class="nav-item" href="/" data-section="desk"><b-icon sym="/assets/sprite.svg#loop"></b-icon><span class="nav-item__label">Desk</span></a>
+  <a class="nav-item" href="/notes" data-section="notes"><b-icon sym="/assets/sprite.svg#knowledge"></b-icon><span class="nav-item__label">Notes</span></a>
+  <a class="nav-item" href="/calendar" data-section="calendar"><b-icon sym="/assets/sprite.svg#traces"></b-icon><span class="nav-item__label">Calendar</span></a>
+  <a class="nav-item" href="/mail" data-section="mail"><b-icon sym="/assets/sprite.svg#send"></b-icon><span class="nav-item__label">Mail</span></a>
+  <a class="nav-item" href="/bread" data-section="bread"><b-icon sym="/assets/sprite.svg#tasks"></b-icon><span class="nav-item__label">BREAD Stack</span></a>
   <div class="side-rail__spacer"></div>
-  <a class="nav-item" href="/about"><b-icon sym="/assets/sprite.svg#settings"></b-icon><span class="nav-item__label">About</span></a>
+  <a class="nav-item" href="/about" data-section="about"><b-icon sym="/assets/sprite.svg#settings"></b-icon><span class="nav-item__label">About</span></a>
 </aside>
 
-<!-- ═══ the TAB BAR: the site's sections as open editor tabs, the same on every page ═══ -->
+<!-- ═══ the TAB BAR = the selected section's submenus (per data-section; hidden if the section has none) ═══ -->
 <header class="app-shell__topbar">
   <button class="icon-btn" data-variant="ghost" data-shell="rail-toggle" aria-label="Toggle navigation">
     <svg class="icon" aria-hidden="true" focusable="false"><use href="/assets/sprite.svg#menu"></use></svg>
   </button>
-  <nav class="app-shell__tabs tab-bar" aria-label="Site sections">
-    <a class="tab" href="/"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#spark" size="sm"></b-icon></span>Welcome<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
-    <a class="tab" href="/notes"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#knowledge" size="sm"></b-icon></span>Notes<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
-    <a class="tab" href="/grain"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#rules" size="sm"></b-icon></span>GRAIN<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
-    <a class="tab" href="/batch"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#tasks" size="sm"></b-icon></span>BATCH<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
-    <a class="tab" href="/mill"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#traces" size="sm"></b-icon></span>MILL<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
-    <a class="tab" href="/dashboard"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#loop" size="sm"></b-icon></span>Workspace<span class="tab__close" aria-hidden="true"><b-icon sym="/assets/sprite.svg#close" size="sm"></b-icon></span></a>
+  <nav class="app-shell__tabs tab-bar" data-tabs-for="bread" aria-label="BREAD Stack">
+    <a class="tab" href="/bread"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#spark" size="sm"></b-icon></span>Overview</a>
+    <a class="tab" href="/batch"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#tasks" size="sm"></b-icon></span>BATCH</a>
+    <a class="tab" href="/grain"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#rules" size="sm"></b-icon></span>GRAIN</a>
+    <a class="tab" href="/mill"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#traces" size="sm"></b-icon></span>MILL</a>
+  </nav>
+  <nav class="app-shell__tabs tab-bar" data-tabs-for="workspace" aria-label="Workspace">
+    <a class="tab" href="/dashboard"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#tasks" size="sm"></b-icon></span>Overview</a>
+    <a class="tab" href="/loop"><span class="tab__icon"><b-icon sym="/assets/sprite.svg#loop" size="sm"></b-icon></span>The loop</a>
   </nav>
 </header>
 
@@ -74,9 +67,10 @@
       </nav>
     </div>
     <div class="assistant__pane" data-pane="chat">
-      <!-- the desk appends here over SSE (chat.send → your bubble + the streamed reply). Site-wide. -->
+      <!-- the desk appends here over SSE (chat.send → your bubble + the streamed reply). Site-wide.
+           Empty-state text shows until the first message lands (CSS :has). -->
       <div class="assistant__log" data-surface="chat-log">
-        <div class="chat-message" data-role="ai" data-grade="grain"><span class="chat-message__who">Desk</span><span class="chat-message__body">Ask me about TJ — or anything on this site.</span></div>
+        <p class="assistant__empty">Ask the desk about TJ — or anything on this site. It answers here, and narrates its work in the terminal below.</p>
       </div>
       <div class="chat-thinking" data-thinking>
         <div class="chat-thinking__head">
@@ -109,8 +103,8 @@
     <div class="console__bar">
       <button class="console__expand" data-shell="console-toggle" type="button" aria-label="Show or hide the desk's work">
         <b-icon sym="/assets/sprite.svg#spark" size="sm"></b-icon>
-        <span class="console__label">the desk</span>
-        <span class="console__acting">is acting…</span>
+        <span class="console__label">Terminal</span>
+        <span class="console__acting">— the desk is acting…</span>
         <span class="console__chev" aria-hidden="true">▾</span>
       </button>
       <button class="console__toggle" data-shell="chat-toggle" type="button" aria-label="Switch between chat and terminal"></button>
@@ -119,18 +113,16 @@
   </div>
 </section>
 
-<!-- ═══ the STATUS BAR: honest meta, left; the byline, right ═══ -->
+<!-- ═══ the STATUS BAR: presence + breadcrumb, left; the byline + contact, right ═══ -->
 <footer class="app-shell__status status-bar">
   <span class="presence">
     <span class="presence__wait">✶ desk waking…</span>
     <span class="presence__on">✶ desk online</span>
     <span class="presence__off">✶ desk offline</span>
   </span>
-  <span data-status-optional data-build-info title="Type + test state of the build serving this page">dev · live</span>
-  <span data-status-optional data-build-ref title="Built from">main · tjakoen.github.io</span>
-  <span data-status-optional data-github-stars="tjakoen/tjakoen.github.io" hidden>★ <span data-stars-count></span></span>
+  <span class="status-bar__crumb" data-breadcrumb>tjakoen.github.io</span>
   <span class="status-bar__spacer"></span>
-  <a class="status-bar__byline" data-status-optional href="/notes/ten-times-zero" title="How this site is built">🤖 I direct, Claude types.</a>
+  <a class="status-bar__byline" href="/notes/ten-times-zero" title="How this site is built">🤖 I direct, Claude types.</a>
   <a class="status-bar__contact" href="/about">Contact</a>
 </footer>
 

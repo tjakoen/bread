@@ -55,7 +55,9 @@ function notesLink(href: string): string {
 function shellChrome(inject: string, injectHead = ""): PageChrome {
   return ({ title, description, body, collection }) => {
     const screen = collection.prefix.split("/")[1] ?? "notes";   // /notes → notes, /grain/docs → grain
-    const section = collection.prefix === "/grain/docs" ? ` data-section="grain"` : "";
+    // THE EDITOR section (rail active + tab group): notes → its own; layer docs live under BREAD.
+    const sectionName = collection.prefix === "/notes" ? "notes" : "bread";
+    const section = ` data-section="${sectionName}"`;
     return `<!DOCTYPE html>
 <html lang="en" data-themes="sourdough baguette brioche">
 <head>
