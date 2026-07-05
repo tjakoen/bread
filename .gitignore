@@ -16,8 +16,9 @@ playwright-report/
 # generated UI snapshots (bun run shots)
 screenshots/
 
-# generated perf + SEO/AEO audit (bun run audit)
-audit/
+# generated perf + SEO/AEO audit output (bun run audit) — ROOT ONLY: a bare `audit/` also
+# swallowed batch/audit/ (the engine SOURCE) and it silently never got committed
+/audit/
 
 # local tooling / editor / OS
 .claude/
