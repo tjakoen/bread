@@ -5,13 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>GRAIN — an AI-interaction design system</title>
   <meta name="description" content="One interface a person and an AI operate through the same controls. GRAIN's own site, built with GRAIN.">
-  <!-- GRAIN's default theme (LINKED, never bundled): tokens → base/skin → grade mechanism -->
-  <link rel="stylesheet" href="/styles/variables.css">
-  <link rel="stylesheet" href="/styles/global.css">
-  <link rel="stylesheet" href="/styles/grain.css">
-  <link rel="stylesheet" href="/components.css"><!-- includes GRAIN's AI module (the "AI is acting" spotlight), reused by the surface demo -->
   <!-- shell.js runs the rail/console toggles (this page now lives in the BREAD shell) -->
-  <script src="/scripts/shell.js" defer></script>
   <!-- the Catalog pane behaviours (sidebar-panel Catalog mode): hover a component → its catalog
        entry is revealed in the pane (opened by the Catalog tab / hero CTA). ⌘K is global. -->
   <script src="/scripts/catalog-peek.js" defer></script>
@@ -20,11 +14,6 @@
   <!-- THE REAL DISPATCHER — the same one client-JS island /loop uses. The composed surface below
        is operated through the ONE DOOR: a human's Ask and the AI's "Watch the AI act" both post an
        Intent to POST /intent and render back over SSE. No showcase-only AI→DOM back channel. -->
-  <script type="module" src="/scripts/ai-dispatch.js"></script>
-  <script type="module" src="/scripts/tabs.js"></script>
-  <script type="module" src="/scripts/terminal.js"></script>
-  <script type="module" src="/scripts/xray.js"></script>
-  <script type="module" src="/site/desk-commands.js"></script>
   <style>
     /* ---------------------------------------------------------------------------
        Demo-site LAYOUT only (NOT the design system). This page is GRAIN's own site,
