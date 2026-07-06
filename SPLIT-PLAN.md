@@ -86,7 +86,25 @@ MILL exists is still the proof BATCH + GRAIN compose into a real, reusable tool.
 
 **Shared, lives at the BREAD root (doesn't belong to one layer):** `PHILOSOPHY.md` (the "why", projected
 — linked, not forked — from the layers), `AUDIT.md` (whole-stack alignment runbook), `DOCS.md` (doc map),
-`standards/` (`VOICE.md`, `README-STANDARD.md`, `CLAUDE.starter.md` — cross-repo personal standards).
+`standards/` (cross-repo personal standards — see below).
+
+### `standards/` is referenced by every repo, never copied
+
+`standards/` is the **single source of truth for how I build and write across all my repos** — how I
+work with an AI ([`AI-DEVELOPMENT.md`](tjakoen.github.io/standards/AI-DEVELOPMENT.md) +
+[`SESSION-LOOP.md`](tjakoen.github.io/standards/SESSION-LOOP.md)), how anything under my byline reads
+(`VOICE.md`, `NOTE-STANDARD.md`, `FIGURES.md`, `README-STANDARD.md`), and how a new repo is set up
+(`CLAUDE.starter.md`). The [`standards/README.md`](tjakoen.github.io/standards/README.md) index is the
+map: read it first, fetch only the one standard the task needs.
+
+**It's published, so every other repo *links* to it — it does not fork it.** The canonical home is
+`https://tjakoen.github.io/standards` (source under `tjakoen.github.io/standards/`). A new repo's
+`CLAUDE.md` (from `CLAUDE.starter.md`) points at the published index; it never copies `VOICE.md` or the
+rest into its own tree, because two copies drift and then both are suspect. Same SSOT-and-projection
+rule the stack holds itself to. (Split destination per the topology table above: the folder is BREAD
+umbrella-root shared docs. Its source sits under `tjakoen.github.io/standards/` today and is published
+at the `tjakoen.github.io/standards` URL by the portfolio via the same package-resolved docs path the
+layer docs use — so the public link every repo points at stays stable across the split.)
 
 ## How the consumers import the stack (the no-build win)
 
@@ -178,8 +196,11 @@ runs the scripted demo entirely in the browser, no server) or a small live host 
 Per `standards/CLAUDE.starter.md`:
 1. Its own `CLAUDE.md` (from the starter) + a `README.md` with a title emoji, a curated badge row, and
    the "built with Claude" footer.
-2. Only `README.md` + `CLAUDE.md` at the root; everything else under `docs/`.
-3. Dependencies on lower layers become real package deps (git deps, above) instead of relative imports.
+2. `CLAUDE.md` **references** the published standards index (`tjakoen.github.io/standards`) — it does
+   not copy `AI-DEVELOPMENT.md`, `VOICE.md`, or the rest in. A symlink `AGENTS.md → CLAUDE.md` makes
+   the same instructions readable by any cross-tool agent (Codex, Cursor, Copilot, Gemini CLI, …).
+3. Only `README.md` + `CLAUDE.md` at the root; everything else under `docs/`.
+4. Dependencies on lower layers become real package deps (git deps, above) instead of relative imports.
 
 ## Licensing (decided 2026-07-03 — unchanged by the umbrella model)
 
