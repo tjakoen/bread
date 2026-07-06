@@ -132,6 +132,11 @@ contract, not a scaffold.** So M★ closes Track A rather than opening it.
      invalidate on applied `RenderOp`s (the index-vs-snapshot model, not a refetch per run);
      (3) view preferences stay `localStorage` (theme.js — already GRAIN's client cache). The header
      mechanism is BATCH (`static.ts`/`modules.ts`/export); the manifest policy is GRAIN (`ai/*`).
+   *Prefs-helper verdict (2026-07-06, THE EDITOR v3):* each island persists its own key inline (~3
+   lines: dotted `grain.<island>.<thing>` + try/catch, per `tabs.js`) — after v3 we're at ~6 keys
+   (rail-collapsed, aside-hidden, console-hidden, tabs.open, **xray.on**, **shell.console-open**). A
+   shared helper would force self-contained IIFE islands to import a module; **only build one if the
+   keys proliferate past ~6.**
 7. **Move the CATALOG to GRAIN** — ✅ **DONE (2026-07-05, commit 46b7964).** Moved `batch/catalog/`
    → `grain/catalog/`; dropped the batch `Runtime` dependency (reads `fs` directly like accepts.ts);
    replaced the batch `sitemap` param with a plain `pages:()=>string[]` thunk (grain/catalog imports
