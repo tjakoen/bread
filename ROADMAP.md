@@ -157,8 +157,8 @@ contract, not a scaffold.** So M★ closes Track A rather than opening it.
    the optional `sitemap` for the Pages nav (inject a plain `string[]` from the composition root).
    Move `batch/catalog/` → `grain/catalog/`; rewire the composition-root import; BATCH's charter drops
    "the component catalog" and GRAIN's "self-documenting catalog" capability becomes literally true
-   (mechanism + content both grain). Cross-cutting — do it in the **portfolio consolidation** fable
-   pass (tjakoen.github.io/CONSOLIDATION.md), not mid-flight.
+   (mechanism + content both grain). Cross-cutting — do it in the **portfolio consolidation** pass
+   (shipped 2026-07-05; see git history), not mid-flight.
 
 8. **Themes as reference files** — ✅ **DONE (2026-07-05, commit eb58392).** Baguette + Brioche split
    into `grain/styles/themes/{baguette,brioche}.css` + annotated `_template.css`; variables.css keeps
