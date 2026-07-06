@@ -36,11 +36,12 @@ own public repo (a **submodule** of this umbrella). See [`SPLIT-PLAN.md`](./SPLI
 |---|---|---|
 | 🥖 **[BATCH](./batch/)** | The no-build substrate — Bun · Addressable · TypeScript · CSS · htmx. Server-rendered hypermedia, no bundler, no template language. | [`batch/docs/ARCHITECTURE.md`](./batch/docs/ARCHITECTURE.md) |
 | **[GRAIN](./grain/)** | The AI-interaction design system + its default theme (**Sourdough**) — atoms/molecules/organisms, tokens, and *grade-as-signal* (grain = AI, clean = human). | [`grain/docs/GRAIN.md`](./grain/docs/GRAIN.md) |
-| **[MILL](./mill/)** | Markdown → GRAIN-pages CMS *(planned)* — feed it `.md` + images, it renders GRAIN pages. GRAIN's companion, built on both layers. | [`mill/PLAN.md`](./mill/PLAN.md) |
+| **[MILL](./mill/)** | Markdown → GRAIN-pages CMS — feed it `.md` + images, it renders GRAIN pages. GRAIN's companion, built on both layers. Live: `/notes`, `/grain/docs`, `/batch/docs` render through it. | [`mill/PLAN.md`](./mill/PLAN.md) |
 
-**Consumers** (their own repos, not part of the umbrella): **`tjakoen.github.io/`** → the personal site
-(`tjakoen.github.io`), and **`project/`** → a private AI-assistant product. They import the stack;
-they don't fork it.
+**The app + composition root** (its own repo, not part of the umbrella): **`tjakoen.github.io/`** →
+the personal site — it wires batch + grain + mill and runs the site + `/loop` demo. It *uses* the
+stack; it doesn't fork it. **`project/`** (a private AI-assistant product) is **paused** — a
+docs-only archive until it resumes as its own repo.
 
 ## The bet
 

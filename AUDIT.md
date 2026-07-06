@@ -36,14 +36,20 @@ Only `tjakoen.github.io/server.ts` wires the layers. New design-system work live
 
 ### 4. Tokens only — CONVENTIONS §5
 ```bash
-grep -rnE "#[0-9a-fA-F]{3,6}|rgb\(|hsl\(" grain/components project/components --include=*.css   # expect none — colors live in grain/styles/variables.css
+grep -rnE "#[0-9a-fA-F]{3,6}|rgb\(|hsl\(" grain/components tjakoen.github.io/components --include=*.css   # expect none — colors live in grain/styles/variables.css
 ```
+**Sanctioned exception:** `grain/styles/themes/{baguette,brioche,_template}.css` are the
+palette-definition files — they *are* where raw hex/`rgb()` legitimately lives (each theme flavor
+declares its literal palette, which the semantic tokens then consume). The *Sourdough* default lives
+in `variables.css`. Don't flag the theme files.
 
 ### 5. Persona-neutral GRAIN — memory `grain-persona-neutral-and-audit`
 ```bash
-grep -rn "the desk" batch grain --include=*.ts --include=*.css --include=*.html --include=*.md   # expect none
+# NOTE: include *.js — the client runtime (grain/scripts/*.js) is user-facing GRAIN too;
+# an earlier grep that omitted it let "the desk" strings sit in terminal.js / ai-dispatch.js.
+grep -rniE "\bdesk\b" batch grain --include=*.ts --include=*.js --include=*.css --include=*.html --include=*.md   # expect none but the exception below
 ```
-GRAIN is product-agnostic: "the desk" is the **product** persona and belongs only to `project/` + `tjakoen.github.io/`. Sole allowed exception in grain: the `desk.stop` action name (rename deferred). `desktop` is a false positive.
+GRAIN is product-agnostic: "the desk" is the **product** persona and belongs only to `project/` + `tjakoen.github.io/`. Use **"the AI"** as the neutral term in grain. Sole allowed exception: the `desk.stop` action name (rename deferred) — it shows up in `contract.ts`, `interaction-layer.ts`, and the `door.submit("desk.stop")` / `action: "desk.stop"` call sites. `desktop` is a false positive.
 
 ### 6. Naming — memories `project-name-temporary`, `batch-rename-open-question`, org rule
 - Product = **"Project"** (temporary) in docs; the old name lingers only in product UI (`tjakoen.github.io/pages/*`, `tjakoen.github.io/pages`) pending a product-rename pass.

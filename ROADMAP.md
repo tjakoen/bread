@@ -1,12 +1,17 @@
 # ROADMAP.md — from choreographed simulation to existence proof
 
-> Status: **canonical execution plan (2026-07-03).** Written after a full-stack audit (4-agent
-> deep dive: GRAIN code-vs-claims, BATCH, MILL, adversarial prior-art sweep) — findings in agent
-> memory `stack-audit-2026-07`. This file is the *what-next*; the layer plans
-> ([mill/PLAN.md](mill/PLAN.md), [project/PROJECT-PLAN.md](project/PROJECT-PLAN.md),
+> Status: **canonical execution plan (2026-07-03; frame updated 2026-07-06).** Written after a
+> full-stack audit (4-agent deep dive: GRAIN code-vs-claims, BATCH, MILL, adversarial prior-art
+> sweep) — findings in agent memory `stack-audit-2026-07`. This file is the *what-next*; the layer
+> plans ([mill/PLAN.md](mill/PLAN.md), [project/PROJECT-PLAN.md](project/PROJECT-PLAN.md),
 > [tjakoen.github.io/PLAN.md](tjakoen.github.io/PLAN.md)) stay canonical for their layers, and
 > [SPLIT-PLAN.md](SPLIT-PLAN.md) stays the repo-split map. When a step lands, tick it here and
 > sync the layer doc.
+>
+> **Update (2026-07-05):** the composition root folded into `tjakoen.github.io/` (now THE app) and
+> the AI-assistant product (`project/`) is **paused** — a docs-only archive. Where a track below
+> says "domain work in `project/`", read it as the app (`tjakoen.github.io/`) until the product
+> resumes as its own repo.
 
 ## The frame (how we now position everything)
 

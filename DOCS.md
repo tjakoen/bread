@@ -27,20 +27,30 @@ non-negotiables and hard-won lessons; they travel with the folder on the split:
 | [GRAIN.md](grain/docs/GRAIN.md) | `grain/docs/` | The AI-interaction layer — a design system an AI can operate (surfaces, one vocabulary, render ops, manifest, grade-as-signal). | Layer |
 | [AI-INTERFACE.md](grain/docs/AI-INTERFACE.md) | `grain/docs/` | GRAIN's detailed contract: intent + render-op envelopes, the SSE push channel, the manifest, the two write paths, the AI-acts protocol. | Contract |
 | [DESIGN-SYSTEM.md](grain/docs/DESIGN-SYSTEM.md) | `grain/docs/` | The visual identity — *Sourdough*, monochrome e-ink. "Grade as signal" (grain = AI, clean = human). | Identity |
-| [PROJECT-PLAN.md](project/PROJECT-PLAN.md) | `project/` | The product's master vision — the full ambient assistant and its differentiators. | Vision |
-| [MVP.md](project/docs/MVP.md) | `project/docs/` | The current product slice — the AI task-manager dashboard. | Product slice |
+| [PLAN.md](mill/PLAN.md) | `mill/` | MILL — the Markdown→GRAIN CMS: its canonical plan + the "What MILL gives you" capability list. A layer *above* grain+batch (`batch → grain → mill`). | Layer |
+| [PROJECT-PLAN.md](project/PROJECT-PLAN.md) | `project/` | The product's master vision — the full ambient assistant. **PAUSED** (docs-only archive since 2026-07-05). | Vision |
+| [MVP.md](project/docs/MVP.md) | `project/docs/` | The product slice — the AI task-manager dashboard. **PAUSED** (see above). | Product slice |
+
+The **app + composition root** is [`tjakoen.github.io/`](tjakoen.github.io/) (the portfolio; it wires
+batch + grain + mill and runs the site). Its own *how/what* docs — [`PLAN.md`](tjakoen.github.io/PLAN.md),
+[`FEATURES.md`](tjakoen.github.io/FEATURES.md), the `/grain`·`/batch` landing-page plans, the demo
+plan — live in `tjakoen.github.io/`, and the personal cross-repo standards in
+[`tjakoen.github.io/standards/`](tjakoen.github.io/standards/). The root also carries the portable
+[`AI-REPO-STANDARD.md`](AI-REPO-STANDARD.md) (the repo-side companion to `standards/AI-DEVELOPMENT.md`).
 
 ## How they fit
 
 ```
-Product:  PROJECT-PLAN ─ the destination (full assistant)
-             └─ MVP    ─ the first slice (task manager dashboard)
+App / composition root:  tjakoen.github.io/ ─ THE app — wires the layers, runs the site + /loop demo
+Layer:    MILL         ─ the Markdown→GRAIN CMS (batch → grain → mill)
 Layer:    GRAIN        ─ the AI-operable interface
              ├─ AI-INTERFACE  ─ the contract: one door, render ops, manifest, AI-acts protocol
              └─ DESIGN-SYSTEM ─ the look + grade-as-signal (grain = AI · clean = human)
 Substrate: BATCH (ARCHITECTURE) ─ no-build server-rendered hypermedia
+Product (PAUSED): PROJECT-PLAN / MVP ─ the assistant's vision, archived until it resumes as its own repo
 
-   Product → built on → GRAIN → built on → BATCH
+   tjakoen.github.io/ → uses → MILL → built on → GRAIN → built on → BATCH
 ```
 
-The running proof lives in [`../grain/`](grain/) + [`../project/`](project/).
+The running proof lives in [`../tjakoen.github.io/`](tjakoen.github.io/) (the app + composition root),
+on the [`../grain/`](grain/) + [`../batch/`](batch/) layers.
