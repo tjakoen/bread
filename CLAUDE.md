@@ -115,7 +115,8 @@ This is the contract for not drifting. After any change, sync everything in its 
 | **A notable decision or non-obvious fact** | write a **memory** (see below) so the next session inherits it |
 
 **Definition of done:** code + the right test tier(s) (unit / integration / e2e per CONVENTIONS §6)
-+ docs synced (this table) + `tsc` and `bun test` green + a memory if a decision was made.
++ docs synced (this table) + `tsc` and `bun test` green + a memory if a decision was made + **commit**
+(once the gate is green, commit the change — don't leave finished, verified work sitting uncommitted).
 
 **When you fix something, fix its cause — not just the instance.** Anything flagged — a failing
 check, a bug, a surface that didn't behave as expected, an AI (or a person) that tripped — is first a
