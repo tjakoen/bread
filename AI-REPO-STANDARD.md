@@ -241,7 +241,37 @@ is cheap.
 
 ---
 
-## 11. Adoption checklist
+## 11. Index the codebase for the AI
+
+Grepping and re-reading raw files is the AI's default way to orient — and its single
+biggest token sink, plus a source of partial-picture mistakes (it acts on the three files
+it read, not the ten that mattered). Commit an index that answers structural questions
+directly: a whole-repo knowledge graph (I use
+[`graphify`](https://github.com/safishamsi/graphify) — local tree-sitter AST, zero API
+cost) the AI queries — "what connects X to Y", "where does this abstraction live", "what's
+impacted if I change this" — and gets back a scoped subgraph instead of a pile of files.
+Measured ~20x fewer tokens per codebase question on the reference repo.
+
+The committed machinery, mapped to this standard's own patterns:
+
+- **A CLAUDE.md rule that teaches query-first** — "for codebase questions, run
+  `graphify query` before grepping; read raw files to *change* lines, not to *find* them."
+  Without the rule the index sits unused; this is the §7 hardening ladder, rung 2.
+- **Freshness on the git post-commit hook, never the build or test step.** Commits are the
+  right granularity; build and test fire constantly on unchanged code, so the graph would
+  rebuild for nothing. Incremental AST updates are free (no LLM), so the hook is cheap. A
+  stale index is worse than none — it lies with confidence, the §6 SSOT failure mode.
+- **Git-ignore the generated output.** It's per-machine and derived, not canon. That also
+  keeps a foreign toolchain (graphify is Python) out of the app — it's a **dev aid**, never
+  a runtime dep. Regenerated on clone via the hook install.
+
+The reusable copy-paste setup prompt lives in `AI-DEVELOPMENT.md` §4 ("Index the codebase
+for the AI"). The index is an orientation layer, not a substitute for reading the actual
+lines you're about to change — same as a map is not the territory.
+
+---
+
+## 12. Adoption checklist
 
 Day one (an hour):
 
@@ -257,6 +287,8 @@ First month (as the work happens, not as a project):
       `AUDIT.md`.
 - [ ] Subsystems grow distinct rules → give each its own `CLAUDE.md` from a shared starter.
 - [ ] More than a couple of docs → add `DOCS.md`.
+- [ ] Codebase big enough that grep/re-read dominates a session → stand up the AI index
+      (§11): build the graph, add the query-first CLAUDE.md rule, wire the post-commit hook.
 - [ ] Run the first full audit with your strongest model; fix findings in-session; commit
       the report.
 
