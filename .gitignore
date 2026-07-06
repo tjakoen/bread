@@ -20,6 +20,9 @@ screenshots/
 # swallowed batch/audit/ (the engine SOURCE) and it silently never got committed
 /audit/
 
+# graphify knowledge graph (generated, per-machine; rebuilt by the post-commit hook)
+graphify-out/
+
 # local tooling / editor / OS
 .claude/
 .DS_Store
