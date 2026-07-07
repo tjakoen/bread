@@ -112,9 +112,13 @@ pointer, the gap is in those docs — fix it there, not here.
 2. ✅ **Getting-started ×2** — lift from the READMEs, make it copy-pasteable, render through MILL. (`df9ec2e`)
 3. ✅ **Tutorial** — the flagship. (`13adfb2`)
 4. ✅ **How-to guides** — batch them; each is small. (`c042825`)
-5. **Generated reference tool** — vocab + endpoints + tokens as a projection of source. ← next
-6. **Contribute section** — links.
-7. **Sync + gate** — per the CLAUDE.md "when you change X" table (below).
+5. ✅ **Generated reference tool** — vocab + endpoints + tokens as a projection of source. (`grain/ai/vocab-reference.ts`, `/reference`)
+6. ✅ **Contribute section** — links, on the `/docs` hub.
+7. ✅ **Sync + gate** — DOCS.md, `/llms.txt`, sitemap, the static-export allowlist; `tsc` + `bun test` green (186 pass).
+
+**All 7 steps shipped 2026-07-07.** DEV-DOCS.md's job is done as a build plan; it stays as the
+canonical record of what got built and why (the file-layout correction, the list-wrap bugfix) for
+whoever touches these docs next.
 
 ## Open decisions
 
