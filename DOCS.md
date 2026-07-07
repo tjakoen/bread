@@ -23,8 +23,10 @@ non-negotiables and hard-won lessons; they travel with the folder on the split:
 
 | Doc | Lives in | What it is | Altitude |
 |---|---|---|---|
+| [GETTING-STARTED.md](batch/docs/GETTING-STARTED.md) | `batch/docs/` | Task-oriented: install, run, what BATCH gives you, next steps. Part of [DEV-DOCS.md](DEV-DOCS.md)'s `/docs` hub. | Substrate |
 | [ARCHITECTURE.md](batch/docs/ARCHITECTURE.md) | `batch/docs/` | The substrate's reasoning — no-build server-rendered hypermedia; incl. the static export (§18) and no-build **client** modules + client-side runtime (§19, with the client-safe boundary). Single source of truth for the stack. | Substrate |
 | [CONVENTIONS.md](batch/docs/CONVENTIONS.md) | `batch/docs/` | The build standard — layering, components, tokens, the action vocabulary, the 3-tier testing bar. | Substrate |
+| [GETTING-STARTED.md](grain/docs/GETTING-STARTED.md) | `grain/docs/` | Task-oriented: install, the two layers (design system vs. AI door), the markup table, next steps. Part of [DEV-DOCS.md](DEV-DOCS.md)'s `/docs` hub. | Layer |
 | [GRAIN.md](grain/docs/GRAIN.md) | `grain/docs/` | The AI-interaction layer — a design system an AI can operate (surfaces, one vocabulary, render ops, manifest, grade-as-signal). | Layer |
 | [AI-INTERFACE.md](grain/docs/AI-INTERFACE.md) | `grain/docs/` | GRAIN's detailed contract: intent + render-op envelopes, the SSE push channel, the manifest, the two write paths, the AI-acts protocol. | Contract |
 | [DESIGN-SYSTEM.md](grain/docs/DESIGN-SYSTEM.md) | `grain/docs/` | The visual identity — *Sourdough*, monochrome e-ink. "Grade as signal" (grain = AI, clean = human). | Identity |
