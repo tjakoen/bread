@@ -97,8 +97,8 @@ pointer, the gap is in those docs — fix it there, not here.
 
 1. ✅ **Hub route `/docs` + nav** — thin, links only what exists today. Proves the shape end-to-end. (`ba231c4`)
 2. ✅ **Getting-started ×2** — lift from the READMEs, make it copy-pasteable, render through MILL. (`df9ec2e`)
-3. **Tutorial** — the flagship. ← next
-4. **How-to guides** — batch them; each is small.
+3. ✅ **Tutorial** — the flagship. (`13adfb2`)
+4. **How-to guides** — batch them; each is small. ← next
 5. **Generated reference tool** — vocab + endpoints + tokens as a projection of source.
 6. **Contribute section** — links.
 7. **Sync + gate** — per the CLAUDE.md "when you change X" table (below).
