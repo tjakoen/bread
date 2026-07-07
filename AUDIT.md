@@ -60,7 +60,7 @@ GRAIN is product-agnostic: "the desk" is the **product** persona and belongs onl
 For anything changed, walk its row (e.g. an action verb → `contract.ts` → reasoner → unit+integration tests → `docs/AI-INTERFACE.md`). **Docs are the single source; pages + the whitepaper are *projections* (teasers), never forks.**
 
 ### 8. Components — CONVENTIONS §4
-Each has `.html` / `.css` / `.md` (+ `.ai.md` if it needs one); operable ones declare `data-kind` + `data-accepts`. It should auto-appear in `/catalog`.
+Each has `.css` / `.md` (+ `.ai.md` if it needs one); operable ones declare `data-kind` + `data-accepts`. It should auto-appear in `/catalog`. **`.html` is required only for components `batch/render` expands as a tag** — **CSS-only** layout/pattern components (`app-shell`, `side-rail`, `tab-bar`, `chat-log`, …) and data-driven atoms (`b-badge`, `b-list`) legitimately skip it (CONVENTIONS §4 "CSS-only components"); they must instead state any parent-context requirement in their `.md`. So a missing `.html` is only a finding when the component IS render-expanded — don't flag the CSS-only ones.
 
 ### 9. Generated output not committed
 `audit/` and `screenshots/` are generated (`bun run audit` / `bun run shots`) → gitignored, never committed.

@@ -12,7 +12,7 @@ dependency — each layer builds only on the layers below it:
 ```
 batch/   BATCH — the substrate (Bun · Addressable · TypeScript · CSS · htmx); no build step
   └─ grain/   GRAIN — an AI-interaction design system + its default theme (the look) + the catalog
-       ├─ MILL/               the markdown CMS (PLANNED; its OWN reusable project) — feed it .md + images, it renders GRAIN pages
+       ├─ MILL/               the markdown CMS (LIVE — core renders /notes + the layer docs; its OWN reusable project) — feed it .md + images, it renders GRAIN pages
        ├─ tjakoen.github.io/  THE app + the composition root — this personal site (BATCH + GRAIN); *uses MILL* for its notes/blog
        └─ project/            the product — a personal AI assistant ("Project"); **PAUSED** — now a docs-only archive (see below)
 ```
