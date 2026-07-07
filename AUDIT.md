@@ -76,6 +76,25 @@ source, and every real feature appears in it — headlined or explicitly listed,
 - **Tiering sane:** heroes are the reasons the layer exists; useful-but-quiet features are under *Also*, not omitted. PLANNED items are marked as such (don't imply shipped).
 - **Teasers are projections, not forks:** the README + landing-page (`/grain`, `/batch`) capability blurbs summarize the source list truly and don't add features the source doesn't have (ties to check 7).
 
+### 12. Attribute ↔ CSS contract — no dead knobs (grain lesson 9; regressed in `adede03`)
+A boolean UI state must use **one idiom, matched on both sides**:
+- **presence** — `el.toggleAttribute("data-x")` (JS) ↔ `[data-x]` selectors (CSS), no value.
+- **value** — `el.setAttribute("data-x","true"/"false")` (JS) ↔ `[data-x="true"]` selectors (CSS).
+
+Crossing them is a **silent dead knob**: `toggleAttribute` sets the attribute to `""`, which never
+equals `"true"`, so the CSS never matches — the control flips on click while nothing on screen moves,
+and `tsc`/unit/e2e all stay green (this is exactly how terminal-expand shipped inert).
+```bash
+# every attr toggled via toggleAttribute() must have NO value-form CSS selector
+for a in $(grep -rhoE 'toggleAttribute\("[a-z-]+"' --include='*.js' grain tjakoen.github.io | sed -E 's/.*"([a-z-]+)".*/\1/' | sort -u); do
+  hits=$(grep -rnE "\[$a=\"" --include='*.css' grain tjakoen.github.io 2>/dev/null)
+  [ -n "$hits" ] && echo "DEAD KNOB: $a toggled (presence) but CSS uses value form:" && echo "$hits"
+done
+# expect: zero "DEAD KNOB" lines
+```
+**Pass bar:** no `DEAD KNOB` output. New toggle → pick one idiom, match both sides. Symptom of a miss:
+the attribute flips in devtools but the layout doesn't budge.
+
 ## Report template
 - **✅ Passing:** (list the checks that passed)
 - **⚠️ Findings:** `file:line` — what — fix or flag
