@@ -49,15 +49,28 @@ re-documenting them.
  └─ Contribute        ← thin: links CLAUDE.md · HACKING.md · CONVENTIONS.md
 ```
 
-Files on disk (travel with the folder on the split):
+Files on disk (travel with the folder on the split). **Flat, not a `guides/` subfolder** — MILL's
+`dirSource` (`mill/serve.ts`) lists one directory non-recursively, so a nested folder would be
+invisible to `/batch/docs`·`/grain/docs`; discovered building step 4, corrected here from the
+original plan:
 
 ```
 batch/docs/GETTING-STARTED.md
-batch/docs/guides/*.md
+batch/docs/ADD-A-ROUTE.md
+batch/docs/CONSUME-AS-GIT-DEPS.md
+batch/docs/STATIC-EXPORT-AND-DEPLOY.md
 grain/docs/GETTING-STARTED.md
-grain/docs/guides/*.md
 grain/docs/TUTORIAL.md          (flagship — GRAIN is where "operable" lives)
+grain/docs/ADD-A-COMPONENT.md
+grain/docs/MAKE-A-SURFACE-OPERABLE.md
+grain/docs/ADD-A-RENDER-OP-KIND.md
+grain/docs/RE-SKIN-VIA-TOKENS.md
 ```
+
+**Every list item in a `.md` MILL renders must stay on one physical source line** — its markdown
+subset has no list-continuation-line support; a wrapped item silently breaks out of the list into a
+stray paragraph. Caught + fixed across every doc in this plan while building step 4 (see the memory
+`mill-markdown-list-single-line`).
 
 The `/docs` hub itself is a portfolio surface (`tjakoen.github.io/`) — it stitches the layer docs into
 one ordered path and links out to `/catalog` and the explanation docs. It **owns no prose**; every
