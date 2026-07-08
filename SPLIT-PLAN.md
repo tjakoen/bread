@@ -46,7 +46,8 @@ BREAD/                      ← umbrella (public repo, was batch-stack)
 ├─ batch/                   ← submodule → its own public repo
 ├─ grain/                   ← submodule → its own public repo
 ├─ mill/                    ← submodule → its own public repo
-├─ proof/                   ← submodule → its own public repo (AI plan board; consumes mill)
+├─ proof/                   ← submodule → its own public repo (AI plan board; mountable layer; consumes mill)
+├─ pantry/                  ← the installable dev-docs + AI cockpit APP (composes the layers; `bunx pantry`)
 └─ (root, stays here)       PHILOSOPHY · ARCHITECTURE/CONVENTIONS map · ROADMAP · AUDIT · standards/ · DOCS.md
 
 tjakoen.github.io/          ← portfolio, its own PUBLIC repo (the personal site / front door)
@@ -77,7 +78,8 @@ Docs and licenses are **already co-located** with their layer, so each is a stra
 | **batch** — no-build substrate | `batch/` | public submodule | `batch/docs/ARCHITECTURE.md` (SSOT), `batch/docs/CONVENTIONS.md` |
 | **grain** — AI-interaction design system | `grain/` | public submodule | `grain/docs/GRAIN.md`, `AI-INTERFACE.md`, `DESIGN-SYSTEM.md` |
 | **mill** — Markdown→GRAIN CMS | `mill/` | public submodule | `mill/PLAN.md`, `mill/README.md` |
-| **proof** — AI plan board (consumes mill) | `proof/` | public submodule | `proof/PLAN.md` |
+| **proof** — AI plan board (mountable layer; consumes mill) | `proof/` | public submodule | `proof/PLAN.md` |
+| **pantry** — installable dev-docs + AI cockpit (app; composes the layers) | `pantry/` | public repo (installable) | `pantry/PLAN.md` |
 | **portfolio** → `tjakoen.github.io` | `tjakoen.github.io/` | own public repo | its own `README` / `PLAN` |
 | **project** *(name TBD)* — the assistant product | `project/` | own **private** repo | `project/PROJECT-PLAN.md`, `project/docs/MVP.md` |
 

@@ -13,8 +13,9 @@ dependency — each layer builds only on the layers below it:
 batch/   BATCH — the substrate (Bun · Addressable · TypeScript · CSS · htmx); no build step
   └─ grain/   GRAIN — an AI-interaction design system + its default theme (the look) + the catalog
        ├─ MILL/               the markdown CMS (LIVE — core renders /notes + the layer docs; its OWN reusable project) — feed it .md + images, it renders GRAIN pages
-       ├─ proof/               PROOF — the AI plan board (plans-as-markdown → kanban projection; uses MILL); **PLANNED, docs-only** — canonical plan `proof/PLAN.md`
-       ├─ tjakoen.github.io/  THE app + the composition root — this personal site (BATCH + GRAIN); *uses MILL* for its notes/blog
+       ├─ proof/               PROOF — the AI plan board, a **mountable layer** (plans-as-markdown → kanban projection; uses MILL); pieces 1–2 built — canonical plan `proof/PLAN.md`
+       ├─ pantry/              PANTRY — the installable dev-docs + AI cockpit **app** (composes batch+grain+mill+proof into one server you `bunx` into any project); **PLANNED, docs-only** — canonical plan `pantry/PLAN.md`
+       ├─ tjakoen.github.io/  THE personal-site app + a composition root — this personal site (BATCH + GRAIN); *uses MILL* for its notes/blog (PANTRY is the neutral sibling app)
        └─ project/            the product — a personal AI assistant ("Project"); **PAUSED** — now a docs-only archive (see below)
 ```
 

@@ -236,6 +236,16 @@ sibling of `mill/`, first library consumer of MILL. **Canonical plan: [proof/PLA
 Track A's M★ push — it competes with nothing above it. Companion blog note drafted:
 `tjakoen.github.io/notes/where-were-we.md`.
 
+## Track F — PANTRY: the installable dev-docs + AI cockpit (approved 2026-07-08, unbuilt)
+
+The **app** that composes the layers (BATCH·GRAIN·MILL·PROOF) into one server you `bunx` into any
+project: renders the framework docs, the project's PROOF plan board, the generated reference, and the
+catalog — everything addressable and AI-answerable in one place, for the AI (and human) building
+there. Neutral, project-agnostic sibling of the portfolio (two apps, one stack). Settles "does PROOF
+need a server?" — no: **PROOF is a mountable layer; PANTRY is the server.** Requires the PROOF split
+(`createProofRoutes`, mirroring MILL) — do it after PROOF's layer (Tracks E pieces 3–4) settles.
+**Canonical plan: [pantry/PLAN.md](pantry/PLAN.md)** (includes the root tidy-up structure).
+
 ## Definition of "the pitch is honest"
 
 - No page or doc says "one write path" while generic CRUD routes ship (Track A.2/A.3 resolve this).
