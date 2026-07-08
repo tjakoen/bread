@@ -46,6 +46,7 @@ BREAD/                      ← umbrella (public repo, was batch-stack)
 ├─ batch/                   ← submodule → its own public repo
 ├─ grain/                   ← submodule → its own public repo
 ├─ mill/                    ← submodule → its own public repo
+├─ proof/                   ← submodule → its own public repo (AI plan board; consumes mill)
 └─ (root, stays here)       PHILOSOPHY · ARCHITECTURE/CONVENTIONS map · ROADMAP · AUDIT · standards/ · DOCS.md
 
 tjakoen.github.io/          ← portfolio, its own PUBLIC repo (the personal site / front door)
@@ -55,7 +56,7 @@ project/                    ← its own PRIVATE repo (the product; not a submodu
 Dependency direction stays strict and one-way — each layer builds only on the layers below it:
 
 ```
-batch  →  grain  →  mill        (and grain touches batch only through the OpChannel port)
+batch  →  grain  →  mill  →  proof   (and grain touches batch only through the OpChannel port)
              ↘        ↘
               consumed by → project (private) · portfolio = tjakoen.github.io (public)
 ```
@@ -76,6 +77,7 @@ Docs and licenses are **already co-located** with their layer, so each is a stra
 | **batch** — no-build substrate | `batch/` | public submodule | `batch/docs/ARCHITECTURE.md` (SSOT), `batch/docs/CONVENTIONS.md` |
 | **grain** — AI-interaction design system | `grain/` | public submodule | `grain/docs/GRAIN.md`, `AI-INTERFACE.md`, `DESIGN-SYSTEM.md` |
 | **mill** — Markdown→GRAIN CMS | `mill/` | public submodule | `mill/PLAN.md`, `mill/README.md` |
+| **proof** — AI plan board (consumes mill) | `proof/` | public submodule | `proof/PLAN.md` |
 | **portfolio** → `tjakoen.github.io` | `tjakoen.github.io/` | own public repo | its own `README` / `PLAN` |
 | **project** *(name TBD)* — the assistant product | `project/` | own **private** repo | `project/PROJECT-PLAN.md`, `project/docs/MVP.md` |
 
@@ -208,14 +210,14 @@ Licenses are already co-located, so they travel on the `git filter-repo` split.
 
 | Repo | License | Files in place |
 |---|---|---|
-| **BREAD** (umbrella), **batch**, **grain**, **mill** | **Apache-2.0** — permissive, patent grant; the fit for frameworks published for adoption | `LICENSE` (Apache-2.0) + `NOTICE` (© 2026 Tjakoen Stolk) |
+| **BREAD** (umbrella), **batch**, **grain**, **mill**, **proof** | **Apache-2.0** — permissive, patent grant; the fit for frameworks published for adoption | `LICENSE` (Apache-2.0) + `NOTICE` (© 2026 Tjakoen Stolk) |
 | **portfolio** (`tjakoen.github.io`) | **Split**: code Apache-2.0; **written content all rights reserved** | `LICENSE` (Apache-2.0, code only) + `NOTICE` (code/prose boundary) |
 | **project** *(ex-"Department of Time")* | **Proprietary — all rights reserved. Not published.** Private repo | `LICENSE` (proprietary notice) |
 
 The product may publicly credit and feature BATCH/GRAIN/MILL — consuming Apache-2.0 frameworks imposes
 nothing on the product's own source, and keeping the product closed imposes nothing on the frameworks.
 
-Placeholder `package.json` per layer (`@tjakoen/batch|grain|mill`, Apache-2.0; `portfolio` private;
+Placeholder `package.json` per layer (`@tjakoen/batch|grain|mill|proof`, Apache-2.0; `portfolio` private;
 `project` UNLICENSED + private) are staged for exactly the git-dep consumption above. They're inert
 today (the root `package.json` + relative imports still drive everything).
 
