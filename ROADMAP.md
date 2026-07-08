@@ -227,7 +227,7 @@ standalone CMS play. Publishing it stays fine; competing with Eleventy is a non-
 3. After M★: re-run the prior-art sweep (the ground moves monthly), then the user-study track
    (§5 H1–H3) becomes the next real evidence step.
 
-## Track E — PROOF: the AI plan board (2026-07-08 — pieces 1/2/4 + mount seam built; piece 3 pending)
+## Track E — PROOF: the AI plan board (2026-07-08 — pieces 1–4 + mount seam built; board LIVE over SSE)
 
 Plans-as-markdown (`plans/` + minimal frontmatter) rendered as a kanban board; injectable into any
 project via `bunx proof init` (scaffold + CLAUDE.md contract + hook set). Own top-level project,
