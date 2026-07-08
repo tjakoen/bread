@@ -227,7 +227,7 @@ standalone CMS play. Publishing it stays fine; competing with Eleventy is a non-
 3. After M★: re-run the prior-art sweep (the ground moves monthly), then the user-study track
    (§5 H1–H3) becomes the next real evidence step.
 
-## Track E — PROOF: the AI plan board (approved 2026-07-08, unbuilt)
+## Track E — PROOF: the AI plan board (2026-07-08 — pieces 1/2/4 + mount seam built; piece 3 pending)
 
 Plans-as-markdown (`plans/` + minimal frontmatter) rendered as a kanban board; injectable into any
 project via `bunx proof init` (scaffold + CLAUDE.md contract + hook set). Own top-level project,
@@ -236,7 +236,7 @@ sibling of `mill/`, first library consumer of MILL. **Canonical plan: [proof/PLA
 Track A's M★ push — it competes with nothing above it. Companion blog note drafted:
 `tjakoen.github.io/notes/where-were-we.md`.
 
-## Track F — PANTRY: the installable dev-docs + AI cockpit (approved 2026-07-08, unbuilt)
+## Track F — PANTRY: the installable dev-docs + AI cockpit (2026-07-08 — v1 built + install-verified)
 
 The **app** that composes the layers (BATCH·GRAIN·MILL·PROOF) into one server you `bunx` into any
 project: renders the framework docs, the project's PROOF plan board, the generated reference, and the

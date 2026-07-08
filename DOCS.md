@@ -17,7 +17,8 @@ folder also carries its own AI-onboarding `CLAUDE.md`, seeded from
 [`tjakoen.github.io/standards/CLAUDE.starter.md`](tjakoen.github.io/standards/CLAUDE.starter.md), with that layer's
 non-negotiables and hard-won lessons; they travel with the folder on the split:
 [`batch`](batch/CLAUDE.md), [`grain`](grain/CLAUDE.md), [`project`](project/CLAUDE.md),
-[`portfolio`](tjakoen.github.io/CLAUDE.md), [`mill`](mill/CLAUDE.md).
+[`portfolio`](tjakoen.github.io/CLAUDE.md), [`mill`](mill/CLAUDE.md). (`proof/` and `pantry/` carry
+their canonical `PLAN.md`; a per-folder `CLAUDE.md` follows when each grows past its plan.)
 
 ## Where the layer docs live
 
@@ -34,6 +35,8 @@ non-negotiables and hard-won lessons; they travel with the folder on the split:
 | [AI-INTERFACE.md](grain/docs/AI-INTERFACE.md) | `grain/docs/` | GRAIN's detailed contract: intent + render-op envelopes, the SSE push channel, the manifest, the two write paths, the AI-acts protocol. | Contract |
 | [DESIGN-SYSTEM.md](grain/docs/DESIGN-SYSTEM.md) | `grain/docs/` | The visual identity — *Sourdough*, monochrome e-ink. "Grade as signal" (grain = AI, clean = human). | Identity |
 | [PLAN.md](mill/PLAN.md) | `mill/` | MILL — the Markdown→GRAIN CMS: its canonical plan + the "What MILL gives you" capability list. A layer *above* grain+batch (`batch → grain → mill`). | Layer |
+| [PLAN.md](proof/PLAN.md) | `proof/` | PROOF — the AI plan board: its canonical plan. A **mountable layer** (plans-as-markdown → kanban projection; consumes MILL). Pieces 1–2 built (core + board) + `check`/`init` CLI. | Layer |
+| [PLAN.md](pantry/PLAN.md) | `pantry/` | PANTRY — the installable dev-docs + AI cockpit **app** that composes batch+grain+mill+proof into one `bunx pantry` server. v1 built (home + board + framework docs). | App |
 | [PROJECT-PLAN.md](project/PROJECT-PLAN.md) | `project/` | The product's master vision — the full ambient assistant. **PAUSED** (docs-only archive since 2026-07-05). | Vision |
 | [MVP.md](project/docs/MVP.md) | `project/docs/` | The product slice — the AI task-manager dashboard. **PAUSED** (see above). | Product slice |
 
@@ -47,7 +50,10 @@ plan — live in `tjakoen.github.io/`, and the personal cross-repo standards in
 ## How they fit
 
 ```
-App / composition root:  tjakoen.github.io/ ─ THE app — wires the layers, runs the site + /loop demo
+Apps (compose the layers):
+   tjakoen.github.io/ ─ the personal site — wires the layers, runs the site + /loop demo
+   PANTRY             ─ the neutral, installable dev-docs + AI cockpit (bunx into any project)
+Layer:    PROOF        ─ the AI plan board (mountable; batch → grain → mill → proof)
 Layer:    MILL         ─ the Markdown→GRAIN CMS (batch → grain → mill)
 Layer:    GRAIN        ─ the AI-operable interface
              ├─ AI-INTERFACE  ─ the contract: one door, render ops, manifest, AI-acts protocol
@@ -55,7 +61,8 @@ Layer:    GRAIN        ─ the AI-operable interface
 Substrate: BATCH (ARCHITECTURE) ─ no-build server-rendered hypermedia
 Product (PAUSED): PROJECT-PLAN / MVP ─ the assistant's vision, archived until it resumes as its own repo
 
-   tjakoen.github.io/ → uses → MILL → built on → GRAIN → built on → BATCH
+   an app → uses → PROOF → MILL → built on → GRAIN → built on → BATCH
+   (two apps on one stack: the portfolio is branded + personal, PANTRY is neutral + installable)
 ```
 
 The running proof lives in [`../tjakoen.github.io/`](tjakoen.github.io/) (the app + composition root),
