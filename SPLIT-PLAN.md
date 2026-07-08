@@ -217,13 +217,14 @@ Licenses are already co-located, so they travel on the `git filter-repo` split.
 | Repo | License | Files in place |
 |---|---|---|
 | **BREAD** (umbrella), **batch**, **grain**, **mill**, **proof** | **Apache-2.0** — permissive, patent grant; the fit for frameworks published for adoption | `LICENSE` (Apache-2.0) + `NOTICE` (© 2026 Tjakoen Stolk) |
+| **pantry** — installable dev-docs + AI cockpit app | **Apache-2.0** — same terms as the framework layers it composes; it's the installable composer app, published for adoption | `LICENSE` (Apache-2.0) + `NOTICE` (© 2026 Tjakoen Stolk) — ratified 2026-07-08 |
 | **portfolio** (`tjakoen.github.io`) | **Split**: code Apache-2.0; **written content all rights reserved** | `LICENSE` (Apache-2.0, code only) + `NOTICE` (code/prose boundary) |
 | **project** *(ex-"Department of Time")* | **Proprietary — all rights reserved. Not published.** Private repo | `LICENSE` (proprietary notice) |
 
 The product may publicly credit and feature BATCH/GRAIN/MILL — consuming Apache-2.0 frameworks imposes
 nothing on the product's own source, and keeping the product closed imposes nothing on the frameworks.
 
-Placeholder `package.json` per layer (`@tjakoen/batch|grain|mill|proof`, Apache-2.0; `portfolio` private;
+Placeholder `package.json` per layer (`@tjakoen/batch|grain|mill|proof|pantry`, Apache-2.0; `portfolio` private;
 `project` UNLICENSED + private) are staged for exactly the git-dep consumption above. They're inert
 today (the root `package.json` + relative imports still drive everything).
 
@@ -248,6 +249,17 @@ today (the root `package.json` + relative imports still drive everything).
   (never crashes) when the package isn't installed.
 - **`bun run bootstrap`** (link setup) + the `bun update`-prefixed dev/deploy scripts per consumer.
 - Curated badge row + footer + title emoji per `standards/README-STANDARD.md` per repo.
+- **Split-day, destructive — umbrella git-history filter (L3, decided 2026-07-08 = `git filter-repo`, not fresh init):**
+  the raw `batch-stack` history can't go public as-is. At `batch-stack` → BREAD rename time, `git filter-repo` the
+  umbrella to (1) **drop `project/`** (proprietary, not published), (2) **strip the 42 `Co-Authored-By: Claude`
+  trailers** via a message callback (memory `no-claude-commit-attribution`), (3) optionally scrub pre-neutralization
+  revisions of career-sensitive docs. Keeps the commit record so the ten-times-zero receipts survive (reword
+  `ten-times-zero.md` "every commit co-authored" once trailers are stripped — O3/L3 tension).
+- **Split-day, mechanical — rewrite cross-repo `../` links to published URLs / package-resolved paths (S4):**
+  these resolve in the monorepo today (do NOT rewrite now — it breaks the monorepo); flip at `git filter-repo` time.
+  Inventory: batch (`README.md:11,14`, `CLAUDE.md:20,26`, `docs/CONSUME-AS-GIT-DEPS.md:6,25,27,31`), grain
+  (`README.md:11,15`, `CLAUDE.md:21-32`, `PLAN.md:8`), mill (`README.md:30,35,36`, `CLAUDE.md:26-27`,
+  `PLAN.md:10,228`), proof (`PLAN.md:9,10,14`), pantry (`PLAN.md:15`).
 - Open elsewhere: BATCH's `A=` meaning (see `batch-rename-open-question`); the product's real name.
 
 ## Cross-repo references
