@@ -3,7 +3,8 @@
 > Status: **canonical execution plan (2026-07-03; frame updated 2026-07-06).** Written after a
 > full-stack audit (4-agent deep dive: GRAIN code-vs-claims, BATCH, MILL, adversarial prior-art
 > sweep) — findings in agent memory `stack-audit-2026-07`. This file is the *what-next*; the layer
-> plans ([mill/PLAN.md](mill/PLAN.md), [project/PROJECT-PLAN.md](project/PROJECT-PLAN.md),
+> plans ([mill/PLAN.md](mill/PLAN.md), [proof/PLAN.md](proof/PLAN.md),
+> [project/PROJECT-PLAN.md](project/PROJECT-PLAN.md),
 > [tjakoen.github.io/PLAN.md](tjakoen.github.io/PLAN.md)) stay canonical for their layers, and
 > [SPLIT-PLAN.md](SPLIT-PLAN.md) stays the repo-split map. When a step lands, tick it here and
 > sync the layer doc.
@@ -225,6 +226,15 @@ standalone CMS play. Publishing it stays fine; competing with Eleventy is a non-
    surface." Pages are teasers of the docs, never forks.
 3. After M★: re-run the prior-art sweep (the ground moves monthly), then the user-study track
    (§5 H1–H3) becomes the next real evidence step.
+
+## Track E — PROOF: the AI plan board (approved 2026-07-08, unbuilt)
+
+Plans-as-markdown (`plans/` + minimal frontmatter) rendered as a kanban board; injectable into any
+project via `bunx proof init` (scaffold + CLAUDE.md contract + hook set). Own top-level project,
+sibling of `mill/`, first library consumer of MILL. **Canonical plan: [proof/PLAN.md](proof/PLAN.md)**
+(the design law: files = SSOT, board = projection, AI never maintains the board). Sequencing: after
+Track A's M★ push — it competes with nothing above it. Companion blog note drafted:
+`tjakoen.github.io/notes/where-were-we.md`.
 
 ## Definition of "the pitch is honest"
 
