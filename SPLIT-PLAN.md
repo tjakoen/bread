@@ -124,9 +124,13 @@ where the source lives, not how it runs.**
   mounts them from the installed package dir (resolved via `import.meta.resolve`); the transpile-on-request
   module server (`batch/http/modules.ts`) already serves TS to the browser this way. **One real task:**
   each layer's `package.json` needs an `exports`/`files` map exposing its `styles/`, `components/`,
-  client-script, **and `docs/`** dirs. **Staged ahead of time** — the `exports`/`files` maps already sit
-  in `grain/package.json` and `batch/package.json` (inert until git-dep consumption). See the next
-  section for why `docs/` is on that list.
+  client-script, **and `docs/`** dirs. **Done for all four layers** — `exports`/`files` maps sit in
+  `batch/`, `grain/`, `mill/`, and `proof/` `package.json`; `pantry` (the app) has a `files` map for
+  `bunx`. Each layer also **declares its inter-layer deps** as `"@tjakoen/X": "workspace:*"` (resolves
+  locally in the monorepo; becomes `github:tjakoen/X#main` at the split), and mill/proof/pantry's
+  cross-layer imports use `@tjakoen/*` specifiers, not relative sibling paths — so the package dep graph
+  already enforces the one-way layering (commit `e8666d0`). See the next section for why `docs/` is on
+  that list.
 - **Day-to-day workflow (solo dev):** consumers point at `#main` and run **`bun update` every run**
   (bake it into the dev/deploy script: `"dev": "bun update @tjakoen/grain @tjakoen/batch && bun run
   server.ts"`) — always latest, zero version bookkeeping. Reproducibility comes from the lockfile.
@@ -229,7 +233,12 @@ today (the root `package.json` + relative imports still drive everything).
   `grain/README.md`, `b-text.ai.md`, and every "Bread"-theme ref) + adopt themes-as-bread-varieties.
 - **Umbrella rename** `batch-stack` → `BREAD` (repo/dir name, root `README.md`, this file's home,
   `CLAUDE.md` framing) — do at split time or as a naming pass.
-- **`exports`/`files` maps** per layer `package.json` (the one real import-plumbing task above).
+- ~~**`exports`/`files` maps** per layer `package.json`~~ **DONE** (commit `e8666d0`): batch/grain/mill/proof
+  export+files; pantry files; inter-layer `workspace:*` deps declared; cross-layer imports use `@tjakoen/*`.
+  Remaining split-time flip: `workspace:*` → `github:tjakoen/X#main`. Known portability gap: **pantry's
+  `/standards` surface reaches into `tjakoen.github.io/standards` via a sibling path with no
+  package/exports story** — needs package-resolution (or a host-config path) before an external host can
+  enable it. (A local git-dep + `bunx pantry` proof against a non-batch host is the open verification.)
 - **`bun run bootstrap`** (link setup) + the `bun update`-prefixed dev/deploy scripts per consumer.
 - Curated badge row + footer + title emoji per `standards/README-STANDARD.md` per repo.
 - Open elsewhere: BATCH's `A=` meaning (see `batch-rename-open-question`); the product's real name.
