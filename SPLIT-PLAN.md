@@ -235,10 +235,17 @@ today (the root `package.json` + relative imports still drive everything).
   `CLAUDE.md` framing) — do at split time or as a naming pass.
 - ~~**`exports`/`files` maps** per layer `package.json`~~ **DONE** (commit `e8666d0`): batch/grain/mill/proof
   export+files; pantry files; inter-layer `workspace:*` deps declared; cross-layer imports use `@tjakoen/*`.
-  Remaining split-time flip: `workspace:*` → `github:tjakoen/X#main`. Known portability gap: **pantry's
-  `/standards` surface reaches into `tjakoen.github.io/standards` via a sibling path with no
-  package/exports story** — needs package-resolution (or a host-config path) before an external host can
-  enable it. (A local git-dep + `bunx pantry` proof against a non-batch host is the open verification.)
+  Remaining split-time flip: `workspace:*` → `github:tjakoen/X#main`.
+  **Install path verified (2026-07-08):** a non-batch host composing batch+grain+mill+proof via
+  package-resolution works (local git-dep experiment); and bun 1.3.14 resolves + commit-pins **public**
+  `github:` deps (smoke-tested). Since the four framework layers split **public**, the real chain uses
+  exactly that proven path. Caveats found: bun's `github:`/`git+https` GitHub URLs go through the tarball
+  API, which **404s on private repos** in 1.3.14 (inline `GITHUB_TOKEN` didn't help) and fails on
+  **local `git+file://`/`git://`** repos — neither affects the public framework layers (only the private
+  `project` consumer, which isn't a dep of anything, would need a bun private-auth story).
+  **Standards portability CLOSED (commit `24ccda0`):** `tjakoen.github.io/standards` is now the
+  `@tjakoen/standards` package; pantry renders it via `import.meta.resolve`, and the surface auto-disables
+  (never crashes) when the package isn't installed.
 - **`bun run bootstrap`** (link setup) + the `bun update`-prefixed dev/deploy scripts per consumer.
 - Curated badge row + footer + title emoji per `standards/README-STANDARD.md` per repo.
 - Open elsewhere: BATCH's `A=` meaning (see `batch-rename-open-question`); the product's real name.
