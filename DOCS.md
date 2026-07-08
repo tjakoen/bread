@@ -36,7 +36,7 @@ their canonical `PLAN.md`; a per-folder `CLAUDE.md` follows when each grows past
 | [DESIGN-SYSTEM.md](grain/docs/DESIGN-SYSTEM.md) | `grain/docs/` | The visual identity — *Sourdough*, monochrome e-ink. "Grade as signal" (grain = AI, clean = human). | Identity |
 | [PLAN.md](mill/PLAN.md) | `mill/` | MILL — the Markdown→GRAIN CMS: its canonical plan + the "What MILL gives you" capability list. A layer *above* grain+batch (`batch → grain → mill`). | Layer |
 | [PLAN.md](proof/PLAN.md) | `proof/` | PROOF — the AI plan board: its canonical plan. A **mountable layer** (plans-as-markdown → kanban projection; consumes MILL). Pieces 1–2 built (core + board) + `check`/`init` CLI. | Layer |
-| [PLAN.md](pantry/PLAN.md) | `pantry/` | PANTRY — the installable dev-docs + AI cockpit **app** that composes batch+grain+mill+proof into one `bunx pantry` server. v1 built (home + board + framework docs). | App |
+| [PLAN.md](pantry/PLAN.md) | `pantry/` | PANTRY — the installable dev-docs + AI cockpit **app** that composes batch+grain+mill+proof into one `bunx pantry` server. v2 built (home + board + framework docs + layer PLANs + reference + catalog + standards; host contract + `pantry init`/`INSTALL.md`). | App |
 | [PROJECT-PLAN.md](project/PROJECT-PLAN.md) | `project/` | The product's master vision — the full ambient assistant. **PAUSED** (docs-only archive since 2026-07-05). | Vision |
 | [MVP.md](project/docs/MVP.md) | `project/docs/` | The product slice — the AI task-manager dashboard. **PAUSED** (see above). | Product slice |
 
