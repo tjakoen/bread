@@ -14,34 +14,39 @@ human and an AI through one shared vocabulary, and the AI's presence is a visibl
 
 ---
 
-**BREAD** is the umbrella for a three-layer stack. The name rides the `LAMP` / `MEAN` lineage — one
-word that reads as "a web stack" — and it closes the baking metaphor the layers already use:
+**BREAD** is the umbrella for a five-member stack — four layers (`batch → grain → mill → proof`)
+plus **PANTRY**, the app that composes them. The name rides the `LAMP` / `MEAN` lineage — one word
+that reads as "a web stack" — and it closes the baking metaphor the layers already use:
 
 ```
 BATCH  (dough / the substrate)
   └─ milled by  MILL  from  GRAIN  (the design system + its default theme, "Sourdough")
-        └─ baked in the  BREAD  stack  →  served as a theme (Sourdough today; more varieties planned)
+        └─ boarded by  PROOF  (the AI plan board, a mountable layer above MILL)
+              └─ baked in the  BREAD  stack  →  composed into an app by PANTRY (`bunx pantry`) or the portfolio
 ```
 
 The defining idea: a human click and an AI decision become the **same `Intent`**, flow through
 **one door**, and return as render operations pushed over SSE. No privileged AI→DOM back channel —
 the AI operates the UI the same way you do, and you can watch it happen (*grain = AI*).
 
-## The three layers
+## The stack
 
-Each layer builds only on the layers below it (`batch → grain → mill`), and each is headed for its
-own public repo (a **submodule** of this umbrella). See [`SPLIT-PLAN.md`](./SPLIT-PLAN.md).
+Each layer builds only on the layers below it (`batch → grain → mill → proof`). The split is
+complete — each layer is now its own public repo, held here as a **submodule**. See
+[`SPLIT-PLAN.md`](./SPLIT-PLAN.md) for how it was executed.
 
 | Layer | What it is | Start reading |
 |---|---|---|
-| 🥖 **[BATCH](./batch/)** | The no-build substrate — Bun · Addressable · TypeScript · CSS · htmx. Server-rendered hypermedia, no bundler, no template language. | [`batch/docs/ARCHITECTURE.md`](./batch/docs/ARCHITECTURE.md) |
-| **[GRAIN](./grain/)** | The AI-interaction design system + its default theme (**Sourdough**) — atoms/molecules/organisms, tokens, and *grade-as-signal* (grain = AI, clean = human). | [`grain/docs/GRAIN.md`](./grain/docs/GRAIN.md) |
+| 🥖 **[BATCH](./batch/)** | The no-build substrate — Bun · Addressable · TypeScript · CSS · htmx. Server-rendered hypermedia, no bundler, no template language. | [BATCH architecture →](https://tjakoen.github.io/batch/docs/architecture) |
+| **[GRAIN](./grain/)** | The AI-interaction design system + its default theme (**Sourdough**) — atoms/molecules/organisms, tokens, and *grade-as-signal* (grain = AI, clean = human). | [GRAIN →](https://tjakoen.github.io/grain/docs/grain) |
 | **[MILL](./mill/)** | Markdown → GRAIN-pages CMS — feed it `.md` + images, it renders GRAIN pages. GRAIN's companion, built on both layers. Live: `/notes`, `/grain/docs`, `/batch/docs` render through it. | [`mill/PLAN.md`](./mill/PLAN.md) |
+| **[PROOF](./proof/)** | The AI plan board — plans are markdown files; the board is a live projection of them. A mountable layer built on MILL (plans-as-markdown → kanban). | [`proof/PLAN.md`](./proof/PLAN.md) |
 
-**The app + composition root** (its own repo, not part of the umbrella): **`tjakoen.github.io/`** →
-the personal site — it wires batch + grain + mill and runs the site + `/loop` demo. It *uses* the
-stack; it doesn't fork it. **`project/`** (a private AI-assistant product) is **paused** — a
-docs-only archive until it resumes as its own repo.
+**The apps** (their own repos, not part of the umbrella): **`tjakoen.github.io/`** → the personal
+site — it wires batch + grain + mill and runs the site + `/loop` demo. It *uses* the stack; it
+doesn't fork it. **PANTRY** → the installable dev-docs + AI cockpit app — `bunx pantry` composes
+batch + grain + mill + proof into one server for any project. **`project/`** (a private AI-assistant
+product) is **paused** — a docs-only archive until it resumes as its own repo.
 
 ## The bet
 
@@ -68,8 +73,9 @@ fight the grain. The trade is taken on purpose. The full *why* is in
 
 ## Quick start
 
-Needs [Bun](https://bun.sh) (pinned `1.3.x`). The split happened: this umbrella holds the layers as
-**submodules** (empty by default — see [`SPLIT-PLAN.md`](./SPLIT-PLAN.md)); the running site lives in
+Needs [Bun](https://bun.sh) (pinned `1.3.x`). The split is complete: this umbrella holds the layers
+as **submodules** — run `git submodule update --init` to pull them in (see
+[`SPLIT-PLAN.md`](./SPLIT-PLAN.md) for how the split was executed). The running site lives in
 [`tjakoen/tjakoen.github.io`](https://github.com/tjakoen/tjakoen.github.io).
 
 ```sh
@@ -92,16 +98,16 @@ Then visit (on the running site):
 - **[`CLAUDE.md`](./CLAUDE.md)** — orientation + operating rules (incl. the "when you change X,
   update Y" matrix). Any AI or human joining starts here.
 - **[`PHILOSOPHY.md`](https://github.com/tjakoen/tjakoen.github.io/blob/main/PHILOSOPHY.md)** — the beliefs the whole stack serves.
-- **[`batch/docs/CONVENTIONS.md`](./batch/docs/CONVENTIONS.md)** — the build standard (layering,
+- **[CONVENTIONS](https://tjakoen.github.io/batch/docs/conventions)** — the build standard (layering,
   components, tokens, the action vocabulary, the 3-tier testing bar).
 - **[`DOCS.md`](./DOCS.md)** — the full map of where every doc lives.
 - **[`ROADMAP.md`](./ROADMAP.md)** — the canonical execution plan.
 
 ## License
 
-Apache-2.0 for the framework layers (BATCH · GRAIN · MILL). The personal site's written content is
-all-rights-reserved; the product is proprietary and unpublished. Details in
-[`SPLIT-PLAN.md`](./SPLIT-PLAN.md#licensing).
+Apache-2.0 for the framework layers (BATCH · GRAIN · MILL · PROOF) and the PANTRY app. The personal
+site's written content is all-rights-reserved; the product is proprietary and unpublished. Details
+in [`SPLIT-PLAN.md`](./SPLIT-PLAN.md#licensing).
 
 ---
 

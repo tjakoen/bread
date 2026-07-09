@@ -42,22 +42,26 @@ pushed over SSE. No privileged AI→DOM back channel.
 ## Start here (reading order)
 
 1. **[PHILOSOPHY.md](tjakoen.github.io/PHILOSOPHY.md)** — the *why* (the beliefs the whole stack serves). **Read first.**
-2. **[CONVENTIONS.md](batch/docs/CONVENTIONS.md)** — the build standard (layering, components, tokens,
+2. **[CONVENTIONS](https://tjakoen.github.io/batch/docs/conventions)** — the build standard (layering, components, tokens,
    the action vocabulary, the 3-tier testing bar, the extraction plan). **The rulebook.**
-3. **[ARCHITECTURE.md](batch/docs/ARCHITECTURE.md)** — the substrate's reasoning (single source of truth).
-4. **[grain/docs/GRAIN.md](grain/docs/GRAIN.md)** + **[grain/docs/AI-INTERFACE.md](grain/docs/AI-INTERFACE.md)** — the
+3. **[ARCHITECTURE](https://tjakoen.github.io/batch/docs/architecture)** — the substrate's reasoning (single source of truth).
+4. **[GRAIN](https://tjakoen.github.io/grain/docs/grain)** + **[AI-INTERFACE](https://tjakoen.github.io/grain/docs/ai-interface)** — the
    design system and the AI contract (surfaces, ops, manifest, the "AI acts" protocol).
-5. **[grain/docs/DESIGN-SYSTEM.md](grain/docs/DESIGN-SYSTEM.md)** — the visual identity / grade-as-signal.
+5. **[DESIGN-SYSTEM](https://tjakoen.github.io/grain/docs/design-system)** — the visual identity / grade-as-signal.
+6. **[`proof/PLAN.md`](proof/PLAN.md)** — PROOF, the AI plan board: plans are markdown files, the
+   board is a live projection of them.
+7. **[`pantry/PLAN.md`](pantry/PLAN.md)** — PANTRY, the installable dev-docs + AI cockpit app
+   (`bunx pantry`) that composes the stack.
 
 The SSOT for what's operable is **`grain/ai/contract.ts`** (`SurfaceKind`, `ActionName`,
 `ACTIONS`, `RenderOp`). The composition root — the only place the layers meet — is
 **`tjakoen.github.io/server.ts`**. The reference screen is **`/loop`** (`tjakoen.github.io/pages/loop.html`).
 
-**Working mainly in one layer?** The future-repo folders carry their **own `CLAUDE.md`** —
+**Working mainly in one layer?** Each layer's repo carries its **own `CLAUDE.md`** —
 [`batch/CLAUDE.md`](batch/CLAUDE.md) and [`grain/CLAUDE.md`](grain/CLAUDE.md) — with that layer's
 non-negotiables and the hard-won *"don't repeat these"* lessons (the silent-failure contracts, the
 control lifecycle, "use the vocabulary, don't reinvent it"). Read the layer's file alongside this
-one; on the split it travels with the folder. The full doc map is [`DOCS.md`](DOCS.md).
+one. The full doc map is [`DOCS.md`](DOCS.md).
 
 ## Commands
 
@@ -100,9 +104,9 @@ This is the contract for not drifting. After any change, sync everything in its 
 
 | You change… | …also update |
 |---|---|
-| **An action verb** (add/modify) | `contract.ts` (`ActionName` + `ACTIONS` + `accepts`) → reasoner branch → **unit test** (reasoner) + **integration test** (door path) → `grain/docs/AI-INTERFACE.md` (vocab) |
+| **An action verb** (add/modify) | `contract.ts` (`ActionName` + `ACTIONS` + `accepts`) → reasoner branch → **unit test** (reasoner) + **integration test** (door path) → [AI-INTERFACE](https://tjakoen.github.io/grain/docs/ai-interface) (vocab) |
 | **A surface kind** | `contract.ts` (`SurfaceKind`) → `ai-routes.ts` manifest targets → any page `data-surface` → tests |
-| **A `RenderOp` kind/field** | `contract.ts` (`RenderOpKind`/`RenderOp`) → dispatcher `applyOp`/`applyType` (`ai-dispatch.js`) → `grain/docs/AI-INTERFACE.md` → tests |
+| **A `RenderOp` kind/field** | `contract.ts` (`RenderOpKind`/`RenderOp`) → dispatcher `applyOp`/`applyType` (`ai-dispatch.js`) → [AI-INTERFACE](https://tjakoen.github.io/grain/docs/ai-interface) → tests |
 | **A component** | follow CONVENTIONS §4 checklist (`.html`/`.css`/`.md`, tokens, AI-mode, `data-kind`/`data-accepts` if operable) → add a test for any behavior → it auto-appears in `/catalog` |
 | **A design token / the theme** | `grain/styles/variables.css` only (never per-component) |
 | **The `/loop` demo or its surfaces** | `grain/ai/reasoner.ts` (the scripted demo) ↔ `tjakoen.github.io/pages/loop.html` surfaces → **e2e** (`tjakoen.github.io/e2e/`) |
@@ -112,9 +116,9 @@ This is the contract for not drifting. After any change, sync everything in its 
 | **A module served to the browser** (`/modules`, or the client-side runtime) | it MUST be **client-safe** (ARCHITECTURE §19.2): no server-only imports (guard-enforced), **no secrets/tokens**, no server-required behavior — static-style only → say so wherever the mode is offered; the mechanism (`batch/http/modules.ts`) is `batch`, the client-door wiring is `grain/ai/*`, the mode switch is the composition root |
 | **Layering / cross-layer deps** | re-verify import purity; if you reach across, add a port instead → CONVENTIONS §1/§10 |
 | **Anything user-visible in behavior** | the matching doc (`ARCHITECTURE` / `GRAIN` / `AI-INTERFACE` / `DESIGN-SYSTEM` / `CONVENTIONS`) |
-| **A concept doc** (`ARCHITECTURE`/`CONVENTIONS`/`GRAIN`/`AI-INTERFACE`) | the portfolio showcase that *renders* it — re-check the pitch/teaser sections still summarize it truly: `grain/docs/GRAIN.md`+`AI-INTERFACE.md` → `/grain` (`tjakoen.github.io/pages/grain/GRAIN-PAGE.md`, `/grain/docs`); `ARCHITECTURE`+`CONVENTIONS` → `/batch` (`tjakoen.github.io/pages/batch/BATCH-PAGE.md`, `/batch/docs`). Docs are the single source; pages are trailheads, never forks |
+| **A concept doc** (`ARCHITECTURE`/`CONVENTIONS`/`GRAIN`/`AI-INTERFACE`) | the portfolio showcase that *renders* it — re-check the pitch/teaser sections still summarize it truly: the published [GRAIN](https://tjakoen.github.io/grain/docs/grain)+[AI-INTERFACE](https://tjakoen.github.io/grain/docs/ai-interface) docs → `/grain` (`tjakoen.github.io/pages/grain/GRAIN-PAGE.md`, `/grain/docs`); `ARCHITECTURE`+`CONVENTIONS` → `/batch` (`tjakoen.github.io/pages/batch/BATCH-PAGE.md`, `/batch/docs`). Docs are the single source; pages are trailheads, never forks |
 | **A roadmap step** (land, drop, or re-sequence) | tick it in [`ROADMAP.md`](./ROADMAP.md) → sync the canonical layer plan for that track (Track A → `grain/CLAUDE.md` / `project/PROJECT-PLAN.md`; Track B → `batch`; Track C → `mill/PLAN.md`; Track D → `tjakoen.github.io/PLAN.md`) |
-| **A platform capability / feature** (add, drop, or re-tier) | update that layer's **tiered capabilities list** — the single source: `grain/docs/GRAIN.md` §"What GRAIN gives you" / `batch/docs/ARCHITECTURE.md` §"What BATCH gives you" / `mill/PLAN.md` §"What MILL gives you" → re-sync its teasers (the layer README + the `/grain`·`/batch` landing pages) as *projections*, never forks → [AUDIT.md](AUDIT.md) check 11 (nothing buried). Heroes = the reasons the layer exists; useful-but-quiet features go under *Also*, never omitted |
+| **A platform capability / feature** (add, drop, or re-tier) | update that layer's **tiered capabilities list** — the single source: [GRAIN](https://tjakoen.github.io/grain/docs/grain) §"What GRAIN gives you" / [ARCHITECTURE](https://tjakoen.github.io/batch/docs/architecture) §"What BATCH gives you" / `mill/PLAN.md` §"What MILL gives you" → re-sync its teasers (the layer README + the `/grain`·`/batch` landing pages) as *projections*, never forks → [AUDIT.md](AUDIT.md) check 11 (nothing buried). Heroes = the reasons the layer exists; useful-but-quiet features go under *Also*, never omitted |
 | **A notable decision or non-obvious fact** | write a **memory** (see below) so the next session inherits it |
 
 **Definition of done:** code + the right test tier(s) (unit / integration / e2e per CONVENTIONS §6)
@@ -140,7 +144,7 @@ Claude Code keeps **per-project memories** (decisions, preferences, context) out
 they surface automatically at the start of each session. When you make a real decision or learn
 something non-obvious, write one so the next session inherits it. If a recalled memory
 contradicts the code, trust the code and fix the memory. (These are agent memory, not committed
-files — durable, repo-worthy rules belong in `batch/docs/CONVENTIONS.md` or this file.)
+files — durable, repo-worthy rules belong in the published [CONVENTIONS](https://tjakoen.github.io/batch/docs/conventions) doc (homed in the portfolio at `tjakoen.github.io/docs/batch/`) or this file.)
 
 ## Working notes
 
@@ -149,11 +153,11 @@ files — durable, repo-worthy rules belong in `batch/docs/CONVENTIONS.md` or th
   it says what's in flight so parallel sessions don't drift.
 - Commit/push only when asked; branch off `main` if you must (this is a private monorepo —
   the user often merges to `main` directly).
-- **This monorepo is temporary scaffolding** — each layer becomes its own repo once proven.
-  The map for that split (what goes where) is [`SPLIT-PLAN.md`](./SPLIT-PLAN.md).
+- **The split is complete** — each layer is now its own repo, held here as a **submodule**.
+  The map for how it was executed (what went where) is [`SPLIT-PLAN.md`](./SPLIT-PLAN.md).
 - **Personal cross-repo standards** (writing voice, the note/blog template, README badges, a starter
-  `CLAUDE.md`) live at the published index <https://tjakoen.github.io/standards> (source: the
-  `tjakoen/standards` repo, the `@tjakoen/standards` package) — referenced, never forked. Writing
+  `CLAUDE.md`) are homed in the portfolio at `tjakoen.github.io/standards/`, published at
+  <https://tjakoen.github.io/standards> — referenced, never forked. Writing
   anything under his byline? [VOICE](https://tjakoen.github.io/standards/voice) (how it reads) +
   [NOTE-STANDARD](https://tjakoen.github.io/standards/note-standard) (how a note is built) are the rulebook.
 - Run from the repo root (relative paths in `tjakoen.github.io/config.ts` assume it).
