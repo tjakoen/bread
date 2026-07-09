@@ -5,7 +5,7 @@
 A **no-build, AI-native web stack** — where every surface is addressable and operable by both a
 human and an AI through one shared vocabulary, and the AI's presence is a visible signal.
 
-[![Made with Claude](https://img.shields.io/badge/Made_with-Claude-D97757?logo=anthropic&logoColor=white)](./tjakoen.github.io/notes/ten-times-zero.md)
+[![Made with Claude](https://img.shields.io/badge/Made_with-Claude-D97757?logo=anthropic&logoColor=white)](https://tjakoen.github.io/notes/ten-times-zero)
 ![Bun](https://img.shields.io/badge/Bun-1.3-000?logo=bun&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![No build step](https://img.shields.io/badge/build_step-none-2ea44f)
@@ -64,21 +64,21 @@ platform — while making the result **legible and operable by an AI, not just a
 
 The cost is honest and documented: rich client interactions (drag-drop, optimistic UI, offline)
 fight the grain. The trade is taken on purpose. The full *why* is in
-[`tjakoen.github.io/PHILOSOPHY.md`](./tjakoen.github.io/PHILOSOPHY.md).
+[`PHILOSOPHY.md`](https://github.com/tjakoen/tjakoen.github.io/blob/main/PHILOSOPHY.md).
 
 ## Quick start
 
-Needs [Bun](https://bun.sh) (pinned `1.3.x`). Today this is a monorepo (splitting into submodules
-per [`SPLIT-PLAN.md`](./SPLIT-PLAN.md)); run from the repo root.
+Needs [Bun](https://bun.sh) (pinned `1.3.x`). The split happened: this umbrella holds the layers as
+**submodules** (empty by default — see [`SPLIT-PLAN.md`](./SPLIT-PLAN.md)); the running site lives in
+[`tjakoen/tjakoen.github.io`](https://github.com/tjakoen/tjakoen.github.io).
 
 ```sh
-bun install
-bun run dev        # http://localhost:3000  (hot reload, no build)
-bun run check      # tsc --noEmit (must stay green)
-bun run test       # unit + integration
+git submodule update --init            # pull the layer repos (batch, grain, mill, proof)
+# to run the site: clone tjakoen/tjakoen.github.io, then
+bun install && bun run dev             # http://localhost:3000  (hot reload, no build)
 ```
 
-Then visit:
+Then visit (on the running site):
 
 | Route | What |
 |---|---|
@@ -91,7 +91,7 @@ Then visit:
 
 - **[`CLAUDE.md`](./CLAUDE.md)** — orientation + operating rules (incl. the "when you change X,
   update Y" matrix). Any AI or human joining starts here.
-- **[`tjakoen.github.io/PHILOSOPHY.md`](./tjakoen.github.io/PHILOSOPHY.md)** — the beliefs the whole stack serves.
+- **[`PHILOSOPHY.md`](https://github.com/tjakoen/tjakoen.github.io/blob/main/PHILOSOPHY.md)** — the beliefs the whole stack serves.
 - **[`batch/docs/CONVENTIONS.md`](./batch/docs/CONVENTIONS.md)** — the build standard (layering,
   components, tokens, the action vocabulary, the 3-tier testing bar).
 - **[`DOCS.md`](./DOCS.md)** — the full map of where every doc lives.
@@ -109,4 +109,4 @@ all-rights-reserved; the product is proprietary and unpublished. Details in
 Claude does the typing, and I take most of the credit. People throw "vibe coder" around like it is
 an insult, so I counted, and it turns out I am the kind that shows up with receipts. **I don't
 prompt and pray. I prompt and prove.**
-[Here's how I actually work with AI (numbers and all) →](./tjakoen.github.io/notes/ten-times-zero.md)
+[Here's how I actually work with AI (numbers and all) →](https://tjakoen.github.io/notes/ten-times-zero)

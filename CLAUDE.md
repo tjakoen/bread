@@ -152,9 +152,10 @@ files — durable, repo-worthy rules belong in `batch/docs/CONVENTIONS.md` or th
 - **This monorepo is temporary scaffolding** — each layer becomes its own repo once proven.
   The map for that split (what goes where) is [`SPLIT-PLAN.md`](./SPLIT-PLAN.md).
 - **Personal cross-repo standards** (writing voice, the note/blog template, README badges, a starter
-  `CLAUDE.md`) live in [`tjakoen.github.io/standards/`](./tjakoen.github.io/standards/) — public + reusable in any
-  repo. Writing anything under his byline? `VOICE.md` (how it reads) + `NOTE-STANDARD.md` (how a note
-  is built) are the rulebook.
+  `CLAUDE.md`) live at the published index <https://tjakoen.github.io/standards> (source: the
+  `tjakoen/standards` repo, the `@tjakoen/standards` package) — referenced, never forked. Writing
+  anything under his byline? [VOICE](https://tjakoen.github.io/standards/voice) (how it reads) +
+  [NOTE-STANDARD](https://tjakoen.github.io/standards/note-standard) (how a note is built) are the rulebook.
 - Run from the repo root (relative paths in `tjakoen.github.io/config.ts` assume it).
 - Bun lives at `~/.bun/bin` — `export PATH="$HOME/.bun/bin:$PATH"` if `bun` isn't found.
 
