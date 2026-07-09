@@ -10,9 +10,15 @@
   "scripts": {
     "cockpit": "bunx pantry serve",
     "plans:check": "bunx proof check",
-    "deps:refresh": "bun add -d @tjakoen/pantry@github:tjakoen/pantry#$(git ls-remote https://github.com/tjakoen/pantry.git main | cut -c1-7)"
+    "deps:refresh": "for p in batch grain mill proof standards pantry; do bun add -d @tjakoen/$p@github:tjakoen/$p#$(git ls-remote https://github.com/tjakoen/$p.git main | cut -c1-7); done"
   },
+  "//devDependencies": "Every @tjakoen github spec in the graph is pinned DIRECTLY, not only pantry: bun 1.3.14's transitive github resolution races and fails intermittently (the bigger the graph, the more often); direct specs resolve reliably and satisfy the transitive ones. Keep the five layer pins matched to pantry's own pins — deps:refresh re-pins all six.",
   "devDependencies": {
-    "@tjakoen/pantry": "github:tjakoen/pantry#75ae4cc"
+    "@tjakoen/batch": "github:tjakoen/batch#f9ecb03",
+    "@tjakoen/grain": "github:tjakoen/grain#3e94bdc",
+    "@tjakoen/mill": "github:tjakoen/mill#15fa3a5",
+    "@tjakoen/pantry": "github:tjakoen/pantry#c629008",
+    "@tjakoen/proof": "github:tjakoen/proof#f06daab",
+    "@tjakoen/standards": "github:tjakoen/standards#4a3c180"
   }
 }
