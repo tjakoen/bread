@@ -37,10 +37,10 @@ complete — each layer is now its own public repo, held here as a **submodule**
 
 | Layer | What it is | Start reading |
 |---|---|---|
-| 🥖 **[BATCH](./batch/)** | The no-build substrate — Bun · Addressable · TypeScript · CSS · htmx. Server-rendered hypermedia, no bundler, no template language. | [BATCH architecture →](https://tjakoen.github.io/batch/docs/architecture) |
-| **[GRAIN](./grain/)** | The AI-interaction design system + its default theme (**Sourdough**) — atoms/molecules/organisms, tokens, and *grade-as-signal* (grain = AI, clean = human). | [GRAIN →](https://tjakoen.github.io/grain/docs/grain) |
-| **[MILL](./mill/)** | Markdown → GRAIN-pages CMS — feed it `.md` + images, it renders GRAIN pages. GRAIN's companion, built on both layers. Live: `/notes`, `/grain/docs`, `/batch/docs` render through it. | [`mill/PLAN.md`](./mill/PLAN.md) |
-| **[PROOF](./proof/)** | The AI plan board — plans are markdown files; the board is a live projection of them. A mountable layer built on MILL (plans-as-markdown → kanban). | [`proof/PLAN.md`](./proof/PLAN.md) |
+| 🥖 **[BATCH](https://github.com/tjakoen/batch)** | The no-build substrate — Bun · Addressable · TypeScript · CSS · htmx. Server-rendered hypermedia, no bundler, no template language. | [BATCH architecture →](https://tjakoen.github.io/batch/docs/architecture) |
+| **[GRAIN](https://github.com/tjakoen/grain)** | The AI-interaction design system + its default theme (**Sourdough**) — atoms/molecules/organisms, tokens, and *grade-as-signal* (grain = AI, clean = human). | [GRAIN →](https://tjakoen.github.io/grain/docs/grain) |
+| **[MILL](https://github.com/tjakoen/mill)** | Markdown → GRAIN-pages CMS — feed it `.md` + images, it renders GRAIN pages. GRAIN's companion, built on both layers. Live: `/notes`, `/grain/docs`, `/batch/docs` render through it. | [`mill/PLAN.md`](https://github.com/tjakoen/mill/blob/main/PLAN.md) |
+| **[PROOF](https://github.com/tjakoen/proof)** | The AI plan board — plans are markdown files; the board is a live projection of them. A mountable layer built on MILL (plans-as-markdown → kanban). | [`proof/PLAN.md`](https://github.com/tjakoen/proof/blob/main/PLAN.md) |
 
 **The apps** (their own repos, not part of the umbrella): **`tjakoen.github.io/`** → the personal
 site — it wires batch + grain + mill and runs the site + `/loop` demo. It *uses* the stack; it

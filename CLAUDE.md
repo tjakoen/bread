@@ -13,8 +13,8 @@ dependency — each layer builds only on the layers below it:
 batch/   BATCH — the substrate (Bun · Addressable · TypeScript · CSS · htmx); no build step
   └─ grain/   GRAIN — an AI-interaction design system + its default theme (the look) + the catalog
        ├─ MILL/               the markdown CMS (LIVE — core renders /notes + the layer docs; its OWN reusable project) — feed it .md + images, it renders GRAIN pages
-       ├─ proof/               PROOF — the AI plan board, a **mountable layer** (`createProofRoutes`; plans-as-markdown → kanban projection; uses MILL); pieces 1/2/4 built + `check`/`init` CLI — canonical plan `proof/PLAN.md`
-       ├─ pantry/              PANTRY — the installable dev-docs + AI cockpit **app** (composes batch+grain+mill+proof into one `bunx pantry` server); **v1 built** (home + board + framework docs) — canonical plan `pantry/PLAN.md`
+       ├─ proof/               PROOF — the AI plan board, a **mountable layer** (`createProofRoutes`; plans-as-markdown → kanban projection; uses MILL); pieces 1–4 built + the mount seam, board LIVE over SSE (see `proof/PLAN.md`'s status line for the current count) — canonical plan `proof/PLAN.md`
+       ├─ pantry/              PANTRY — the installable dev-docs + AI cockpit **app** (composes batch+grain+mill+proof into one `bunx pantry` server); reshaped into a dev side-tool — AI-retrieval (`/llms.txt`, `/knowledge.json`) + the whole-codebase mindmap (`/map`) are live (see `pantry/PLAN.md`'s status line for the current state) — canonical plan `pantry/PLAN.md`
        ├─ tjakoen.github.io/  THE personal-site app + a composition root — this personal site (BATCH + GRAIN); *uses MILL* for its notes/blog (PANTRY is the neutral sibling app)
        └─ project/            the product — a personal AI assistant ("Project"); **PAUSED** — now a docs-only archive (see below)
 ```
@@ -41,16 +41,16 @@ pushed over SSE. No privileged AI→DOM back channel.
 
 ## Start here (reading order)
 
-1. **[PHILOSOPHY.md](tjakoen.github.io/PHILOSOPHY.md)** — the *why* (the beliefs the whole stack serves). **Read first.**
+1. **[PHILOSOPHY.md](https://github.com/tjakoen/tjakoen.github.io/blob/main/PHILOSOPHY.md)** — the *why* (the beliefs the whole stack serves). **Read first.**
 2. **[CONVENTIONS](https://tjakoen.github.io/batch/docs/conventions)** — the build standard (layering, components, tokens,
    the action vocabulary, the 3-tier testing bar, the extraction plan). **The rulebook.**
 3. **[ARCHITECTURE](https://tjakoen.github.io/batch/docs/architecture)** — the substrate's reasoning (single source of truth).
 4. **[GRAIN](https://tjakoen.github.io/grain/docs/grain)** + **[AI-INTERFACE](https://tjakoen.github.io/grain/docs/ai-interface)** — the
    design system and the AI contract (surfaces, ops, manifest, the "AI acts" protocol).
 5. **[DESIGN-SYSTEM](https://tjakoen.github.io/grain/docs/design-system)** — the visual identity / grade-as-signal.
-6. **[`proof/PLAN.md`](proof/PLAN.md)** — PROOF, the AI plan board: plans are markdown files, the
+6. **[`proof/PLAN.md`](https://github.com/tjakoen/proof/blob/main/PLAN.md)** — PROOF, the AI plan board: plans are markdown files, the
    board is a live projection of them.
-7. **[`pantry/PLAN.md`](pantry/PLAN.md)** — PANTRY, the installable dev-docs + AI cockpit app
+7. **[`pantry/PLAN.md`](https://github.com/tjakoen/pantry/blob/main/PLAN.md)** — PANTRY, the installable dev-docs + AI cockpit app
    (`bunx pantry`) that composes the stack.
 
 The SSOT for what's operable is **`grain/ai/contract.ts`** (`SurfaceKind`, `ActionName`,
@@ -58,7 +58,7 @@ The SSOT for what's operable is **`grain/ai/contract.ts`** (`SurfaceKind`, `Acti
 **`tjakoen.github.io/server.ts`**. The reference screen is **`/loop`** (`tjakoen.github.io/pages/loop.html`).
 
 **Working mainly in one layer?** Each layer's repo carries its **own `CLAUDE.md`** —
-[`batch/CLAUDE.md`](batch/CLAUDE.md) and [`grain/CLAUDE.md`](grain/CLAUDE.md) — with that layer's
+[`batch/CLAUDE.md`](https://github.com/tjakoen/batch/blob/main/CLAUDE.md) and [`grain/CLAUDE.md`](https://github.com/tjakoen/grain/blob/main/CLAUDE.md) — with that layer's
 non-negotiables and the hard-won *"don't repeat these"* lessons (the silent-failure contracts, the
 control lifecycle, "use the vocabulary, don't reinvent it"). Read the layer's file alongside this
 one. The full doc map is [`DOCS.md`](DOCS.md).
@@ -132,8 +132,8 @@ possible* and close it at the source: sharpen the contract, design the mistake o
 that misled — so the next person or AI can't repeat it. An operator tripping on the system measures
 the system's clarity, not just the operator's; if you (an AI) got it wrong building here, suspect the
 docs/design first. The bar it's all held to: **this stack must be easy for a human and *even more*
-legible and operable for an AI** — that's the point of the whole thing (→ [PHILOSOPHY.md](tjakoen.github.io/PHILOSOPHY.md),
-the two lead bets; the worked-through lessons: [grain/CLAUDE.md](grain/CLAUDE.md) §5, [batch/CLAUDE.md](batch/CLAUDE.md)).
+legible and operable for an AI** — that's the point of the whole thing (→ [PHILOSOPHY.md](https://github.com/tjakoen/tjakoen.github.io/blob/main/PHILOSOPHY.md),
+the two lead bets; the worked-through lessons: [grain/CLAUDE.md](https://github.com/tjakoen/grain/blob/main/CLAUDE.md) §5, [batch/CLAUDE.md](https://github.com/tjakoen/batch/blob/main/CLAUDE.md)).
 
 **Before committing / after a big change:** run the alignment audit — [AUDIT.md](AUDIT.md) (a repeatable
 runbook: green gate, layering purity, tokens-only, persona-neutral GRAIN, naming, docs-synced).
