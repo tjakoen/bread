@@ -28,7 +28,7 @@ BATCH (dough / substrate)  →  milled by MILL from  GRAIN (the design system)
   reaches links, focus, `::selection`, and the primary button fill — one brand knob, palette
   otherwise closed (success/danger stay monochrome). **Sourdough stays hueless** (`--color-accent =
   ink`). Needs a one-time component wiring; after that, accented themes are pure token overrides.
-  Detailed theming/accent plan: `tjakoen.github.io/PLAN.md`.
+  Detailed theming/accent plan: `tjakoen.github.io/docs/architecture/PLAN.md`.
 - *(`Bakery` was the runner-up umbrella name; `BREAD` won for the `___ stack` fit.)*
 
 **Positioning / tagline** (the umbrella's description doubles as the stack's pitch):

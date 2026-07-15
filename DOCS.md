@@ -43,7 +43,7 @@ their canonical `PLAN.md`; a per-folder `CLAUDE.md` follows when each grows past
 
 The **app + composition root** is [`tjakoen.github.io/`](https://tjakoen.github.io/) (the portfolio; it wires
 batch + grain + mill and runs the site). Its own *how/what* docs — [`PLAN.md`](https://github.com/tjakoen/tjakoen.github.io/blob/main/PLAN.md),
-[`FEATURES.md`](https://github.com/tjakoen/tjakoen.github.io/blob/main/FEATURES.md), the `/grain`·`/batch` landing-page plans, the demo
+[`FEATURES.md`](https://github.com/tjakoen/tjakoen.github.io/blob/main/docs/architecture/FEATURES.md), the `/grain`·`/batch` landing-page plans, the demo
 plan — live in `tjakoen.github.io/`, and the personal cross-repo standards in
 [`tjakoen.github.io/standards/`](https://tjakoen.github.io/standards). The root also carries the portable
 [`AI-REPO-STANDARD.md`](AI-REPO-STANDARD.md) (the repo-side companion to `standards/AI-DEVELOPMENT.md`).

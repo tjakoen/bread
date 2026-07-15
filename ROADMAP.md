@@ -5,7 +5,7 @@
 > sweep) — findings in agent memory `stack-audit-2026-07`. This file is the *what-next*; the layer
 > plans ([mill/PLAN.md](mill/PLAN.md), [proof/PLAN.md](proof/PLAN.md),
 > [project/PROJECT-PLAN.md](project/PROJECT-PLAN.md),
-> [tjakoen.github.io/PLAN.md](tjakoen.github.io/PLAN.md)) stay canonical for their layers, and
+> [tjakoen.github.io/PLAN.md](tjakoen.github.io/docs/architecture/PLAN.md)) stay canonical for their layers, and
 > [SPLIT-PLAN.md](SPLIT-PLAN.md) stays the repo-split map. When a step lands, tick it here and
 > sync the layer doc.
 >
