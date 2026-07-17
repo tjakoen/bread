@@ -1,5 +1,9 @@
 # SPLIT-PLAN.md — how this monorepo becomes the **BREAD stack**
 
+> **Status: executed, historical (2026-07).** The split is done: each layer is its own repo, held here
+> as a submodule, and the two consumers have left into their own repos. This file is kept as the map of
+> *how* it was executed (what went where, the naming), not as a live plan.
+
 > **This repo becomes `BREAD` — a permanent umbrella, not disposable scaffolding.** Today
 > `batch-stack` is a monorepo because it's convenient to build the whole stack in one place while it's
 > young. On the split it doesn't dissolve — it *becomes* the **BREAD** umbrella: a thin public repo that
@@ -219,7 +223,7 @@ Licenses are already co-located, so they travel on the `git filter-repo` split.
 | **BREAD** (umbrella), **batch**, **grain**, **mill**, **proof** | **Apache-2.0** — permissive, patent grant; the fit for frameworks published for adoption | `LICENSE` (Apache-2.0) + `NOTICE` (© 2026 Tjakoen Stolk) |
 | **pantry** — installable dev-docs + AI cockpit app | **Apache-2.0** — same terms as the framework layers it composes; it's the installable composer app, published for adoption | `LICENSE` (Apache-2.0) + `NOTICE` (© 2026 Tjakoen Stolk) — ratified 2026-07-08 |
 | **portfolio** (`tjakoen.github.io`) | **Split**: code Apache-2.0; **written content all rights reserved** | `LICENSE` (Apache-2.0, code only) + `NOTICE` (code/prose boundary) |
-| **project** *(ex-"Department of Time")* | **Proprietary — all rights reserved. Not published.** Private repo | `LICENSE` (proprietary notice) |
+| **project** | **Proprietary — all rights reserved. Not published.** Private repo | `LICENSE` (proprietary notice) |
 
 The product may publicly credit and feature BATCH/GRAIN/MILL — consuming Apache-2.0 frameworks imposes
 nothing on the product's own source, and keeping the product closed imposes nothing on the frameworks.
