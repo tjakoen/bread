@@ -153,8 +153,11 @@ files — durable, repo-worthy rules belong in the published [CONVENTIONS](https
   it says what's in flight so parallel sessions don't drift.
 - Commit/push only when asked; branch off `main` if you must (this is a private monorepo —
   the user often merges to `main` directly).
-- **The split is complete** — each layer is now its own repo, held here as a **submodule**.
-  The map for how it was executed (what went where) is [`SPLIT-PLAN.md`](./SPLIT-PLAN.md).
+- **The split is complete, then partly re-consolidated (2026-07-19).** `batch` is its own repo
+  (submodule). `grain` is now a **monorepo** (submodule) holding `packages/{grain,mill,proof,crumb}` —
+  mill + proof are no longer separate repos/submodules (their standalone repos are archived), and
+  are published to GitHub Packages as `@tjakoen/{mill,proof}`. Consumers pin the published versions,
+  not github SHAs. The original split map is [`SPLIT-PLAN.md`](./SPLIT-PLAN.md) (historical).
 - **Personal cross-repo standards** (writing voice, the note/blog template, README badges, a starter
   `CLAUDE.md`) are homed in the portfolio at `tjakoen.github.io/standards/`, published at
   <https://tjakoen.github.io/standards> — referenced, never forked. Writing

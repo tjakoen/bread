@@ -3,7 +3,7 @@
 > Status: **canonical execution plan (2026-07-03; frame updated 2026-07-06).** Written after a
 > full-stack audit (4-agent deep dive: GRAIN code-vs-claims, BATCH, MILL, adversarial prior-art
 > sweep) — findings in agent memory `stack-audit-2026-07`. This file is the *what-next*; the layer
-> plans ([mill/PLAN.md](mill/PLAN.md), [proof/PLAN.md](proof/PLAN.md),
+> plans ([mill/PLAN.md](grain/packages/mill/PLAN.md), [proof/PLAN.md](grain/packages/proof/PLAN.md),
 > [project/PROJECT-PLAN.md](project/PROJECT-PLAN.md),
 > [tjakoen.github.io/PLAN.md](tjakoen.github.io/docs/architecture/PLAN.md)) stay canonical for their layers, and
 > [SPLIT-PLAN.md](SPLIT-PLAN.md) stays the repo-split map. When a step lands, tick it here and
@@ -231,7 +231,7 @@ standalone CMS play. Publishing it stays fine; competing with Eleventy is a non-
 
 Plans-as-markdown (`plans/` + minimal frontmatter) rendered as a kanban board; injectable into any
 project via `bunx proof init` (scaffold + CLAUDE.md contract + hook set). Own top-level project,
-sibling of `mill/`, first library consumer of MILL. **Canonical plan: [proof/PLAN.md](proof/PLAN.md)**
+sibling of `mill/` in the grain monorepo, first library consumer of MILL. **Canonical plan: [proof/PLAN.md](grain/packages/proof/PLAN.md)**
 (the design law: files = SSOT, board = projection, AI never maintains the board). Sequencing: after
 Track A's M★ push — it competes with nothing above it. Companion blog note drafted:
 `tjakoen.github.io/notes/where-were-we.md`.
