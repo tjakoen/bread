@@ -4,9 +4,3 @@
 [submodule "grain"]
 	path = grain
 	url = https://github.com/tjakoen/grain.git
-[submodule "mill"]
-	path = mill
-	url = https://github.com/tjakoen/mill.git
-[submodule "proof"]
-	path = proof
-	url = https://github.com/tjakoen/proof.git
