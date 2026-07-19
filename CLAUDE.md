@@ -48,7 +48,7 @@ pushed over SSE. No privileged AI→DOM back channel.
 4. **[GRAIN](https://tjakoen.github.io/grain/docs/grain)** + **[AI-INTERFACE](https://tjakoen.github.io/grain/docs/ai-interface)** — the
    design system and the AI contract (surfaces, ops, manifest, the "AI acts" protocol).
 5. **[DESIGN-SYSTEM](https://tjakoen.github.io/grain/docs/design-system)** — the visual identity / grade-as-signal.
-6. **[`proof/PLAN.md`](https://github.com/tjakoen/proof/blob/main/PLAN.md)** — PROOF, the AI plan board: plans are markdown files, the
+6. **[`proof/PLAN.md`](https://github.com/tjakoen/grain/blob/main/packages/proof/PLAN.md)** — PROOF, the AI plan board: plans are markdown files, the
    board is a live projection of them.
 7. **[`pantry/PLAN.md`](https://github.com/tjakoen/pantry/blob/main/PLAN.md)** — PANTRY, the installable dev-docs + AI cockpit app
    (`bunx pantry`) that composes the stack.
