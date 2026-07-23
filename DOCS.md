@@ -1,9 +1,11 @@
 # Docs — where everything lives
 
 A guide — for me and Claude — to where every doc lives now that BREAD's layers are their own repos
-(see [`SPLIT-PLAN.md`](SPLIT-PLAN.md) for how the split was executed). Plans and `CLAUDE.md` files
-still sit **next to the layer they document**, in that layer's own repo, held here as a submodule;
-the explanatory docs moved into the portfolio's docs home (below). There's no central `docs/` folder
+(see [`SPLIT-PLAN.md`](SPLIT-PLAN.md) for how the split was executed, and the working notes in
+[`CLAUDE.md`](CLAUDE.md) for the later de-submoduling). Plans and `CLAUDE.md` files still sit **next
+to the layer they document**, in that layer's own repo (`batch` its own repo; `grain`/`mill`/`proof`/
+`crumb` inside the `grain` monorepo) — `bread` itself no longer embeds them, it links out; the
+explanatory docs moved into the portfolio's docs home (below). There's no central `docs/` folder
 for the umbrella; the cross-cutting docs live at the root or in `tjakoen.github.io/`:
 
 - [`PHILOSOPHY.md`](https://github.com/tjakoen/tjakoen.github.io/blob/main/PHILOSOPHY.md) — the *why* beneath the whole stack (lives in `tjakoen.github.io/`). **Read first.**
@@ -37,6 +39,7 @@ their canonical `PLAN.md`; a per-folder `CLAUDE.md` follows when each grows past
 | [DESIGN-SYSTEM.md](https://tjakoen.github.io/grain/docs/design-system) | `tjakoen.github.io/docs/grain/` (rendered at `tjakoen.github.io/grain/docs/`) | The visual identity — *Sourdough*, monochrome e-ink. "Grade as signal" (grain = AI, clean = human). | Identity |
 | [PLAN.md](https://github.com/tjakoen/grain/blob/main/packages/mill/PLAN.md) | `grain/packages/mill/` | MILL — the Markdown→GRAIN CMS: its canonical plan + the "What MILL gives you" capability list. A layer *above* grain+batch (`batch → grain → mill`). | Layer |
 | [PLAN.md](https://github.com/tjakoen/grain/blob/main/packages/proof/PLAN.md) | `grain/packages/proof/` | PROOF — the AI plan board: its canonical plan. A **mountable layer** (plans-as-markdown → kanban projection; consumes MILL). Pieces 1–4 built + the mount seam (`createProofRoutes`); the board is LIVE over SSE (see the file's status line for the current count) + `check`/`init` CLI. | Layer |
+| [`crumb/`](https://github.com/tjakoen/grain/tree/main/packages/crumb) | `grain/packages/crumb/` | CRUMB — the guided-tour layer. Live in production on the portfolio (`tjakoen.github.io`). | Layer |
 | [PLAN.md](https://github.com/tjakoen/pantry/blob/main/PLAN.md) | `pantry/` | PANTRY — the installable dev-docs + AI cockpit **app** that composes batch+grain+mill+proof into one `bunx pantry` server. Reshaped into a dev side-tool (board-forward home, stack pitch moved to `/about`); AI-retrieval (`/llms.txt`, `/knowledge.json`) + the whole-codebase mindmap (`/map`) are live (see the file's status line for the current state). | App |
 | [PROJECT-PLAN.md](https://github.com/tjakoen/project/blob/main/PROJECT-PLAN.md) | `project/` | The product's master vision — the full ambient assistant. **PAUSED** (docs-only archive since 2026-07-05). Private repo. | Vision |
 | [MVP.md](https://github.com/tjakoen/project/blob/main/docs/MVP.md) | `project/docs/` | The product slice — the AI task-manager dashboard. **PAUSED** (see above). Private repo. | Product slice |
@@ -55,6 +58,7 @@ plan — live in `tjakoen.github.io/`, and the personal cross-repo standards in
 Apps (compose the layers):
    tjakoen.github.io/ ─ the personal site — wires the layers, runs the site + /loop demo
    PANTRY             ─ the neutral, installable dev-docs + AI cockpit (bunx into any project)
+Layer:    CRUMB        ─ the guided-tour layer (batch → grain → crumb)
 Layer:    PROOF        ─ the AI plan board (mountable; batch → grain → mill → proof)
 Layer:    MILL         ─ the Markdown→GRAIN CMS (batch → grain → mill)
 Layer:    GRAIN        ─ the AI-operable interface

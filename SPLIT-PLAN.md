@@ -1,8 +1,11 @@
 # SPLIT-PLAN.md — how this monorepo becomes the **BREAD stack**
 
-> **Status: executed, historical (2026-07).** The split is done: each layer is its own repo, held here
-> as a submodule, and the two consumers have left into their own repos. This file is kept as the map of
-> *how* it was executed (what went where, the naming), not as a live plan.
+> **Status: executed, historical (2026-07).** The split is done: each layer is its own repo (`batch`;
+> `grain` now a monorepo holding `grain`/`mill`/`proof`/`crumb`), and the two consumers have left into
+> their own repos. This file was originally written when `bread` held the layers as git submodules;
+> as of 2026-07-23 those submodules were dropped too — `bread` is a pure map/manifesto repo that links
+> out rather than embedding them (see [`README.md`](README.md)). This file is kept as the map of *how*
+> the split was executed (what went where, the naming), not as a live plan.
 
 > **This repo becomes `BREAD` — a permanent umbrella, not disposable scaffolding.** Today
 > `batch-stack` is a monorepo because it's convenient to build the whole stack in one place while it's

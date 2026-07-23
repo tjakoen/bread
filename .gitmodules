@@ -1,6 +1,0 @@
-[submodule "batch"]
-	path = batch
-	url = https://github.com/tjakoen/batch.git
-[submodule "grain"]
-	path = grain
-	url = https://github.com/tjakoen/grain.git
