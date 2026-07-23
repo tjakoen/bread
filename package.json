@@ -1,7 +1,7 @@
 {
   "name": "bread",
   "version": "0.1.0",
-  "description": "BREAD — the umbrella for the stack: batch + grain (the grain monorepo now holds grain · mill · proof · crumb) as submodules, plus the project-wide plans board (PANTRY-hosted).",
+  "description": "BREAD — the umbrella map for the stack: batch (own repo) + the grain monorepo (grain · mill · proof · crumb), plus the project-wide plans board (PANTRY-hosted).",
   "type": "module",
   "license": "Apache-2.0",
   "private": true,
