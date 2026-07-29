@@ -64,17 +64,26 @@ non-negotiables and the hard-won *"don't repeat these"* lessons (the silent-fail
 control lifecycle, "use the vocabulary, don't reinvent it"). Read the layer's file alongside this
 one. The full doc map is [`DOCS.md`](DOCS.md).
 
-## Commands
+## This repo is the stack's control plane — run it
+
+`bread` is a **map, not a monorepo**, but it is also the one place that operates the *whole stack*
+at once. There is no app code to run here; the commands below drive PANTRY against this umbrella host
+(its `plans/`, its docs, its layer pins). The per-layer `bun run dev/test/shots/audit` commands live
+in each **layer's own repo** (e.g. `tjakoen.github.io/`), not here.
 
 ```bash
-bun run dev        # hot-reload server (http://localhost:3000)
-bun run check      # tsc --noEmit (must stay green)
-bun run test       # unit + integration (bun test)
-bun run test:e2e   # Playwright e2e (first run: bunx playwright install chromium)
-bun run test:all   # everything
-bun run shots      # capture UI screenshots (+ a gallery) — see "Seeing the UI" below
-bun run audit      # perf + SEO/AEO baseline (Playwright) → audit/report.md + report.json
+bun run cockpit    # bunx pantry serve — the whole-stack cockpit: plans board, decision inbox, docs
+bun run check      # bunx pantry check — doc-drift lint (dead references); CI-able, exits nonzero on a break
+bun run doctor     # bunx pantry doctor — kit compliance + staleness + layer-pin drift (the omnibus)
+bun run deps       # bunx pantry deps — are the @tjakoen/* pins current with the layer sources on disk?
+bun run plans:check # bunx proof check — validate the umbrella plan board
+bun run deps:refresh # re-pin every layer to its latest (the fix when `deps` reports drift)
 ```
+
+`deps` / `doctor`'s pin check reads the **sibling layer checkouts** (`../batch`, `../grain/packages/*`):
+a pin behind its source is a chore that's **due** (surfaced), never a broken build (it does not fail
+CI). Run `deps:refresh` to clear it. This is the umbrella's unique job — no single layer repo can
+answer "is the stack pinned to what I actually have?"
 
 ## Seeing the UI (headless / remote)
 

@@ -29,9 +29,11 @@ The defining idea: a human click and an AI decision become the **same `Intent`**
 **one door**, and return as render operations pushed over SSE. No privileged AI→DOM back channel:
 the AI operates the UI the same way you do, and you can watch it happen (*grain = AI*).
 
-This repo is a **map, not a monorepo**: it links to where each layer actually lives and tells the
-story. The full manifesto lives at **<https://tjakoen.github.io/bread/>**; read it there rather
-than in duplicate here.
+This repo is a **map, not a monorepo** — and the stack's **control plane**: it links to where each
+layer lives, tells the story, and is the one place you *operate the whole stack at once* (the umbrella
+plan board, the decision inbox, and the layer-pin drift check — see [Operate the stack](#operate-the-stack)).
+The full manifesto lives at **<https://tjakoen.github.io/bread/>**; read it there rather than in
+duplicate here.
 
 ## The stack
 
@@ -88,6 +90,29 @@ Then visit (on the running site):
 | `/grain` | the GRAIN showcase: grade-as-signal, live, driven through the real door |
 | `/catalog` | the live component catalog (Human/AI toggle, search) |
 | `/sitemap.xml`, `/robots.txt` | derived from the pages tree |
+
+## Operate the stack
+
+There is no app to run *here* — but this is the umbrella host, so it is where you operate the whole
+stack at once. Each command is PANTRY (or PROOF) pointed at this repo; nothing to clone, `bunx`
+resolves them:
+
+```sh
+bun run cockpit     # the whole-stack cockpit: plan board · decision inbox · docs · reference
+bun run doctor      # kit compliance + staleness + layer-pin drift (the CI-able omnibus)
+bun run deps        # are the @tjakoen/* pins current with the layer sources on disk?
+bun run deps:refresh # re-pin every layer to its latest — the fix when `deps` reports drift
+```
+
+`deps` is the one check no single layer repo can run: it reads each layer's version from its sibling
+checkout (`../batch`, `../grain/packages/*`) and flags any pin the umbrella has let fall behind. A
+lagging pin is a chore that's **due**, not a broken build — surfaced, never gated. Example:
+
+```
+[ok    ] @tjakoen/batch: pin 0.1.0 matches source
+[BEHIND] @tjakoen/mill:  pin 0.1.2 < source 0.2.0 — bump the pin (deps:refresh)
+5 pins, 1 behind
+```
 
 ## Where to read next
 

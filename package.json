@@ -9,6 +9,9 @@
   "homepage": "https://tjakoen.github.io/bread",
   "scripts": {
     "cockpit": "bunx pantry serve",
+    "check": "bunx pantry check",
+    "doctor": "bunx pantry doctor",
+    "deps": "bunx pantry deps",
     "plans:check": "bunx proof check",
     "deps:refresh": "for p in pantry; do bun add -d @tjakoen/$p@github:tjakoen/$p#$(git ls-remote https://github.com/tjakoen/$p.git main | cut -c1-7); done && bun update @tjakoen/batch @tjakoen/grain @tjakoen/mill @tjakoen/proof"
   },
