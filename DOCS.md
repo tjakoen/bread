@@ -1,7 +1,7 @@
 # Docs — where everything lives
 
 A guide — for me and Claude — to where every doc lives now that BREAD's layers are their own repos
-(see [`SPLIT-PLAN.md`](SPLIT-PLAN.md) for how the split was executed, and the working notes in
+(see [`SPLIT-PLAN.md`](docs/history/SPLIT-PLAN.md) for how the split was executed, and the working notes in
 [`CLAUDE.md`](CLAUDE.md) for the later de-submoduling). Plans and `CLAUDE.md` files still sit **next
 to the layer they document**, in that layer's own repo (`batch` its own repo; `grain`/`mill`/`proof`/
 `crumb` inside the `grain` monorepo) — `bread` itself no longer embeds them, it links out; the
@@ -56,7 +56,7 @@ plan — live in `tjakoen.github.io/`, and the personal cross-repo standards in
 
 ```
 Apps (compose the layers):
-   tjakoen.github.io/ ─ the personal site — wires the layers, runs the site + /loop demo
+   tjakoen.github.io/ ─ the personal site — wires the layers, runs the site (hero desk = reference surface)
    PANTRY             ─ the neutral, installable dev-docs + AI cockpit (bunx into any project)
 Layer:    CRUMB        ─ the guided-tour layer (batch → grain → crumb)
 Layer:    PROOF        ─ the AI plan board (mountable; batch → grain → mill → proof)

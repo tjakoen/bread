@@ -13,14 +13,15 @@ dependency — each layer builds only on the layers below it:
 batch/   BATCH — the substrate (Bun · Addressable · TypeScript · CSS · htmx); no build step
   └─ grain/   GRAIN — an AI-interaction design system + its default theme (the look) + the catalog
        ├─ MILL/               the markdown CMS (LIVE — core renders /notes + the layer docs; its OWN reusable project) — feed it .md + images, it renders GRAIN pages
-       ├─ proof/               PROOF — the AI plan board, a **mountable layer** (`createProofRoutes`; plans-as-markdown → kanban projection; uses MILL); pieces 1–4 built + the mount seam, board LIVE over SSE (see `proof/PLAN.md`'s status line for the current count) — canonical plan `proof/PLAN.md`
+       ├─ proof/               PROOF — the AI plan board, a **mountable layer** (`createProofRoutes`; plans-as-markdown → kanban projection; uses MILL); pieces 1–4 built + the mount seam, board LIVE over SSE (status line in the canonical plan for the current count) — canonical plan [`packages/proof/PLAN.md`](https://github.com/tjakoen/grain/blob/main/packages/proof/PLAN.md) in the grain monorepo
        ├─ pantry/              PANTRY — the installable dev-docs + AI cockpit **app** (composes batch+grain+mill+proof into one `bunx pantry` server); reshaped into a dev side-tool — AI-retrieval (`/llms.txt`, `/knowledge.json`) + the whole-codebase mindmap (`/map`) are live (see `pantry/PLAN.md`'s status line for the current state) — canonical plan `pantry/PLAN.md`
        ├─ tjakoen.github.io/  THE personal-site app + a composition root — this personal site (BATCH + GRAIN); *uses MILL* for its notes/blog (PANTRY is the neutral sibling app)
        └─ project/            the product — a personal AI assistant ("Project"); **PAUSED** — now a docs-only archive (see below)
 ```
 
 The **composition root folded into `tjakoen.github.io/` (2026-07-05)**: the portfolio is now THE app —
-it wires batch + grain + mill and runs the site + the `/loop` "watch the AI act" demo. `project/` is
+it wires batch + grain + mill and runs the site; the hero desk is the reference surface where you
+watch the AI act. `project/` is
 **paused**: its code (server, domain, pages) moved into the portfolio or was dropped; the folder now
 holds only the product's vision docs (`PROJECT-PLAN.md`, `docs/MVP.md`) until the assistant resumes as
 its own repo. `MILL/` and `tjakoen.github.io/` are consumers of `grain` + `batch`. The portfolio is
@@ -31,7 +32,7 @@ depends on both `grain` (components) and `batch` (substrate), never the reverse 
 *extension of neither*, a new layer above both** (`batch → grain → MILL`). MILL's core is
 framework-agnostic (a Markdown→components engine driven by a render adapter); the BATCH+GRAIN adapter
 is the default. That MILL exists at all is part of the pitch: it's BATCH + GRAIN proving they compose
-into a real, reusable tool. **Canonical MILL plan: `mill/PLAN.md`.**
+into a real, reusable tool. **Canonical MILL plan: [`packages/mill/PLAN.md`](https://github.com/tjakoen/grain/blob/main/packages/mill/PLAN.md) in the grain monorepo.**
 
 The defining idea: a UI where **every surface is addressable and operable by both a human
 and an AI through one shared vocabulary**, with the AI's presence shown as a visible signal
@@ -55,7 +56,7 @@ pushed over SSE. No privileged AI→DOM back channel.
 
 The SSOT for what's operable is **`grain/ai/contract.ts`** (`SurfaceKind`, `ActionName`,
 `ACTIONS`, `RenderOp`). The composition root — the only place the layers meet — is
-**`tjakoen.github.io/server.ts`**. The reference screen is **`/loop`** (`tjakoen.github.io/pages/loop.html`).
+**`tjakoen.github.io/server.ts`**. The reference surface is the **hero desk** (the home route `/`), where a human and the AI drive the same door.
 
 **Working mainly in one layer?** Each layer's repo carries its **own `CLAUDE.md`** —
 [`batch/CLAUDE.md`](https://github.com/tjakoen/batch/blob/main/CLAUDE.md) and [`grain/CLAUDE.md`](https://github.com/tjakoen/grain/blob/main/CLAUDE.md) — with that layer's
@@ -109,7 +110,7 @@ This is the contract for not drifting. After any change, sync everything in its 
 | **A `RenderOp` kind/field** | `contract.ts` (`RenderOpKind`/`RenderOp`) → dispatcher `applyOp`/`applyType` (`ai-dispatch.js`) → [AI-INTERFACE](https://tjakoen.github.io/grain/docs/ai-interface) → tests |
 | **A component** | follow CONVENTIONS §4 checklist (`.html`/`.css`/`.md`, tokens, AI-mode, `data-kind`/`data-accepts` if operable) → add a test for any behavior → it auto-appears in `/catalog` |
 | **A design token / the theme** | `grain/styles/variables.css` only (never per-component) |
-| **The `/loop` demo or its surfaces** | `grain/ai/reasoner.ts` (the scripted demo) ↔ `tjakoen.github.io/pages/loop.html` surfaces → **e2e** (`tjakoen.github.io/e2e/`) |
+| **The hero desk or its surfaces** | the desk reasoner ↔ `tjakoen.github.io/` home-route surfaces → **e2e** (`tjakoen.github.io/e2e/`) |
 | **The client dispatcher or a UI interaction** | `grain/scripts/ai-dispatch.js` → **e2e** (only tier that covers it) |
 | **The static export / prerender** | keep it a *projection* of the running server (fetch, don't re-render) → `batch/export` (`bun run export`, framework-generic) → respect the exportable boundary (no operable `/intent`+SSE surfaces) → ARCHITECTURE §18 |
 | **The doc map or the layer/route structure** (a canonical doc, a landing route, a docs route) | re-sync `/llms.txt` — the AI-facing index (`tjakoen.github.io/llms.ts`, a *projection* of `DOCS.md`; format in `batch/http/llms.ts`) → ARCHITECTURE §11.4. It's the AEO counterpart to `sitemap.xml`; a stale link there misdirects an AI crawler |
@@ -117,8 +118,8 @@ This is the contract for not drifting. After any change, sync everything in its 
 | **Layering / cross-layer deps** | re-verify import purity; if you reach across, add a port instead → CONVENTIONS §1/§10 |
 | **Anything user-visible in behavior** | the matching doc (`ARCHITECTURE` / `GRAIN` / `AI-INTERFACE` / `DESIGN-SYSTEM` / `CONVENTIONS`) |
 | **A concept doc** (`ARCHITECTURE`/`CONVENTIONS`/`GRAIN`/`AI-INTERFACE`) | the portfolio showcase that *renders* it — re-check the pitch/teaser sections still summarize it truly: the published [GRAIN](https://tjakoen.github.io/grain/docs/grain)+[AI-INTERFACE](https://tjakoen.github.io/grain/docs/ai-interface) docs → `/grain` (`tjakoen.github.io/pages/grain/GRAIN-PAGE.md`, `/grain/docs`); `ARCHITECTURE`+`CONVENTIONS` → `/batch` (`tjakoen.github.io/pages/batch/BATCH-PAGE.md`, `/batch/docs`). Docs are the single source; pages are trailheads, never forks |
-| **A roadmap step** (land, drop, or re-sequence) | tick it in [`ROADMAP.md`](./ROADMAP.md) → sync the canonical layer plan for that track (Track A → `grain/CLAUDE.md` / `project/PROJECT-PLAN.md`; Track B → `batch`; Track C → `mill/PLAN.md`; Track D → `tjakoen.github.io/docs/architecture/PLAN.md`) |
-| **A platform capability / feature** (add, drop, or re-tier) | update that layer's **tiered capabilities list** — the single source: [GRAIN](https://tjakoen.github.io/grain/docs/grain) §"What GRAIN gives you" / [ARCHITECTURE](https://tjakoen.github.io/batch/docs/architecture) §"What BATCH gives you" / `mill/PLAN.md` §"What MILL gives you" → re-sync its teasers (the layer README + the `/grain`·`/batch` landing pages) as *projections*, never forks → [AUDIT.md](AUDIT.md) check 11 (nothing buried). Heroes = the reasons the layer exists; useful-but-quiet features go under *Also*, never omitted |
+| **A roadmap step** (land, drop, or re-sequence) | tick it in [`ROADMAP.md`](./ROADMAP.md) → sync the canonical layer plan for that track (Track A → `grain/CLAUDE.md` / `project/PROJECT-PLAN.md`; Track B → `batch`; Track C → `packages/mill/PLAN.md` (grain monorepo); Track D → `tjakoen.github.io/docs/architecture/PLAN.md`) |
+| **A platform capability / feature** (add, drop, or re-tier) | update that layer's **tiered capabilities list** — the single source: [GRAIN](https://tjakoen.github.io/grain/docs/grain) §"What GRAIN gives you" / [ARCHITECTURE](https://tjakoen.github.io/batch/docs/architecture) §"What BATCH gives you" / `packages/mill/PLAN.md` §"What MILL gives you" → re-sync its teasers (the layer README + the `/grain`·`/batch` landing pages) as *projections*, never forks → [AUDIT.md](AUDIT.md) check 11 (nothing buried). Heroes = the reasons the layer exists; useful-but-quiet features go under *Also*, never omitted |
 | **A notable decision or non-obvious fact** | write a **memory** (see below) so the next session inherits it |
 
 **Definition of done:** code + the right test tier(s) (unit / integration / e2e per CONVENTIONS §6)
@@ -159,7 +160,7 @@ files — durable, repo-worthy rules belong in the published [CONVENTIONS](https
   repos are archived), and grain/mill/proof/batch are published to GitHub Packages as
   `@tjakoen/{batch,grain,mill,proof}`. Consumers pin the published versions, not github SHAs. `bread`
   no longer holds `batch`/`grain` as submodules — it's a pure map/manifesto repo that links out.
-  The original split map is [`SPLIT-PLAN.md`](./SPLIT-PLAN.md) (historical).
+  The original split map is [`SPLIT-PLAN.md`](./docs/history/SPLIT-PLAN.md) (historical).
 - **Personal cross-repo standards** (writing voice, the note/blog template, README badges, a starter
   `CLAUDE.md`) are homed in the portfolio at `tjakoen.github.io/standards/`, published at
   <https://tjakoen.github.io/standards> — referenced, never forked. Writing

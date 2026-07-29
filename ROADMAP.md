@@ -6,7 +6,7 @@
 > plans ([mill/PLAN.md](grain/packages/mill/PLAN.md), [proof/PLAN.md](grain/packages/proof/PLAN.md),
 > [project/PROJECT-PLAN.md](project/PROJECT-PLAN.md),
 > [tjakoen.github.io/PLAN.md](tjakoen.github.io/docs/architecture/PLAN.md)) stay canonical for their layers, and
-> [SPLIT-PLAN.md](SPLIT-PLAN.md) stays the repo-split map. When a step lands, tick it here and
+> [SPLIT-PLAN.md](docs/history/SPLIT-PLAN.md) stays the repo-split map. When a step lands, tick it here and
 > sync the layer doc.
 >
 > **Update (2026-07-05):** the composition root folded into `tjakoen.github.io/` (now THE app) and

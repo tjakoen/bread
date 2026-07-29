@@ -39,7 +39,7 @@ Each layer builds only on the layers below it. `batch` is its own repo; `grain`,
 and `crumb` live together in the [`grain`](https://github.com/tjakoen/grain) monorepo
 (`packages/{grain,mill,proof,crumb}`), published individually as `@tjakoen/*` on GitHub Packages.
 (The stack was originally split into one repo per layer, then partly reconsolidated into the grain
-monorepo: see [`SPLIT-PLAN.md`](./SPLIT-PLAN.md) for that history.)
+monorepo: see [`SPLIT-PLAN.md`](./docs/history/SPLIT-PLAN.md) for that history.)
 
 | Layer | What it is | Code | Docs / landing |
 |---|---|---|---|
@@ -50,7 +50,7 @@ monorepo: see [`SPLIT-PLAN.md`](./SPLIT-PLAN.md) for that history.)
 | **CRUMB** | Guided tours: a mountable layer built on GRAIN. Live in production on the portfolio. | [packages/crumb](https://github.com/tjakoen/grain/tree/main/packages/crumb) | no landing yet (package dir is the entry point) |
 
 **The apps** (their own repos, not part of the umbrella): **`tjakoen.github.io/`** → the personal
-site: it wires batch + grain + mill and runs the site + `/loop` demo. It *uses* the stack; it
+site: it wires batch + grain + mill and runs the site. It *uses* the stack; it
 doesn't fork it. **PANTRY** → the installable dev-docs + AI cockpit app: `bunx pantry` composes
 batch + grain + mill + proof into one server for any project. **`project/`** (a private AI-assistant
 product) is **paused**, a docs-only archive until it resumes as its own repo.
@@ -84,7 +84,7 @@ Then visit (on the running site):
 
 | Route | What |
 |---|---|
-| `/loop` | the AI interaction-loop demo, the reference screen (GRAIN) |
+| `/` | the hero desk: the reference surface, drive the AI through the real door |
 | `/grain` | the GRAIN showcase: grade-as-signal, live, driven through the real door |
 | `/catalog` | the live component catalog (Human/AI toggle, search) |
 | `/sitemap.xml`, `/robots.txt` | derived from the pages tree |
@@ -99,14 +99,14 @@ Then visit (on the running site):
   components, tokens, the action vocabulary, the 3-tier testing bar).
 - **[`DOCS.md`](./DOCS.md)**: the full map of where every doc lives.
 - **[`ROADMAP.md`](./ROADMAP.md)**: the canonical execution plan.
-- **[`SPLIT-PLAN.md`](./SPLIT-PLAN.md)** (historical): how the stack split into per-layer repos, and
+- **[`SPLIT-PLAN.md`](./docs/history/SPLIT-PLAN.md)** (historical): how the stack split into per-layer repos, and
   how `grain`/`mill`/`proof`/`crumb` later reconsolidated into the `grain` monorepo.
 
 ## License
 
 Apache-2.0 for the framework layers (BATCH · GRAIN · MILL · PROOF · CRUMB) and the PANTRY app. The
 personal site's written content is all-rights-reserved; the product is proprietary and unpublished.
-Details in [`SPLIT-PLAN.md`](./SPLIT-PLAN.md#licensing).
+Details in [`SPLIT-PLAN.md`](./docs/history/SPLIT-PLAN.md#licensing).
 
 ---
 🤖 **Built with Claude. I don't prompt and pray, I prompt and prove.** Every commit here is co-authored with an AI, on purpose. [How I actually work with AI, receipts and all →](https://tjakoen.github.io/notes/ten-times-zero)
