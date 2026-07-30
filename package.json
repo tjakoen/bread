@@ -19,8 +19,8 @@
   "devDependencies": {
     "@tjakoen/batch": "^0.1.0",
     "@tjakoen/grain": "^0.1.12",
-    "@tjakoen/mill": "^0.1.2",
-    "@tjakoen/pantry": "github:tjakoen/pantry#a010db3",
+    "@tjakoen/mill": "^0.2.0",
+    "@tjakoen/pantry": "github:tjakoen/pantry#489d57a",
     "@tjakoen/proof": "^0.1.2"
   }
 }
