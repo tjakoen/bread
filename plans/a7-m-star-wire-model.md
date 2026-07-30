@@ -3,7 +3,7 @@ id: a7-m-star-wire-model
 status: todo
 track: A
 depends: [a1-finish-interaction-layer, a3-kb-ownership-seam, a4-couple-grade-to-provenance, a5-actor-identity-reconnect, a6-pre-model-hardening]
-touches: [grain/ai/reasoner.ts, grain/ai/contract.ts]
+touches: [tjakoen.github.io/src/ai/desk-reasoner.ts]
 owner: human
 ---
 

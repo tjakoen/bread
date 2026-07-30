@@ -3,7 +3,7 @@ id: a2-close-back-channels
 status: done
 track: A
 depends: []
-touches: [grain/ai/reasoner.ts, tjakoen.github.io/pages/loop.html]
+touches: [tjakoen.github.io/src/ai/desk-reasoner.ts]
 owner: ai
 ---
 

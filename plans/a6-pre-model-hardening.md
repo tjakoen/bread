@@ -3,7 +3,7 @@ id: a6-pre-model-hardening
 status: todo
 track: A
 depends: [a1-finish-interaction-layer]
-touches: [grain/ai/reasoner.ts, grain/scripts/ai-dispatch.js]
+touches: [tjakoen.github.io/src/ai/desk-reasoner.ts]
 owner: ai
 ---
 

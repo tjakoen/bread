@@ -49,7 +49,7 @@ contract, not a scaffold.** So M★ closes Track A rather than opening it.
 *Order matters; each step hardens the contract the model will land in.*
 
 1. **Finish the UI interaction layer** (in progress — owner). Complete the control lifecycle,
-   spotlight/takeover, console narration per [AI-INTERFACE.md](grain/docs/AI-INTERFACE.md) §5.
+   spotlight/takeover, console narration per [AI-INTERFACE.md](../tjakoen.github.io/docs/grain/AI-INTERFACE.md) §5.
 2. **Close the accidental back channels** ✅ (2026-07-04) (the *designed* seam stays — see 3):
    - ~~Retire the legacy generic CRUD routes (`/ui/items*`, `/api/items*`)~~ **Done** — `routes.ts`,
      `routes.test.ts`, and the `/home` page deleted; app-frame nav link, audit/screenshot entries,

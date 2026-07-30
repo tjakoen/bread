@@ -3,7 +3,7 @@ id: a3-kb-ownership-seam
 status: todo
 track: A
 depends: [a1-finish-interaction-layer]
-touches: [grain/docs/AI-INTERFACE.md]
+touches: [tjakoen.github.io/docs/grain/AI-INTERFACE.md]
 owner: ai
 ---
 

@@ -3,7 +3,7 @@ id: a4-couple-grade-to-provenance
 status: todo
 track: A
 depends: [a1-finish-interaction-layer]
-touches: [grain/scripts/ai-dispatch.js, grain/ai/contract.ts]
+touches: [tjakoen.github.io/src/ai]
 owner: ai
 ---
 

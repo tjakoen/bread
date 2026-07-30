@@ -3,7 +3,7 @@ id: a5-actor-identity-reconnect
 status: todo
 track: A
 depends: [a1-finish-interaction-layer]
-touches: [grain/ai]
+touches: [tjakoen.github.io/src/ai]
 owner: ai
 ---
 
