@@ -39,7 +39,8 @@ duplicate here.
 
 Each layer builds only on the layers below it. `batch` is its own repo; `grain`, `mill`, `proof`,
 and `crumb` live together in the [`grain`](https://github.com/tjakoen/grain) monorepo
-(`packages/{grain,mill,proof,crumb}`), published individually as `@tjakoen/*` on GitHub Packages.
+(`packages/{grain,mill,proof,crumb}`), published individually as `@tjakoen/*` on the public npm
+registry — install them with a version range, no `.npmrc` and no token.
 (The stack was originally split into one repo per layer, then partly reconsolidated into the grain
 monorepo: see [`SPLIT-PLAN.md`](./docs/history/SPLIT-PLAN.md) for that history.)
 
