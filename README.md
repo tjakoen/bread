@@ -68,6 +68,11 @@ and in [`PHILOSOPHY.md`](https://github.com/tjakoen/tjakoen.github.io/blob/main/
 
 ## Quick start
 
+**Starting your own project on BREAD?** Drop one link into the coding agent on an empty repo and it
+interviews you, reads the stack for itself, and proposes which layers you actually need before writing
+a line: **<https://tjakoen.github.io/kickstart>**. Everything below is for running *this* stack's own
+source instead.
+
 Needs [Bun](https://bun.sh) (pinned `1.3.x`). There's nothing to clone here: `bread` is a map, not
 code. To run the stack yourself, clone the two source repos:
 
