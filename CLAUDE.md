@@ -12,33 +12,27 @@ dependency — each layer builds only on the layers below it:
 ```
 batch/   BATCH — the substrate (Bun · Addressable · TypeScript · CSS · htmx); no build step
   └─ grain/   GRAIN — an AI-interaction design system + its default theme (the look) + the catalog
-       ├─ MILL/               the markdown CMS (LIVE — core renders /notes + the layer docs; its OWN reusable project) — feed it .md + images, it renders GRAIN pages
-       ├─ proof/               PROOF — the AI plan board, a **mountable layer** (`createProofRoutes`; plans-as-markdown → kanban projection; uses MILL); pieces 1–4 built + the mount seam, board LIVE over SSE (status line in the canonical plan for the current count) — canonical plan [`packages/proof/PLAN.md`](https://github.com/tjakoen/grain/blob/main/packages/proof/PLAN.md) in the grain monorepo
-       ├─ pantry/              PANTRY — the installable dev-docs + AI cockpit **app** (composes batch+grain+mill+proof into one `bunx pantry` server); reshaped into a dev side-tool — AI-retrieval (`/llms.txt`, `/knowledge.json`) + the whole-codebase mindmap (`/map`) are live (see `pantry/PLAN.md`'s status line for the current state) — canonical plan `pantry/PLAN.md`
-       ├─ tjakoen.github.io/  THE personal-site app + a composition root — this personal site (BATCH + GRAIN); *uses MILL* for its notes/blog (PANTRY is the neutral sibling app)
-       └─ project/            the product — a personal AI assistant ("Project"); **PAUSED** — now a docs-only archive (see below)
+       ├─ MILL/               the markdown CMS (LIVE — renders /notes + the layer docs; its OWN reusable project)
+       ├─ proof/              PROOF — the AI plan board, a mountable layer (plans-as-markdown → kanban)
+       ├─ pantry/             PANTRY — the installable dev-docs + AI cockpit app (`bunx pantry`)
+       ├─ tjakoen.github.io/  THE personal-site app + the composition root
+       └─ project/            the product — a personal AI assistant; **PAUSED**, docs-only archive
 ```
 
 The **composition root folded into `tjakoen.github.io/` (2026-07-05)**: the portfolio is now THE app —
 it wires batch + grain + mill and runs the site; the hero desk is the reference surface where you
-watch the AI act. `project/` is
-**paused**: its code (server, domain, pages) moved into the portfolio or was dropped; the folder now
-holds only the product's vision docs (`PROJECT-PLAN.md`, `docs/MVP.md`) until the assistant resumes as
-its own repo. `MILL/` and `tjakoen.github.io/` are consumers of `grain` + `batch`. The portfolio is
-its own custom app — **MILL doesn't *build* it**; the portfolio just *uses* MILL to manage its
-markdown content (the notes/blog), while its bespoke surfaces (hero desk, calendar, etc.) are its own
-work. Dependency purity: `grain` imports nothing from `batch` except the `OpChannel` port; **MILL
-depends on both `grain` (components) and `batch` (substrate), never the reverse — so MILL is an
-*extension of neither*, a new layer above both** (`batch → grain → MILL`). MILL's core is
-framework-agnostic (a Markdown→components engine driven by a render adapter); the BATCH+GRAIN adapter
-is the default. That MILL exists at all is part of the pitch: it's BATCH + GRAIN proving they compose
-into a real, reusable tool. **Canonical MILL plan: [`packages/mill/PLAN.md`](https://github.com/tjakoen/grain/blob/main/packages/mill/PLAN.md) in the grain monorepo.**
+watch the AI act. The portfolio *uses* MILL for its markdown content; MILL does not build it.
+Dependency purity: `grain` imports nothing from `batch` except the `OpChannel` port; **MILL depends
+on both, never the reverse** — a new layer above both, not an extension of either.
 
 The defining idea: a UI where **every surface is addressable and operable by both a human
 and an AI through one shared vocabulary**, with the AI's presence shown as a visible signal
 (*grain = AI*). A human click and an AI decision become the **same `Intent`**, flow through
 **one door** (`POST /intent` → `grain/ai/interaction-layer.ts`), and return as **`RenderOp`s**
 pushed over SSE. No privileged AI→DOM back channel.
+
+Fuller detail on each layer, and the paused-project history, is in [`DOCS.md`](DOCS.md) — the
+full doc map.
 
 ## Start here (reading order)
 
@@ -49,31 +43,28 @@ pushed over SSE. No privileged AI→DOM back channel.
 4. **[GRAIN](https://tjakoen.github.io/grain/docs/grain)** + **[AI-INTERFACE](https://tjakoen.github.io/grain/docs/ai-interface)** — the
    design system and the AI contract (surfaces, ops, manifest, the "AI acts" protocol).
 5. **[DESIGN-SYSTEM](https://tjakoen.github.io/grain/docs/design-system)** — the visual identity / grade-as-signal.
-6. **[`proof/PLAN.md`](https://github.com/tjakoen/grain/blob/main/packages/proof/PLAN.md)** — PROOF, the AI plan board: plans are markdown files, the
-   board is a live projection of them.
-7. **[`pantry/PLAN.md`](https://github.com/tjakoen/pantry/blob/main/PLAN.md)** — PANTRY, the installable dev-docs + AI cockpit app
-   (`bunx pantry`) that composes the stack.
+6. **[`proof/PLAN.md`](https://github.com/tjakoen/grain/blob/main/packages/proof/PLAN.md)** + **[`pantry/PLAN.md`](https://github.com/tjakoen/pantry/blob/main/PLAN.md)** — the plan board and the cockpit app.
 
 The SSOT for what's operable is **`grain/ai/contract.ts`** (`SurfaceKind`, `ActionName`,
 `ACTIONS`, `RenderOp`). The composition root — the only place the layers meet — is
-**`tjakoen.github.io/server.ts`**. The reference surface is the **hero desk** (the home route `/`), where a human and the AI drive the same door.
+**`tjakoen.github.io/server.ts`**. The reference surface is the **hero desk** (the home route `/`),
+where a human and the AI drive the same door.
 
 **Working mainly in one layer?** Each layer's repo carries its **own `CLAUDE.md`** —
 [`batch/CLAUDE.md`](https://github.com/tjakoen/batch/blob/main/CLAUDE.md) and [`grain/CLAUDE.md`](https://github.com/tjakoen/grain/blob/main/CLAUDE.md) — with that layer's
-non-negotiables and the hard-won *"don't repeat these"* lessons (the silent-failure contracts, the
-control lifecycle, "use the vocabulary, don't reinvent it"). Read the layer's file alongside this
-one. The full doc map is [`DOCS.md`](DOCS.md).
+non-negotiables and the hard-won *"don't repeat these"* lessons. Read the layer's file alongside this
+one.
 
 ## This repo is the stack's control plane — run it
 
 `bread` is a **map, not a monorepo**, but it is also the one place that operates the *whole stack*
 at once. There is no app code to run here; the commands below drive PANTRY against this umbrella host
 (its `plans/`, its docs, its layer pins). The per-layer `bun run dev/test/shots/audit` commands live
-in each **layer's own repo** (e.g. `tjakoen.github.io/`), not here.
+in each **layer's own repo**, not here.
 
 ```bash
 bun run cockpit    # bunx pantry serve — the whole-stack cockpit: plans board, decision inbox, docs
-bun run check      # bunx pantry check — doc-drift lint (dead references); CI-able, exits nonzero on a break
+bun run check      # bunx pantry check — doc-drift lint (dead references); CI-able, exits nonzero
 bun run doctor     # bunx pantry doctor — kit compliance + staleness + layer-pin drift (the omnibus)
 bun run deps       # bunx pantry deps — are the @tjakoen/* pins current with the layer sources on disk?
 bun run plans:check # bunx proof check — validate the umbrella plan board
@@ -81,19 +72,9 @@ bun run deps:refresh # re-pin every layer to its latest (the fix when `deps` rep
 ```
 
 `deps` / `doctor`'s pin check reads the **sibling layer checkouts** (`../batch`, `../grain/packages/*`):
-a pin behind its source is a chore that's **due** (surfaced), never a broken build (it does not fail
-CI). Run `deps:refresh` to clear it. This is the umbrella's unique job — no single layer repo can
-answer "is the stack pinned to what I actually have?"
-
-## Seeing the UI (headless / remote)
-
-There's no display in a remote/headless session, so to *show the user* what the UI looks
-like: run `bun run shots` (Playwright drives chromium against a freshly-booted app and
-captures the key screens **and states** — the desk mid-act with the spotlight, the ⌘K
-palette — to `screenshots/`, plus a self-contained `screenshots/gallery.html`). Then
-**publish `screenshots/gallery.html` as an Artifact** and give the user the link — that's
-the channel they can view remotely. Add/adjust shots in `tjakoen.github.io/tools/screenshots.ts`.
-Use this whenever the user asks to "see" something or you've changed anything visual.
+a pin behind its source is a chore that's **due** (surfaced), never a broken build. Run `deps:refresh`
+to clear it. This is the umbrella's unique job — no single layer repo can answer "is the stack pinned
+to what I actually have?"
 
 ## Non-negotiables (see CONVENTIONS for the full rules)
 
@@ -106,88 +87,45 @@ Use this whenever the user asks to "see" something or you've changed anything vi
   overriding tokens, never editing components.
 - **AI-mode idiom:** in-transit reads grain via `[data-commit="pending"]` (live) / `[data-grade="grain"]`
   (static); express per-component but key off those.
-- **Tests are part of the work** (below). `tsc` + `bun test` green before you call something done.
+- **Tests are part of the work.** `tsc` + `bun test` green before you call something done.
 
-## Keep the vision aligned — when you change X, update Y
+## Keep the vision aligned
 
-This is the contract for not drifting. After any change, sync everything in its row:
-
-| You change… | …also update |
-|---|---|
-| **An action verb** (add/modify) | `contract.ts` (`ActionName` + `ACTIONS` + `accepts`) → reasoner branch → **unit test** (reasoner) + **integration test** (door path) → [AI-INTERFACE](https://tjakoen.github.io/grain/docs/ai-interface) (vocab) |
-| **A surface kind** | `contract.ts` (`SurfaceKind`) → `ai-routes.ts` manifest targets → any page `data-surface` → tests |
-| **A `RenderOp` kind/field** | `contract.ts` (`RenderOpKind`/`RenderOp`) → dispatcher `applyOp`/`applyType` (`ai-dispatch.js`) → [AI-INTERFACE](https://tjakoen.github.io/grain/docs/ai-interface) → tests |
-| **A component** | follow CONVENTIONS §4 checklist (`.html`/`.css`/`.md`, tokens, AI-mode, `data-kind`/`data-accepts` if operable) → add a test for any behavior → it auto-appears in `/catalog` |
-| **A design token / the theme** | `grain/styles/variables.css` only (never per-component) |
-| **The hero desk or its surfaces** | the desk reasoner ↔ `tjakoen.github.io/` home-route surfaces → **e2e** (`tjakoen.github.io/e2e/`) |
-| **The client dispatcher or a UI interaction** | `grain/scripts/ai-dispatch.js` → **e2e** (only tier that covers it) |
-| **The static export / prerender** | keep it a *projection* of the running server (fetch, don't re-render) → `batch/export` (`bun run export`, framework-generic) → respect the exportable boundary (no operable `/intent`+SSE surfaces) → ARCHITECTURE §18 |
-| **The doc map or the layer/route structure** (a canonical doc, a landing route, a docs route) | re-sync `/llms.txt` — the AI-facing index (`tjakoen.github.io/llms.ts`, a *projection* of `DOCS.md`; format in `batch/http/llms.ts`) → ARCHITECTURE §11.4. It's the AEO counterpart to `sitemap.xml`; a stale link there misdirects an AI crawler |
-| **A module served to the browser** (`/modules`, or the client-side runtime) | it MUST be **client-safe** (ARCHITECTURE §19.2): no server-only imports (guard-enforced), **no secrets/tokens**, no server-required behavior — static-style only → say so wherever the mode is offered; the mechanism (`batch/http/modules.ts`) is `batch`, the client-door wiring is `grain/ai/*`, the mode switch is the composition root |
-| **Layering / cross-layer deps** | re-verify import purity; if you reach across, add a port instead → CONVENTIONS §1/§10 |
-| **Anything user-visible in behavior** | the matching doc (`ARCHITECTURE` / `GRAIN` / `AI-INTERFACE` / `DESIGN-SYSTEM` / `CONVENTIONS`) |
-| **A concept doc** (`ARCHITECTURE`/`CONVENTIONS`/`GRAIN`/`AI-INTERFACE`) | the portfolio showcase that *renders* it — re-check the pitch/teaser sections still summarize it truly: the published [GRAIN](https://tjakoen.github.io/grain/docs/grain)+[AI-INTERFACE](https://tjakoen.github.io/grain/docs/ai-interface) docs → `/grain` (`tjakoen.github.io/pages/grain/GRAIN-PAGE.md`, `/grain/docs`); `ARCHITECTURE`+`CONVENTIONS` → `/batch` (`tjakoen.github.io/pages/batch/BATCH-PAGE.md`, `/batch/docs`). Docs are the single source; pages are trailheads, never forks |
-| **A roadmap step** (land, drop, or re-sequence) | tick it in [`ROADMAP.md`](./ROADMAP.md) → sync the canonical layer plan for that track (Track A → `grain/CLAUDE.md` / `project/PROJECT-PLAN.md`; Track B → `batch`; Track C → `packages/mill/PLAN.md` (grain monorepo); Track D → `tjakoen.github.io/docs/architecture/PLAN.md`) |
-| **A platform capability / feature** (add, drop, or re-tier) | update that layer's **tiered capabilities list** — the single source: [GRAIN](https://tjakoen.github.io/grain/docs/grain) §"What GRAIN gives you" / [ARCHITECTURE](https://tjakoen.github.io/batch/docs/architecture) §"What BATCH gives you" / `packages/mill/PLAN.md` §"What MILL gives you" → re-sync its teasers (the layer README + the `/grain`·`/batch` landing pages) as *projections*, never forks → [AUDIT.md](AUDIT.md) check 11 (nothing buried). Heroes = the reasons the layer exists; useful-but-quiet features go under *Also*, never omitted |
-| **A notable decision or non-obvious fact** | write a **memory** (see below) so the next session inherits it |
+The when-you-change-X-update-Y table lives in **[docs/ALIGNMENT.md](docs/ALIGNMENT.md)**. Open the row
+for what you are changing before you change it — that table is the contract for not drifting.
 
 **Definition of done:** code + the right test tier(s) (unit / integration / e2e per CONVENTIONS §6)
-+ docs synced (this table) + `tsc` and `bun test` green + a memory if a decision was made + **commit**
++ docs synced (that table) + `tsc` and `bun test` green + a memory if a decision was made + **commit**
 (once the gate is green, commit the change — don't leave finished, verified work sitting uncommitted).
 
 **When you fix something, fix its cause — not just the instance.** Anything flagged — a failing
-check, a bug, a surface that didn't behave as expected, an AI (or a person) that tripped — is first a
-signal about the *docs or the architecture*, not a one-off. Before you move on, ask *why it was
-possible* and close it at the source: sharpen the contract, design the mistake out, or fix the doc
-that misled — so the next person or AI can't repeat it. An operator tripping on the system measures
-the system's clarity, not just the operator's; if you (an AI) got it wrong building here, suspect the
-docs/design first. The bar it's all held to: **this stack must be easy for a human and *even more*
-legible and operable for an AI** — that's the point of the whole thing (→ [PHILOSOPHY.md](https://github.com/tjakoen/tjakoen.github.io/blob/main/PHILOSOPHY.md),
-the two lead bets; the worked-through lessons: [grain/CLAUDE.md](https://github.com/tjakoen/grain/blob/main/CLAUDE.md) §5, [batch/CLAUDE.md](https://github.com/tjakoen/batch/blob/main/CLAUDE.md)).
+check, a bug, a surface that didn't behave as expected, an AI that tripped — is first a signal about
+the *docs or the architecture*, not a one-off. Ask *why it was possible* and close it at the source.
+An operator tripping on the system measures the system's clarity, not just the operator's. The bar:
+**this stack must be easy for a human and *even more* legible and operable for an AI**.
 
-**Before committing / after a big change:** run the alignment audit — [AUDIT.md](AUDIT.md) (a repeatable
-runbook: green gate, layering purity, tokens-only, persona-neutral GRAIN, naming, docs-synced).
+**Before committing / after a big change:** run the alignment audit — [AUDIT.md](AUDIT.md) (green
+gate, layering purity, tokens-only, persona-neutral GRAIN, naming, docs-synced).
 
 ## Memory
 
 Claude Code keeps **per-project memories** (decisions, preferences, context) outside the repo;
 they surface automatically at the start of each session. When you make a real decision or learn
 something non-obvious, write one so the next session inherits it. If a recalled memory
-contradicts the code, trust the code and fix the memory. (These are agent memory, not committed
-files — durable, repo-worthy rules belong in the published [CONVENTIONS](https://tjakoen.github.io/batch/docs/conventions) doc (homed in the portfolio at `tjakoen.github.io/docs/batch/`) or this file.)
+contradicts the code, trust the code and fix the memory. Durable, repo-worthy rules belong in the
+published [CONVENTIONS](https://tjakoen.github.io/batch/docs/conventions) doc or this file.
 
-## Working notes
+## The rest
 
-- **Pre-flight: read [`ROADMAP.md`](./ROADMAP.md) before starting substantive work** — the
-  canonical execution plan (per-layer tracks, the M★ live-model milestone, the honest-pitch bar);
-  it says what's in flight so parallel sessions don't drift.
-- Commit/push only when asked; branch off `main` if you must (this is a private monorepo —
-  the user often merges to `main` directly).
-- **The split is complete, then partly re-consolidated (2026-07-19), then de-submoduled
-  (2026-07-23).** `batch` is its own repo. `grain` is a **monorepo** holding
-  `packages/{grain,mill,proof,crumb}` — mill + proof are no longer separate repos (their standalone
-  repos are archived), and grain/mill/proof/crumb/batch are published to the **public npm registry**
-  as `@tjakoen/{batch,grain,mill,proof,crumb}` (moved off GitHub Packages 2026-07-30 — its registry
-  demanded a `read:packages` token even for public packages, so every newcomer had to mint a PAT
-  before installing; npmjs needs nothing). Consumers pin the published versions, not github SHAs, and
-  carry **no committed `.npmrc`** — a scope mapping there would reinstate the token requirement.
-  `bread` no longer holds `batch`/`grain` as submodules — it's a pure map/manifesto repo that links
-  out.
-  The original split map is [`SPLIT-PLAN.md`](./docs/history/SPLIT-PLAN.md) (historical).
-- **Personal cross-repo standards** (writing voice, the note/blog template, README badges, a starter
-  `CLAUDE.md`) are homed in the portfolio at `tjakoen.github.io/standards/`, published at
-  <https://tjakoen.github.io/standards> — referenced, never forked. Writing
-  anything under his byline? [VOICE](https://tjakoen.github.io/standards/voice) (how it reads) +
-  [NOTE-STANDARD](https://tjakoen.github.io/standards/note-standard) (how a note is built) are the rulebook.
-- Run from the repo root (relative paths in `tjakoen.github.io/config.ts` assume it).
-- Bun lives at `~/.bun/bin` — `export PATH="$HOME/.bun/bin:$PATH"` if `bun` isn't found.
+**Pre-flight: read [`ROADMAP.md`](./ROADMAP.md) before starting substantive work** — the canonical
+execution plan; it says what's in flight so parallel sessions don't drift. Commit/push only when
+asked. Run from the repo root. Bun lives at `~/.bun/bin`.
 
-## graphify
+Working notes (the split history, the npm-registry move, where the personal standards live) and how
+to **show the UI in a headless session** are in
+**[docs/OPERATING-NOTES.md](docs/OPERATING-NOTES.md)**.
 
-This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
-
-Rules:
-- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
-- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
-- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
-- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+Querying the code graph: follow the published standard —
+<https://tjakoen.github.io/standards/graph>. Short version: `graphify query "<symbol>"` before you
+fan out grep, symbol names not English prose, and `graphify update .` after edits (AST-only, no API
+cost). This repo carries a graph at `graphify-out/`.
