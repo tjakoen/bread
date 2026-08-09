@@ -17,7 +17,7 @@
   },
   "//devDependencies": "The pins of record for the members. Since the 2026-07-19 grain-monorepo cutover, grain · mill · proof · batch are PUBLISHED packages (public npm registry since 2026-07-30 — the @tjakoen scope resolves there by default, so this repo carries NO .npmrc and needs no token) pinned to versions, NOT github SHAs; only pantry stays a github git-dep (it is an app, not published). deps:refresh re-pins pantry by sha and 'bun update's the four published layers. This umbrella stays LOCKLESS (bun.lock gitignored), but no longer because it has to: the nested graph — bread -> pantry -> tjakoen.github.io -> layers — DOES resolve from scratch as of 2026-07-30 (verified cold: purged @tjakoen cache, empty HOME, all 7 packages installed, pantry check OK). The old bread-bun-nested-git blocker was misattributed to bun. The real causes were pantry pinning a portfolio sha that had been deleted from the remote, and the GitHub Packages token wall underneath it; both are fixed. bread still needs no lock: everything runs via bunx (cockpit -> bunx pantry, plans:check -> bunx proof), which resolve in isolation and don't use bread's own node_modules. Do NOT try to regenerate a lock here. (standards was folded into the portfolio 2026-07-09 and its repo deleted; pantry resolves /standards from the tjakoen.github.io git-dep.)",
   "devDependencies": {
-    "@tjakoen/batch": "^0.1.0",
+    "@tjakoen/batch": "^0.2.0",
     "@tjakoen/grain": "^0.1.12",
     "@tjakoen/mill": "^0.2.0",
     "@tjakoen/pantry": "github:tjakoen/pantry#d7966df",
