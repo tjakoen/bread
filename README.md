@@ -64,7 +64,7 @@ Most web stacks answer "how do I build a UI?" with a client framework, a build p
 state-sync problem. BREAD bets you can delete all three for a large class of apps and lean on the
 platform, while making the result **legible and operable by an AI, not just a human**. The full
 *why*, with all the detail, lives at **[tjakoen.github.io/bread](https://tjakoen.github.io/bread/)**
-and in [`PHILOSOPHY.md`](https://github.com/tjakoen/tjakoen.github.io/blob/main/PHILOSOPHY.md).
+and in [`PHILOSOPHY.md`](https://github.com/tjakoen/tjakoen.github.io/blob/main/docs/PHILOSOPHY.md).
 
 ## Quick start
 

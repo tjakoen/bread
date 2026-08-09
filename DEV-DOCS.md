@@ -31,7 +31,7 @@ re-documenting them.
 
 - **Docs are the single source; pages are projections, never forks.** The reference must *render* or
   *generate* from source, not copy it. (→ [CLAUDE.md](CLAUDE.md) "projections not forks", `philosophy-doc-and-ssot-map`.)
-- **The vocabulary SSOT is `grain/ai/contract.ts`.** Any vocabulary reference is generated from it, so
+- **The vocabulary SSOT is `grain/packages/grain/ai/contract.ts`.** Any vocabulary reference is generated from it, so
   it can't drift. (→ CLAUDE.md "One vocabulary".)
 - **Docs live next to the layer they document** so the repo split stays a straight move. (→ [DOCS.md](DOCS.md).)
 - **Served by the existing MILL machinery** (`/grain/docs`, `/batch/docs` render the installed
@@ -96,9 +96,9 @@ One task, one page, copy-pasteable. Candidate set:
 
 ### 3. Reference — generated as a projection (BATCH idiom)
 Like `llms.ts` and `sitemap` — emit it from source so it can't drift:
-- **Vocabulary**: `ActionName` / `SurfaceKind` / `RenderOp` (+ `accepts`) generated from `grain/ai/contract.ts`.
+- **Vocabulary**: `ActionName` / `SurfaceKind` / `RenderOp` (+ `accepts`) generated from `grain/packages/grain/ai/contract.ts`.
 - **Endpoints**: `POST /intent`, the SSE push channel, `/ai/manifest`.
-- **Tokens**: the semantic token list from `grain/styles/variables.css`.
+- **Tokens**: the semantic token list from `grain/packages/grain/styles/variables.css`.
 - **Components**: frame the live `/catalog` — it already *is* the component reference; don't fork it.
 
 ### 4. Contribute (thin)
@@ -112,7 +112,7 @@ pointer, the gap is in those docs — fix it there, not here.
 2. ✅ **Getting-started ×2** — lift from the READMEs, make it copy-pasteable, render through MILL. (`df9ec2e`)
 3. ✅ **Tutorial** — the flagship. (`13adfb2`)
 4. ✅ **How-to guides** — batch them; each is small. (`c042825`)
-5. ✅ **Generated reference tool** — vocab + endpoints + tokens as a projection of source. (`grain/ai/vocab-reference.ts`, `/reference`)
+5. ✅ **Generated reference tool** — vocab + endpoints + tokens as a projection of source. (`grain/packages/grain/ai/vocab-reference.ts`, `/reference`)
 6. ✅ **Contribute section** — links, on the `/docs` hub.
 7. ✅ **Sync + gate** — DOCS.md, `/llms.txt`, sitemap, the static-export allowlist; `tsc` + `bun test` green (186 pass).
 
