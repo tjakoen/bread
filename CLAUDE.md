@@ -36,7 +36,7 @@ full doc map.
 
 ## Start here (reading order)
 
-1. **[PHILOSOPHY.md](https://github.com/tjakoen/tjakoen.github.io/blob/main/PHILOSOPHY.md)** — the *why* (the beliefs the whole stack serves). **Read first.**
+1. **[PHILOSOPHY.md](https://github.com/tjakoen/tjakoen.github.io/blob/main/docs/PHILOSOPHY.md)** — the *why* (the beliefs the whole stack serves). **Read first.**
 2. **[CONVENTIONS](https://tjakoen.github.io/batch/docs/conventions)** — the build standard (layering, components, tokens,
    the action vocabulary, the 3-tier testing bar, the extraction plan). **The rulebook.**
 3. **[ARCHITECTURE](https://tjakoen.github.io/batch/docs/architecture)** — the substrate's reasoning (single source of truth).
