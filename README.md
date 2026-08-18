@@ -29,9 +29,9 @@ The defining idea: a human click and an AI decision become the **same `Intent`**
 **one door**, and return as render operations pushed over SSE. No privileged AI→DOM back channel:
 the AI operates the UI the same way you do, and you can watch it happen (*grain = AI*).
 
-This repo is a **map, not a monorepo** — and the stack's **control plane**: it links to where each
+This repo is a **map, not a monorepo**, and the stack's **control plane**: it links to where each
 layer lives, tells the story, and is the one place you *operate the whole stack at once* (the umbrella
-plan board, the decision inbox, and the layer-pin drift check — see [Operate the stack](#operate-the-stack)).
+plan board, the decision inbox, and the layer-pin drift check, see [Operate the stack](#operate-the-stack)).
 The full manifesto lives at **<https://tjakoen.github.io/bread/>**; read it there rather than in
 duplicate here.
 
@@ -40,7 +40,7 @@ duplicate here.
 Each layer builds only on the layers below it. `batch` is its own repo; `grain`, `mill`, `proof`,
 and `crumb` live together in the [`grain`](https://github.com/tjakoen/grain) monorepo
 (`packages/{grain,mill,proof,crumb}`), published individually as `@tjakoen/*` on the public npm
-registry — install them with a version range, no `.npmrc` and no token.
+registry: install them with a version range, no `.npmrc` and no token.
 (The stack was originally split into one repo per layer, then partly reconsolidated into the grain
 monorepo: see [`SPLIT-PLAN.md`](./docs/history/SPLIT-PLAN.md) for that history.)
 
@@ -99,7 +99,7 @@ Then visit (on the running site):
 
 ## Operate the stack
 
-There is no app to run *here* — but this is the umbrella host, so it is where you operate the whole
+There is no app to run *here*, but this is the umbrella host, so it is where you operate the whole
 stack at once. Each command is PANTRY (or PROOF) pointed at this repo; nothing to clone, `bunx`
 resolves them:
 
@@ -112,7 +112,7 @@ bun run deps:refresh # re-pin every layer to its latest — the fix when `deps` 
 
 `deps` is the one check no single layer repo can run: it reads each layer's version from its sibling
 checkout (`../batch`, `../grain/packages/*`) and flags any pin the umbrella has let fall behind. A
-lagging pin is a chore that's **due**, not a broken build — surfaced, never gated. Example:
+lagging pin is a chore that's **due**, not a broken build, surfaced, never gated. Example:
 
 ```
 [ok    ] @tjakoen/batch: pin 0.1.0 matches source
