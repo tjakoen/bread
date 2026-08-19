@@ -14,14 +14,14 @@ Use this whenever the user asks to "see" something or you've changed anything vi
 
 ## Working notes
 
-- **Pre-flight: read [`ROADMAP.md`](./ROADMAP.md) before starting substantive work** — the
+- **Pre-flight: read [`ROADMAP.md`](../ROADMAP.md) before starting substantive work** — the
   canonical execution plan (per-layer tracks, the M★ live-model milestone, the honest-pitch bar);
   it says what's in flight so parallel sessions don't drift.
-- Commit/push only when asked; branch off `main` if you must (this is a private monorepo —
-  the user often merges to `main` directly).
+- Commit/push only when asked; branch off `main` if you must (this repo is public, and it is a map
+  rather than a monorepo; the user often merges to `main` directly).
 - **The split is complete, then partly re-consolidated (2026-07-19), then de-submoduled
   (2026-07-23).** `batch` is its own repo. `grain` is a **monorepo** holding
-  `packages/{grain,mill,proof,crumb}` — mill + proof are no longer separate repos (their standalone
+  `packages/{grain,mill,proof,crumb,grain-mcp}` — mill + proof are no longer separate repos (their standalone
   repos are archived), and grain/mill/proof/crumb/batch are published to the **public npm registry**
   as `@tjakoen/{batch,grain,mill,proof,crumb}` (moved off GitHub Packages 2026-07-30 — its registry
   demanded a `read:packages` token even for public packages, so every newcomer had to mint a PAT
@@ -29,7 +29,7 @@ Use this whenever the user asks to "see" something or you've changed anything vi
   carry **no committed `.npmrc`** — a scope mapping there would reinstate the token requirement.
   `bread` no longer holds `batch`/`grain` as submodules — it's a pure map/manifesto repo that links
   out.
-  The original split map is [`SPLIT-PLAN.md`](./docs/history/SPLIT-PLAN.md) (historical).
+  The original split map is [`SPLIT-PLAN.md`](history/SPLIT-PLAN.md) (historical).
 - **Personal cross-repo standards** (writing voice, the note/blog template, README badges, a starter
   `CLAUDE.md`) are homed in the portfolio at `tjakoen.github.io/standards/`, published at
   <https://tjakoen.github.io/standards> — referenced, never forked. Writing

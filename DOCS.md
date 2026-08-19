@@ -19,7 +19,7 @@ For the whole-repo orientation + operating rules, start at [`CLAUDE.md`](CLAUDE.
 carries its own AI-onboarding `CLAUDE.md` in its repo, seeded from
 [`tjakoen.github.io/standards/CLAUDE.starter.md`](https://tjakoen.github.io/standards/claude.starter), with that layer's
 non-negotiables and hard-won lessons:
-[`batch`](https://github.com/tjakoen/batch/blob/main/CLAUDE.md), [`grain`](https://github.com/tjakoen/grain/blob/main/CLAUDE.md), [`project`](https://github.com/tjakoen/project/blob/main/CLAUDE.md),
+[`batch`](https://github.com/tjakoen/batch/blob/main/CLAUDE.md), [`grain`](https://github.com/tjakoen/grain/blob/main/CLAUDE.md), `project` (private, unpublished),
 [`portfolio`](https://github.com/tjakoen/tjakoen.github.io/blob/main/CLAUDE.md), [`mill`](https://github.com/tjakoen/grain/blob/main/packages/mill/CLAUDE.md). (`proof/` and `pantry/` carry
 their canonical `PLAN.md`; a per-folder `CLAUDE.md` follows when each grows past its plan.)
 
@@ -50,8 +50,8 @@ their canonical `PLAN.md`; a per-folder `CLAUDE.md` follows when each grows past
 | [GETTING-STARTED.md](https://tjakoen.github.io/pantry/docs/getting-started) | `tjakoen.github.io/docs/pantry/` (rendered at `tjakoen.github.io/pantry/docs/`) | Task-oriented: install, what PANTRY composes, next steps. | App |
 | [WHAT-IT-COMPOSES.md](https://tjakoen.github.io/pantry/docs/what-it-composes) | `tjakoen.github.io/docs/pantry/` (rendered at `tjakoen.github.io/pantry/docs/`) | What PANTRY composes and why — batch+grain+mill+proof into one `bunx pantry` server. | App |
 | [PLAN.md](https://github.com/tjakoen/pantry/blob/main/PLAN.md) | `pantry/` | PANTRY — the installable dev-docs + AI cockpit **app** that composes batch+grain+mill+proof into one `bunx pantry` server. Reshaped into a dev side-tool (board-forward home, stack pitch moved to `/about`); AI-retrieval (`/llms.txt`, `/knowledge.json`) + the whole-codebase mindmap (`/map`) are live (see the file's status line for the current state). | App |
-| [PROJECT-PLAN.md](https://github.com/tjakoen/project/blob/main/PROJECT-PLAN.md) | `project/` | The product's master vision — the full ambient assistant. **PAUSED** (docs-only archive since 2026-07-05). Private repo. | Vision |
-| [MVP.md](https://github.com/tjakoen/project/blob/main/docs/MVP.md) | `project/docs/` | The product slice — the AI task-manager dashboard. **PAUSED** (see above). Private repo. | Product slice |
+| PROJECT-PLAN.md | `project/` | The product's master vision — the full ambient assistant. **PAUSED** (docs-only archive since 2026-07-05). Private repo. | Vision |
+| MVP.md | `project/docs/` | The product slice — the AI task-manager dashboard. **PAUSED** (see above). Private repo. | Product slice |
 
 The **app + composition root** is [`tjakoen.github.io/`](https://tjakoen.github.io/) (the portfolio; it wires
 batch + grain + mill and runs the site). Its own *how/what* docs — [`PLAN.md`](https://github.com/tjakoen/tjakoen.github.io/blob/main/docs/architecture/PLAN.md),

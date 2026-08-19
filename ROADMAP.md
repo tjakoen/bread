@@ -3,9 +3,9 @@
 > Status: **canonical execution plan (2026-07-03; frame updated 2026-07-06).** Written after a
 > full-stack audit (4-agent deep dive: GRAIN code-vs-claims, BATCH, MILL, adversarial prior-art
 > sweep) — findings in agent memory `stack-audit-2026-07`. This file is the *what-next*; the layer
-> plans ([mill/PLAN.md](grain/packages/mill/PLAN.md), [proof/PLAN.md](grain/packages/proof/PLAN.md),
-> [project/PROJECT-PLAN.md](project/PROJECT-PLAN.md),
-> [tjakoen.github.io/PLAN.md](tjakoen.github.io/docs/architecture/PLAN.md)) stay canonical for their layers, and
+> plans ([mill/PLAN.md](https://github.com/tjakoen/grain/blob/main/packages/mill/PLAN.md), [proof/PLAN.md](https://github.com/tjakoen/grain/blob/main/packages/proof/PLAN.md),
+> `project/PROJECT-PLAN.md` (private, unpublished),
+> [tjakoen.github.io/PLAN.md](https://github.com/tjakoen/tjakoen.github.io/blob/main/docs/architecture/PLAN.md)) stay canonical for their layers, and
 > [SPLIT-PLAN.md](docs/history/SPLIT-PLAN.md) stays the repo-split map. When a step lands, tick it here and
 > sync the layer doc.
 >
@@ -28,7 +28,7 @@ validate the market; we say so out loud and lead with it. Our point on that road
 Symmetry and the single writer are no longer individually novel (Agent-Native ships both);
 **provenance-as-grade coupled to the door is the load-bearing differentiator.** Every pitch, page,
 and doc leads with the convergence story and lands on that differentiator. The whitepaper
-([tjakoen.github.io/notes/whitepaper-one-vocabulary.md](tjakoen.github.io/notes/whitepaper-one-vocabulary.md),
+([tjakoen.github.io/notes/whitepaper-one-vocabulary.md](https://tjakoen.github.io/notes/whitepaper-one-vocabulary),
 revised 2026-07-03) is the argued version.
 
 ## The one milestone that changes what this *is*
@@ -91,7 +91,7 @@ contract, not a scaffold.** So M★ closes Track A rather than opening it.
    verbatim, `PUBLIC_BASE_PATH`/`PUBLIC_ORIGIN` for subpath/root hosts, and the exportable boundary
    enforced by a dead-internal-link warning. Tier 2 (prerender of `hx-trigger="load"`) deferred.
    Unblocks MILL's hosting adapter and the portfolio deploy; the ~8 stale references are now true.
-2. **Fix binary serving** in [batch/http/static.ts](batch/http/static.ts): `.text()` corrupts
+2. **Fix binary serving** in [batch/http/static.ts](https://github.com/tjakoen/batch/blob/main/http/static.ts): `.text()` corrupts
    binaries and the MIME map has no images — `server.ts` already routes around it for fonts, and
    a picture-led portfolio hits this immediately. Serve bytes, extend the MIME map, add a test.
 3. **Test the core**: the render engine has 4 tests (all security) — add coverage for `each=`,
@@ -231,7 +231,7 @@ standalone CMS play. Publishing it stays fine; competing with Eleventy is a non-
 
 Plans-as-markdown (`plans/` + minimal frontmatter) rendered as a kanban board; injectable into any
 project via `bunx proof init` (scaffold + CLAUDE.md contract + hook set). Own top-level project,
-sibling of `mill/` in the grain monorepo, first library consumer of MILL. **Canonical plan: [proof/PLAN.md](grain/packages/proof/PLAN.md)**
+sibling of `mill/` in the grain monorepo, first library consumer of MILL. **Canonical plan: [proof/PLAN.md](https://github.com/tjakoen/grain/blob/main/packages/proof/PLAN.md)**
 (the design law: files = SSOT, board = projection, AI never maintains the board). Sequencing: after
 Track A's M★ push — it competes with nothing above it. Companion blog note drafted:
 `tjakoen.github.io/notes/where-were-we.md`.
@@ -244,7 +244,7 @@ catalog — everything addressable and AI-answerable in one place, for the AI (a
 there. Neutral, project-agnostic sibling of the portfolio (two apps, one stack). Settles "does PROOF
 need a server?" — no: **PROOF is a mountable layer; PANTRY is the server.** Requires the PROOF split
 (`createProofRoutes`, mirroring MILL) — do it after PROOF's layer (Tracks E pieces 3–4) settles.
-**Canonical plan: [pantry/PLAN.md](pantry/PLAN.md)** (includes the root tidy-up structure).
+**Canonical plan: [pantry/PLAN.md](https://github.com/tjakoen/pantry/blob/main/PLAN.md)** (includes the root tidy-up structure).
 
 ## Definition of "the pitch is honest"
 

@@ -4,7 +4,7 @@
 > `grain` now a monorepo holding `grain`/`mill`/`proof`/`crumb`), and the two consumers have left into
 > their own repos. This file was originally written when `bread` held the layers as git submodules;
 > as of 2026-07-23 those submodules were dropped too — `bread` is a pure map/manifesto repo that links
-> out rather than embedding them (see [`README.md`](README.md)). This file is kept as the map of *how*
+> out rather than embedding them (see [`README.md`](../../README.md)). This file is kept as the map of *how*
 > the split was executed (what went where, the naming), not as a live plan.
 
 > **This repo becomes `BREAD` — a permanent umbrella, not disposable scaffolding.** Today
@@ -102,10 +102,10 @@ MILL exists is still the proof BATCH + GRAIN compose into a real, reusable tool.
 ### `standards/` is referenced by every repo, never copied
 
 `standards/` is the **single source of truth for how I build and write across all my repos** — how I
-work with an AI ([`AI-DEVELOPMENT.md`](tjakoen.github.io/standards/AI-DEVELOPMENT.md) +
-[`SESSION-LOOP.md`](tjakoen.github.io/standards/SESSION-LOOP.md)), how anything under my byline reads
+work with an AI ([`AI-DEVELOPMENT.md`](https://tjakoen.github.io/standards/ai-development) +
+[`SESSION-LOOP.md`](https://tjakoen.github.io/standards/session-loop)), how anything under my byline reads
 (`VOICE.md`, `NOTE-STANDARD.md`, `FIGURES.md`, `README-STANDARD.md`), and how a new repo is set up
-(`CLAUDE.starter.md`). The [`standards/README.md`](tjakoen.github.io/standards/README.md) index is the
+(`CLAUDE.starter.md`). The [`standards/README.md`](https://tjakoen.github.io/standards) index is the
 map: read it first, fetch only the one standard the task needs.
 
 **It's published, so every other repo *links* to it — it does not fork it.** The canonical home is

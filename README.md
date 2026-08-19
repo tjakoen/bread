@@ -38,9 +38,10 @@ duplicate here.
 ## The stack
 
 Each layer builds only on the layers below it. `batch` is its own repo; `grain`, `mill`, `proof`,
-and `crumb` live together in the [`grain`](https://github.com/tjakoen/grain) monorepo
-(`packages/{grain,mill,proof,crumb}`), published individually as `@tjakoen/*` on the public npm
-registry: install them with a version range, no `.npmrc` and no token.
+and `crumb` live together in the [`grain`](https://github.com/tjakoen/grain) monorepo, published
+individually as `@tjakoen/*` on the public npm registry: install them with a version range, no
+`.npmrc` and no token. That monorepo carries a fifth package, `grain-mcp`, an MCP server over a
+built export; it stays workspace-only and is not part of the layer chain.
 (The stack was originally split into one repo per layer, then partly reconsolidated into the grain
 monorepo: see [`SPLIT-PLAN.md`](./docs/history/SPLIT-PLAN.md) for that history.)
 
@@ -78,13 +79,15 @@ code. To run the stack yourself, clone the two source repos:
 
 ```sh
 git clone https://github.com/tjakoen/batch.git
-git clone https://github.com/tjakoen/grain.git   # holds grain, mill, proof, crumb
+git clone https://github.com/tjakoen/grain.git   # holds grain, mill, proof, crumb, grain-mcp
 ```
 
 To run the actual running site, clone
 [`tjakoen/tjakoen.github.io`](https://github.com/tjakoen/tjakoen.github.io) instead:
 
 ```sh
+git clone https://github.com/tjakoen/tjakoen.github.io.git
+cd tjakoen.github.io
 bun install && bun run dev             # http://localhost:3000  (hot reload, no build)
 ```
 
@@ -100,8 +103,8 @@ Then visit (on the running site):
 ## Operate the stack
 
 There is no app to run *here*, but this is the umbrella host, so it is where you operate the whole
-stack at once. Each command is PANTRY (or PROOF) pointed at this repo; nothing to clone, `bunx`
-resolves them:
+stack at once. Each command is PANTRY (or PROOF) pointed at this repo. Run them from a checkout of
+this repo after `bun install`, which is what puts PANTRY on the path:
 
 ```sh
 bun run cockpit     # the whole-stack cockpit: plan board · decision inbox · docs · reference
@@ -109,6 +112,11 @@ bun run doctor      # kit compliance + staleness + layer-pin drift (the CI-able 
 bun run deps        # are the @tjakoen/* pins current with the layer sources on disk?
 bun run deps:refresh # re-pin every layer to its latest — the fix when `deps` reports drift
 ```
+
+> PANTRY is not on the public registry, and the unscoped `pantry` name there belongs to an unrelated
+> package. A bare `bunx pantry` on a machine that has not installed it will fetch the wrong thing.
+> Install it from its repo (`bun add -d @tjakoen/pantry@github:tjakoen/pantry#main`) or run the
+> scripts above from this checkout, where it is already a dev dependency.
 
 `deps` is the one check no single layer repo can run: it reads each layer's version from its sibling
 checkout (`../batch`, `../grain/packages/*`) and flags any pin the umbrella has let fall behind. A
