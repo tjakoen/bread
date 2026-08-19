@@ -129,3 +129,12 @@ Querying the code graph: follow the published standard —
 <https://tjakoen.github.io/standards/graph>. Short version: `graphify query "<symbol>"` before you
 fan out grep, symbol names not English prose, and `graphify update .` after edits (AST-only, no API
 cost). This repo carries a graph at `graphify-out/`.
+
+## Evidence: where a run lands its findings (LOOP section 4a)
+
+A run closes with a report in `artifacts/runs/`, one file per run, `YYYY-MM-DD-slug.md`. Gate output
+pasted verbatim rather than summarized, what was **not** done named, and what needs human eyes named
+separately. The README in that directory carries the frontmatter shape and explains why the directory
+came before the checks did. A claim of "verified" with no report attached is treated as unverified.
+
+Plans live in `plans/`, one file per plan, claimed before the editing starts rather than after.
