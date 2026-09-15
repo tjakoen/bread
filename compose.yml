@@ -1,0 +1,111 @@
+# The BREAD stack, composed for this machine.
+#
+# This file lives in bread/ and reaches sideways into its sibling checkouts, which is the
+# estate's own layout: bread is a sibling of the four repos rather than their parent, as
+# DOCS.md and the portfolio's `../bread/DOCS.md` reference both assume.
+#
+# WHY THIS EXISTS. Windows cannot create a symlink without Developer Mode, and the estate's test
+# fixtures build one. The result was 104 of 105 doctor tests failing with EPERM before reaching an
+# assertion, which reads as a broken repo and is nothing of the kind. A Linux container has no such
+# restriction: the same suite is 669 pass, 0 fail. Every gate below therefore runs in a container,
+# and none of them depend on what happens to be installed on the host.
+#
+# FROM GIT BASH, PREFIX EVERY CALL WITH MSYS_NO_PATHCONV=1. Without it MSYS rewrites a container
+# path like /app into a Windows path and the run dies before it starts. This is the same trap the
+# people-manager repo already records.
+#
+#   MSYS_NO_PATHCONV=1 docker compose --profile gates run --rm gates-pantry
+#   MSYS_NO_PATHCONV=1 docker compose up -d portfolio
+#
+# NODE_MODULES LIVE IN NAMED VOLUMES, never on the host. The host keeps no copy, so a Linux-built
+# binary can never collide with a host-side bun run, and a bind mount does not pay the Windows
+# filesystem cost on every module read. The trade is that an editor on the host resolves no imports
+# from these volumes; run `bun install` on the host too if you want that, and the two stay
+# independent by design.
+#
+# GATES ARE A PROFILE, so `docker compose up` never starts them. They are one-shot commands that
+# must exit, and an autostarting gate is a gate that runs when nobody asked and is muted by the
+# following week.
+name: bread
+
+x-bun: &bun
+  image: oven/bun:1.4.2-slim
+  working_dir: /app
+  init: true
+
+x-gate: &gate
+  <<: *bun
+  profiles: [gates]
+  restart: "no"
+
+services:
+  # --- gates -------------------------------------------------------------------------------------
+  # Each one installs from the frozen lockfile first, so a gate can never pass against a dependency
+  # tree nobody committed. grain is the one repo where that freeze failed until its lockfile was
+  # regenerated, which is exactly the class of problem the freeze exists to surface.
+  gates-portfolio:
+    <<: *gate
+    volumes:
+      - ../tjakoen.github.io:/app
+      - portfolio-modules:/app/node_modules
+    command: sh -lc "bun install --frozen-lockfile && bun run check && bun test && bun run lint"
+
+  gates-pantry:
+    <<: *gate
+    volumes:
+      - ../pantry:/app
+      - pantry-modules:/app/node_modules
+    command: sh -lc "bun install --frozen-lockfile && bun run check && bun test && bun run lint"
+
+  gates-batch:
+    <<: *gate
+    volumes:
+      - ../batch:/app
+      - batch-modules:/app/node_modules
+    command: sh -lc "bun install --frozen-lockfile && bun run check && bun test && bun run lint"
+
+  # grain builds its own image because its diagram test drives a real browser. See
+  # docker/bun-playwright.Dockerfile for why that is a separate base rather than a run-time install.
+  gates-grain:
+    <<: *gate
+    image: bread/bun-playwright:1.4.2
+    build:
+      context: ./docker
+      dockerfile: bun-playwright.Dockerfile
+    volumes:
+      - ../grain:/app
+      - grain-modules:/app/node_modules
+    command: sh -lc "bun install --frozen-lockfile && bun run check && bun test && bun run lint"
+
+  # --- apps --------------------------------------------------------------------------------------
+  # These are the surfaces a rendered change gets shown on, which the portfolio's CLAUDE.md makes a
+  # non-negotiable: a page, a component or a figure closes with a screenshot, not with a claim that
+  # it renders. Both bind-mount their source, so an edit on the host is live in the container.
+  portfolio:
+    <<: *bun
+    volumes:
+      - ../tjakoen.github.io:/app
+      - portfolio-modules:/app/node_modules
+    # 3001 on the host, not 3000: the people-manager container holds 3000 and carries
+    # `restart: unless-stopped`, so Docker Desktop brings it back on every machine start. 3001 is
+    # also what this repo's own pantry.config.json already names as its previewTarget.
+    ports:
+      - "3001:3000"
+    environment:
+      PORT: "3000"
+    command: sh -lc "bun install --frozen-lockfile && bun src/server.ts"
+
+  pantry:
+    <<: *bun
+    volumes:
+      - ../pantry:/app
+      - pantry-modules:/app/node_modules
+    ports:
+      - "4400:4400"
+    command: sh -lc "bun install --frozen-lockfile && bun cli.ts serve"
+
+volumes:
+  portfolio-modules:
+  pantry-modules:
+  grain-modules:
+  batch-modules:
