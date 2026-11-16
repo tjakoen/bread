@@ -1,6 +1,6 @@
 ---
 id: a1-finish-interaction-layer
-status: doing
+status: todo
 track: A
 depends: []
 touches: [tjakoen.github.io/docs/grain/AI-INTERFACE.md, tjakoen.github.io/src/ai]
