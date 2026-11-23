@@ -40,3 +40,4 @@ pantry/screenshots/
 
 # Intentionally lockless: bun can't resolve the depth-3 nested github git-dep graph (see package.json note)
 bun.lock
+.tokensave
