@@ -1,5 +1,6 @@
 {
   "projectName": "BREAD",
   "plansDir": "./plans",
-  "docsDirs": []
+  "docsDirs": [],
+  "ownerLayer": true
 }
