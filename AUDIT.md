@@ -16,16 +16,19 @@ procedure for verifying it. It references them — it does not restate them (sin
 ## The checks
 
 ### 1. Green gate (must pass)
+
+This repo has no code tier of its own: no TypeScript, no test file, no `test` script. Its gate is the
+umbrella's, and the code gates belong to the layer repos.
 ```bash
-bun run check        # tsc --noEmit → zero errors
-bun test             # unit + integration → green
-bun run test:e2e     # Playwright e2e → green   (or: bun run test:all)
+bun run check        # bunx pantry check → doc links, kit compliance
+bun run plans:check  # bunx proof check → plan schema and index
+bun run doctor       # pantry doctor → the full alignment brief
 ```
 
 ### 2. Layering purity — CONVENTIONS §1
 ```bash
-grep -rn "import" batch --include=*.ts | grep -iE "grain|/project"   # batch imports NOTHING inward → expect none
-grep -rn "import" grain --include=*.ts | grep -i "batch"             # grain imports NOTHING from batch (only its OpChannel port) → expect none
+grep -rn "import" ../batch --include=*.ts | grep -iE "grain|/project"            # batch imports NOTHING inward → expect none
+grep -rn "import" ../grain/packages --include=*.ts | grep -i "batch"             # grain imports NOTHING from batch (only its OpChannel port) → expect none
 ```
 Only `tjakoen.github.io/server.ts` wires the layers. New design-system work lives in `grain/` by default; `mill/`/`tjakoen.github.io/` sit above grain (`batch → grain → mill`), consume, never reverse.
 
@@ -36,7 +39,7 @@ Only `tjakoen.github.io/server.ts` wires the layers. New design-system work live
 
 ### 4. Tokens only — CONVENTIONS §5
 ```bash
-grep -rnE "#[0-9a-fA-F]{3,6}|rgb\(|hsl\(" grain/components tjakoen.github.io/components --include=*.css   # expect none — colors live in grain/styles/variables.css
+grep -rnE "#[0-9a-fA-F]{3,6}|rgb\(|hsl\(" ../grain/packages/grain/components ../tjakoen.github.io/view/components --include=*.css   # expect none — colors live in grain/styles/variables.css
 ```
 **Sanctioned exception:** `grain/styles/themes/{baguette,brioche,_template}.css` are the
 palette-definition files — they *are* where raw hex/`rgb()` legitimately lives (each theme flavor
